@@ -8,11 +8,16 @@
       "id": "obra/superpowers",
       "category": "agent-workflows",
       "upstream": "https://github.com/obra/superpowers",
-      "kind": "unverified",
-      "license": "unverified",
+      "kind": "skill_collection",
+      "license": "MIT (repository-level; per-file clearance pending)",
       "source_commit": null,
       "security_review": "not_started",
-      "import_status": "discovery_only"
+      "import_status": "discovery_only",
+      "review_notes": "Upstream README documents skills/writing-skills/SKILL.md and multi-agent installation; optional visual companion telemetry noted. No code imported.",
+      "review_sources": [
+        "https://github.com/obra/superpowers",
+        "https://github.com/obra/superpowers/blob/main/skills/writing-skills/SKILL.md"
+      ]
     },
     {
       "id": "affaan-m/everything-claude-code",
@@ -58,11 +63,16 @@
       "id": "github/awesome-copilot",
       "category": "copilot-skills",
       "upstream": "https://github.com/github/awesome-copilot",
-      "kind": "unverified",
-      "license": "unverified",
+      "kind": "skill_collection",
+      "license": "MIT (repository-level; verify individual contributions)",
       "source_commit": null,
       "security_review": "not_started",
-      "import_status": "discovery_only"
+      "import_status": "discovery_only",
+      "review_notes": "Official docs list skills with SKILL.md and bundled resources; source contains community contributions. No code imported.",
+      "review_sources": [
+        "https://github.com/github/awesome-copilot",
+        "https://github.com/github/awesome-copilot/blob/main/docs/README.skills.md"
+      ]
     },
     {
       "id": "czlonkowski/n8n-skills",
@@ -88,31 +98,34 @@
       "id": "promptfoo/promptfoo",
       "category": "evaluation-tooling",
       "upstream": "https://github.com/promptfoo/promptfoo",
-      "kind": "unverified",
+      "kind": "tooling_reference",
       "license": "unverified",
       "source_commit": null,
       "security_review": "not_started",
-      "import_status": "discovery_only"
+      "import_status": "discovery_only",
+      "review_notes": "External tool/project reference, not yet verified as a standalone Agent Skills package."
     },
     {
       "id": "langfuse/langfuse",
       "category": "observability-tooling",
       "upstream": "https://github.com/langfuse/langfuse",
-      "kind": "unverified",
+      "kind": "tooling_reference",
       "license": "unverified",
       "source_commit": null,
       "security_review": "not_started",
-      "import_status": "discovery_only"
+      "import_status": "discovery_only",
+      "review_notes": "External tool/project reference, not yet verified as a standalone Agent Skills package."
     },
     {
       "id": "modelcontextprotocol/servers",
       "category": "mcp-servers",
       "upstream": "https://github.com/modelcontextprotocol/servers",
-      "kind": "unverified",
+      "kind": "mcp_server_collection",
       "license": "unverified",
       "source_commit": null,
       "security_review": "not_started",
-      "import_status": "discovery_only"
+      "import_status": "discovery_only",
+      "review_notes": "Classify separately from installable Markdown skills; not an import candidate for xah add without new adapter."
     },
     {
       "id": "ComposioHQ/composio",
@@ -138,11 +151,12 @@
       "id": "BerriAI/litellm",
       "category": "llm-gateway",
       "upstream": "https://github.com/BerriAI/litellm",
-      "kind": "unverified",
+      "kind": "tooling_reference",
       "license": "unverified",
       "source_commit": null,
       "security_review": "not_started",
-      "import_status": "discovery_only"
+      "import_status": "discovery_only",
+      "review_notes": "External tool/project reference, not yet verified as a standalone Agent Skills package."
     },
     {
       "id": "openai/openai-cookbook",
