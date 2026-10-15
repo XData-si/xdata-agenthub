@@ -5,6 +5,7 @@ import json
 import pathlib
 import re
 import shutil
+import platform
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -36,6 +37,11 @@ def main():
     add = sub.add_parser("add", help="Copy a vetted template into a project")
     add.add_argument("id")
     add.add_argument("--target", default=".")
+    init = sub.add_parser("init", help="Install a curated local starter profile")
+    init.add_argument("--target", default=".")
+    init.add_argument("--profile", choices=["developer", "research", "devops"], default="developer")
+    init.add_argument("--dry-run", action="store_true")
+    sub.add_parser("doctor", help="Check Python version, catalog and template paths")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
     args = parser.parse_args()
@@ -48,6 +54,54 @@ def main():
             item = entry(args.id)
             print(f'# {item["name"]} ({item["id"]})\nSource: {item["source"]}\nLicense: {item["license"]}\n')
             print(source(item).read_text(encoding="utf-8"))
+        elif args.cmd == "doctor":
+            print(f"Python: {platform.python_version()}")
+            print(f"Catalog: {CATALOG}")
+            if sys.version_info < (3, 10):
+                raise ValueError("Python 3.10+ required")
+            catalog = items()
+            seen = set()
+            for item in catalog:
+                if item["id"] in seen:
+                    raise ValueError("Duplicate catalog ID: " + item["id"])
+                seen.add(item["id"])
+                source(item)
+            print(f"OK: {len(catalog)} catalog entries, all local paths valid")
+        elif args.cmd == "init":
+            profiles = {
+                "developer": ["project-agents", "code-review", "documentation"],
+                "research": ["project-agents", "research-agent", "documentation"],
+                "devops": ["project-agents", "devops-review", "code-review"],
+            }
+            target = pathlib.Path(args.target).expanduser().resolve()
+            if not target.is_dir():
+                raise ValueError("Target must be an existing directory")
+            planned = []
+            for item_id in profiles[args.profile]:
+                item = entry(item_id)
+                src = source(item)
+                rel = pathlib.Path(item["path"])
+                if rel.is_absolute() or ".." in rel.parts:
+                    raise ValueError("Unsafe destination")
+                dest = target / rel
+                if dest.exists() or dest.is_symlink():
+                    raise ValueError(f"Destination already exists: {dest}")
+                parent = dest.parent
+                while parent != target.parent:
+                    if parent.is_symlink():
+                        raise ValueError(f"Symlink destination refused: {parent}")
+                    if parent == target:
+                        break
+                    parent = parent.parent
+                planned.append((src, dest))
+            for src, dest in planned:
+                if args.dry_run:
+                    print(f"Would install: {dest}")
+                    continue
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                with dest.open("x", encoding="utf-8") as handle:
+                    handle.write(src.read_text(encoding="utf-8"))
+                print(f"Installed: {dest}")
         elif args.cmd == "add":
             item = entry(args.id)
             src = source(item)
