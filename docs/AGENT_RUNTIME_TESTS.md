@@ -47,3 +47,7 @@ A **PASS** requires observable discovery, actual skill use (not merely generic t
 ## Reporting
 
 Store redacted transcripts and version details under `docs/integration-evidence/` via a pull request. Never commit API keys, user directories, access tokens, private prompts or confidential documents. Keep a separate result for each client/version. Re-run after significant client updates.
+
+## Additional skill scenarios
+
+After validating `code-review`, use [EXTENDED_SKILL_TESTS.md](EXTENDED_SKILL_TESTS.md) for reproducible offline tests of `mcp-review`, `security-review`, and `python-testing`. Record results per skill and per client; do not generalize from a single successful skill.
