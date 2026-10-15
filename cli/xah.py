@@ -129,18 +129,51 @@ def main():
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
-            findings = 0
-            patterns = [r"curl\s+[^\n|]+\|\s*(?:bash|sh)\b", r"wget\s+[^\n|]+\|\s*(?:bash|sh)\b", r"rm\s+-rf\s+/"]
+            actionable = 0
+            examples = 0
+            patterns = [r"curl\s+[^\n|]+\|\s*(?:bash|sh)\b",
+                        r"wget\s+[^\n|]+\|\s*(?:bash|sh)\b",
+                        r"rm\s+-rf\s+/"]
+            # An explicit marker applies only to the next fenced code block.
+            # Unmarked code blocks remain actionable; documentation is not
+            # automatically trusted merely because it is fenced.
             for file in target.rglob("*.md"):
                 if file.is_symlink() or not file.is_file() or file.stat().st_size > 1_000_000:
                     continue
-                body = file.read_text(encoding="utf-8", errors="replace")
-                for pattern in patterns:
-                    if re.search(pattern, body, re.IGNORECASE):
-                        print(f"REVIEW: {file}: matched {pattern}")
-                        findings += 1
-            print(f"Heuristic audit: {findings} finding(s). Not a security certification.")
-            if findings:
+                lines = file.read_text(encoding="utf-8", errors="replace").splitlines()
+                marked_next = False
+                in_fence = False
+                fence_marker = ""
+                example_fence = False
+                for line_no, line in enumerate(lines, 1):
+                    stripped = line.strip()
+                    if not in_fence and stripped == "<!-- xah-audit: fixture -->":
+                        marked_next = True
+                        continue
+                    fence = re.match(r"^\s*(`{3,}|~{3,})", line)
+                    if fence:
+                        delimiter = fence.group(1)
+                        if not in_fence:
+                            in_fence = True
+                            fence_marker = delimiter
+                            example_fence = marked_next
+                            marked_next = False
+                        elif delimiter[0] == fence_marker[0] and len(delimiter) >= len(fence_marker):
+                            in_fence = False
+                            example_fence = False
+                        continue
+                    if not in_fence and stripped:
+                        marked_next = False
+                    for pattern in patterns:
+                        if re.search(pattern, line, re.IGNORECASE):
+                            if in_fence and example_fence:
+                                print(f"INFO: {file}:{line_no}: documented test fixture ({pattern})")
+                                examples += 1
+                            else:
+                                print(f"REVIEW: {file}:{line_no}: matched {pattern}")
+                                actionable += 1
+            print(f"Heuristic audit: {actionable} review finding(s), {examples} fixture example(s). Not a security certification.")
+            if actionable:
                 return 2
     except (ValueError, OSError, KeyError, json.JSONDecodeError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
