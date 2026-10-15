@@ -1,0 +1,28 @@
+name: Skill proposal
+description: Propose a new or improved original skill
+title: "[Skill] "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: skill
+    attributes:
+      label: Skill ID or topic
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem and intended outcome
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Example task and acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Originality and source attribution
+      description: Disclose inspiration, upstream licenses and third-party content
