@@ -112,7 +112,7 @@ class CliTests(unittest.TestCase):
             prefix = pathlib.Path(tmp) / "share"
             bin_dir = pathlib.Path(tmp) / "bin"
             bin_dir.mkdir()
-            legacy = '#!/usr/bin/env bash\\nexec python3 "' + str(prefix) + '/cli/xah.py" "$@"\\n'
+            legacy = '#!/usr/bin/env bash\nexec python3 "' + str(prefix) + '/cli/xah.py" "$@"\n'
             (bin_dir / "xah").write_text(legacy)
             env = os.environ.copy()
             env["XAH_HOME"] = str(prefix)
