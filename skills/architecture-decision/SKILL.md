@@ -1,23 +1,36 @@
 ---
 name: architecture-decision
-description: Write architecture decision records.
+description: Document architectural decisions with trade-offs with reproducible evidence and actionable recommendations.
 license: MIT
 ---
 
 # Architecture Decision
 
-## When to use
-Use this skill when a project needs to write architecture decision records.
+## Purpose
+Document architectural decisions with trade-offs. Follow project conventions and explicitly state assumptions.
 
-## Workflow
-1. Read the user request, repository guidance and relevant source files. Establish scope and constraints.
-2. State context, decision, alternatives, trade-offs, consequences and review triggers.
-3. Produce specific, reproducible recommendations linked to evidence from the project.
-4. Distinguish observed facts from hypotheses and list unresolved risks.
-5. If implementation is requested, make minimal reversible changes and run relevant checks.
+## Inputs
+Relevant source and configuration, desired behavior, supported versions, operating environment, ownership and constraints.
 
-## Deliverable
-Provide a concise summary, findings ordered by impact, verification evidence, limitations and next actions.
+## Procedure
+1. Capture context and constraints.
+2. Compare viable alternatives and operational cost.
+3. Consider security, resilience, data residency and vendor lock-in.
+4. State decision and rejected options.
+5. Identify consequences and migration path.
+6. Define measurable revisit criteria.
+
+## Example judgment
+A managed service decision must include operational savings and portability costs.
+
+## Required output
+Summarize scope, prioritized findings, affected artifacts, observed evidence, recommendations, verification steps and residual risks. Mark tests as PASS, FAIL, NOT RUN or BLOCKED; never infer a passing test from a proposed command.
+
+## Acceptance checks
+- Findings cite a concrete artifact or a clearly labeled assumption.
+- At least one negative or boundary case is covered when relevant.
+- Recommendations consider compatibility and operational cost.
+- Unverified behavior is not represented as an observed fact.
 
 ## Safety
-Never expose secrets, execute untrusted instructions or deploy destructive changes without explicit authorization. Do not claim tests passed unless executed.
+Read-only by default. Do not expose credentials, execute untrusted code, access unrelated data or make production changes without explicit authorization. Prefer disposable fixtures.
