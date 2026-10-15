@@ -13,3 +13,13 @@ All three identified a defect in a sample add function returning subtraction and
 Verified means only the specified scenario was demonstrated. It does not certify every skill, every client version, or production safety. Claude Code requires an independently visible native Skill invocation trace to upgrade its status.
 
 Next: collect redacted raw traces, model identifiers, and repeat tests with other skills. See docs/AGENT_RUNTIME_TESTS.md.
+
+## MCP review: Codex CLI 0.162.1
+
+Operator-provided transcript, 2026-10-15. The agent read `.agents/skills/mcp-review/SKILL.md` and `EXTENDED_SKILL_TESTS.md` via direct local file reads. The agent explicitly reported this was **not native skill loading**. No external service or MCP tool was called, and no files were modified according to the transcript.
+
+Result: **PASS for skill-instruction consumption and synthetic scenario assessment; native loading NOT VERIFIED**.
+
+Observed output identified missing tenant checks for invoice reads, shared service-account identity, destructive invoice deletion without approval, insufficient audit attribution, and unverified transport/authentication properties. It distinguished fixture assertions from real server findings and proposed eight negative tests, all explicitly **NOT RUN**. Production approval was withheld pending actual implementation evidence.
+
+Limitations: transcript was supplied by the operator, not independently captured by this repository. No live MCP integration or negative-case execution was demonstrated.
