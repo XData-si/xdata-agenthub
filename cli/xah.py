@@ -130,7 +130,7 @@ def main():
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             findings = 0
-            patterns = [r"curl\\s+[^\\n|]+\\|\\s*(?:bash|sh)", r"wget\\s+[^\\n|]+\\|\\s*(?:bash|sh)", r"rm\\s+-rf\\s+/"]
+            patterns = [r"curl\s+[^\n|]+\|\s*(?:bash|sh)\b", r"wget\s+[^\n|]+\|\s*(?:bash|sh)\b", r"rm\s+-rf\s+/"]
             for file in target.rglob("*.md"):
                 if file.is_symlink() or not file.is_file() or file.stat().st_size > 1_000_000:
                     continue
