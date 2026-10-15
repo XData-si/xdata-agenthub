@@ -55,5 +55,28 @@ class CliTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertTrue((pathlib.Path(tmp) / expected).is_file())
 
+    def test_catalog_unique_and_safe(self):
+        catalog = json.loads((ROOT / "registry/catalog.json").read_text())["items"]
+        ids = [item["id"] for item in catalog]
+        self.assertEqual(len(ids), len(set(ids)))
+        for item in catalog:
+            self.assertEqual(item["source"], "XData original")
+            self.assertEqual(item["license"], "MIT")
+            self.assertTrue(item["id"])
+            path = pathlib.Path(item["path"])
+            self.assertFalse(path.is_absolute())
+            self.assertNotIn("..", path.parts)
+            self.assertTrue((ROOT / path).resolve().is_relative_to(ROOT.resolve()))
+
+    def test_curated_skills_have_criteria(self):
+        curated = ("rag-evaluation", "prompt-injection-defense",
+                   "docker-hardening", "security-review", "agent-evaluation")
+        for skill in curated:
+            with self.subTest(skill=skill):
+                content = (ROOT / "skills" / skill / "SKILL.md").read_text()
+                self.assertIn("## Acceptance checks", content)
+                self.assertIn("## Goal", content)
+                self.assertGreater(len(content), 1000)
+
 if __name__ == "__main__":
     unittest.main()
