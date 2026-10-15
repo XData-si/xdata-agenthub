@@ -24,3 +24,7 @@ References: [Claude skills](https://code.claude.com/docs/en/skills), [OpenCode s
 ## Runtime verification
 
 Use [AGENT_RUNTIME_TESTS.md](AGENT_RUNTIME_TESTS.md) to record real skill discovery and invocation for each client version. The compatibility table above documents intended installation paths, **not** verified runtime compatibility.
+
+## Recorded integration results
+
+See [2026-10-15 runtime results](integration-evidence/2026-10-15-runtime-results.md) for the tested client versions, evidence and limitations. Only the `code-review` scenario was exercised.
