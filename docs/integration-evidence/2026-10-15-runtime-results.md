@@ -23,3 +23,13 @@ Result: **PASS for skill-instruction consumption and synthetic scenario assessme
 Observed output identified missing tenant checks for invoice reads, shared service-account identity, destructive invoice deletion without approval, insufficient audit attribution, and unverified transport/authentication properties. It distinguished fixture assertions from real server findings and proposed eight negative tests, all explicitly **NOT RUN**. Production approval was withheld pending actual implementation evidence.
 
 Limitations: transcript was supplied by the operator, not independently captured by this repository. No live MCP integration or negative-case execution was demonstrated.
+
+## Security review: Codex CLI 0.162.1
+
+Operator-provided transcript, 2026-10-15. Codex read `.agents/skills/security-review/SKILL.md` and `EXTENDED_SKILL_TESTS.md` using direct shell file reads, explicitly **not** a native skill-loader verification.
+
+Result: **PASS for skill-instruction consumption and static analysis of the synthetic fixture; native loading NOT VERIFIED**.
+
+The review identified concatenation of untrusted input into SQL as a potential injection risk, distinguished source-observed concatenation from conditional exploitability, noted unknown database adapter and input validation, and recommended adapter-specific parameter binding. It proposed a recording-fake-database test and isolated in-memory regression checks. No code or tests were executed and no files were modified according to the transcript.
+
+Limitations: operator-supplied transcript only; no real application assessed, no exploitability demonstrated, and no regression test executed.
