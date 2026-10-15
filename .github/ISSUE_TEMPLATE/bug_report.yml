@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible CLI, installer or skill defect
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Problem
+      description: Describe expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include commands with credentials and personal data removed
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, agent and version if relevant
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted output
+      description: Never paste tokens, passwords or customer data
