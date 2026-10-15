@@ -130,6 +130,12 @@ def main():
     mode = update.add_mutually_exclusive_group(required=True)
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--apply", action="store_true")
+    refresh = sub.add_parser("catalog-refresh", help="Explicit pinned HTTPS catalog update")
+    refresh.add_argument("--url", required=True)
+    refresh.add_argument("--revision", required=True)
+    refresh.add_argument("--sha256", required=True)
+    refresh.add_argument("--approve", action="store_true")
+    refresh.add_argument("--offline", action="store_true")
     status = sub.add_parser("status", help="Report installed-file modification states")
     status.add_argument("--target", default=".")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
@@ -191,6 +197,11 @@ def main():
                 print(f"{action:10} {rel}")
             if any(action == "conflict" for action, _ in result):
                 return 2
+        elif args.cmd == "catalog-refresh":
+            from catalog_refresh import refresh_catalog
+            digest = refresh_catalog(CATALOG, source_url=args.url, revision=args.revision,
+                                     sha256=args.sha256, approve=args.approve, offline=args.offline)
+            print(f"Catalog refreshed; verified SHA-256: {digest}")
         elif args.cmd == "status":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
