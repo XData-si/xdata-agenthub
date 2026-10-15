@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "evidence": [],
+  "clients": [
+    {"client": "claude", "status": "not_tested"},
+    {"client": "codex", "status": "not_tested"},
+    {"client": "opencode", "status": "not_tested"},
+    {"client": "generic", "status": "not_tested"}
+  ]
+}
