@@ -8,7 +8,7 @@
 
 **XData AgentHub is a public alpha project.** No unsupported claims of certification or compatibility. This project currently ships a dependency-free Python CLI and local curated templates; it does **not** install arbitrary remote code.
 
-## Why
+**34 curated local resources · 31 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.\n\n## Why
 AI development instructions are scattered across repositories and incompatible conventions. AgentHub starts with a small, inspectable catalog and a local-first installer.
 
 ## Quick start
@@ -18,6 +18,7 @@ AI development instructions are scattered across repositories and incompatible c
 python3 cli/xah.py list
 python3 cli/xah.py search review
 python3 cli/xah.py doctor
+python3 cli/xah.py init --agent claude --profile developer --target /tmp/xah-demo --dry-run
 mkdir -p /tmp/xah-demo
 python3 cli/xah.py init --profile developer --target /tmp/xah-demo --dry-run
 python3 cli/xah.py init --profile developer --target /tmp/xah-demo
@@ -33,7 +34,7 @@ bash scripts/install.sh
 xah --help
 ```
 
-## What's included
+## Supported project layouts\n\n| Target | Skill path | Guidance |\n|---|---|---|\n| Claude Code | `.claude/skills/` | `CLAUDE.md` |\n| Codex | `.agents/skills/` | `AGENTS.md` |\n| OpenCode | `.opencode/skills/` | `AGENTS.md` |\n\nSee [compatibility details](docs/AGENT_COMPATIBILITY.md) and [demo storyboard](docs/SHOWCASE.md). These are path-level adapters, not full semantic conversions.\n\n## What's included
 - **Skills**: focused reusable agent capabilities, starting with code review and documentation.
 - **Instructions**: portable AGENTS.md starter for repositories.
 - **Agents**: example agent roles, not running autonomous services.
