@@ -54,3 +54,12 @@ No bulk scraping, no direct shell execution from listings, no automatic third-pa
 - MCP servers and tools such as promptfoo, Langfuse and LiteLLM are not automatically installable `SKILL.md` packages. Keep these entries in a separate discovery class until the registry and CLI explicitly support their resource type.
 
 **Review scope:** this is an initial source and packaging assessment, not a source-code security audit. No external candidate has been promoted into the 31 shipped skills.
+
+### vercel-labs/agent-skills
+- **Confirmed from upstream:** Agent Skills-style packages with `SKILL.md`, optional `scripts/` and `references/`; documentation describes an immutable release discovery index and per-skill artifacts.
+- **Review flags:** upstream issue [#330](https://github.com/vercel-labs/agent-skills/issues/330) reports frontmatter names differing from directory names. Issue [#335](https://github.com/vercel-labs/agent-skills/issues/335) alleges a deployment fallback may upload unintended files; this is a reported issue, **not independently verified here**. Several issues also question repository license-file presence; verify license evidence before reuse.
+- **Decision:** keep discovery-only; prioritize non-executing frontend guidance, avoid deployment skills until reviewed. No code imported.
+- Sources: [repository](https://github.com/vercel-labs/agent-skills), [authoring guidance](https://github.com/vercel-labs/agent-skills/blob/main/AGENTS.md).
+
+### Ecosystem installer benchmark
+[Vercel's separate `skills` CLI](https://github.com/vercel-labs/skills) supports source discovery, project/global installation, agent-specific paths and optional scripts/assets. Its download limits and install modes are useful design references, but XData AgentHub should retain an offline-first, reviewed-import policy rather than enabling arbitrary remote installation by default.
