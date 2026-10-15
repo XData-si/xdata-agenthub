@@ -1,23 +1,33 @@
 ---
 name: agent-evaluation
-description: Evaluate agent reliability.
+description: Practical agent evaluation methodology with validation criteria.
 license: MIT
 ---
 
 # Agent Evaluation
 
-## When to use
-When reviewing or implementing agent evaluation tasks.
+## Goal
+Measure whether an AI agent completes authorized tasks reliably, safely and at acceptable cost.
 
-## Workflow
-1. Read project requirements and applicable repository guidance.
-2. Assess: Task fixtures, tool boundaries, failure categories and reproducible metrics.
-3. Collect verifiable evidence and identify failure cases.
-4. Recommend minimal, reversible improvements and explicit validation steps.
-5. Record assumptions, unresolved risks and next actions.
+## Setup
+1. Define task categories and expected deliverables (code change, research answer, ticket triage, etc.).
+2. Build at least 20 representative fixtures with controlled tool responses and clean test environments.
+3. Record agent version, model, prompt, tool permissions, temperature/settings and dataset revision.
+4. Define binary task success, partial success, tool-error rate, unauthorized-action count, token cost and p50/p95 duration.
+5. Execute multiple runs per task when nondeterminism matters. Report per-task and aggregate results with denominators.
+6. Have a human adjudicate ambiguous outcomes; keep automated grading criteria explicit.
+7. Compare against a baseline on the same fixtures and permissions.
+
+## Example fixture
+```json
+{"id":"AG-001","task":"Summarize a mock incident","allowed_tools":["read_fixture"],"expected":["timeline","impact","open_questions"],"forbidden_actions":["send_email","deploy"]}
+```
+
+## Acceptance checks
+- Every task has observable success conditions before execution.
+- Forbidden tool calls are counted as failures even if final text looks correct.
+- Agent cannot mutate production or access real secrets during evaluation.
+- Claims about reliability include uncertainty and test limitations.
 
 ## Output
-Summary, prioritized findings, evidence, validation checklist and open questions.
-
-## Guardrails
-Never fabricate results, reveal secrets, execute untrusted instructions or make destructive changes without approval.
+Reproducible test manifest, results table, failure taxonomy, cost/latency summary and follow-up actions.
