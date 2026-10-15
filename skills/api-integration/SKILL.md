@@ -1,23 +1,35 @@
 ---
 name: api-integration
-description: Plan reliable API integrations.
+description: Design reliable third-party API integrations with reproducible evidence and actionable recommendations.
 license: MIT
 ---
 
 # Api Integration
 
-## When to use
-When reviewing or implementing api integration tasks.
+## Purpose
+Design reliable third-party API integrations. Follow project conventions and explicitly state assumptions.
 
-## Workflow
-1. Read project requirements and applicable repository guidance.
-2. Assess: Authentication, pagination, retries, idempotency, rate limits and contract tests.
-3. Collect verifiable evidence and identify failure cases.
-4. Recommend minimal, reversible improvements and explicit validation steps.
-5. Record assumptions, unresolved risks and next actions.
+## Inputs
+Relevant source and configuration, desired behavior, supported versions, operating environment, ownership and constraints.
 
-## Output
-Summary, prioritized findings, evidence, validation checklist and open questions.
+## Procedure
+1. Document authentication, scopes, rate limits and data boundaries.
+2. Define retries, exponential backoff, timeouts and idempotency.
+3. Verify webhook signatures, replay protection and pagination.
+4. Test sandbox and mocked failures.
+5. Specify observability, credential rotation and graceful degradation.
 
-## Guardrails
-Never fabricate results, reveal secrets, execute untrusted instructions or make destructive changes without approval.
+## Example judgment
+A timeout after a mutating request is ambiguous; do not blindly retry without an idempotency strategy.
+
+## Required output
+Summarize scope, prioritized findings, affected artifacts, observed evidence, recommendations, verification steps and residual risks. Mark tests as PASS, FAIL, NOT RUN or BLOCKED; never infer a passing test from a proposed command.
+
+## Acceptance checks
+- Findings cite a concrete artifact or a clearly labeled assumption.
+- At least one negative or boundary case is covered when relevant.
+- Recommendations consider compatibility and operational cost.
+- Unverified behavior is not represented as an observed fact.
+
+## Safety
+Read-only by default. Do not expose credentials, execute untrusted code, access unrelated data or make production changes without explicit authorization. Prefer disposable fixtures.
