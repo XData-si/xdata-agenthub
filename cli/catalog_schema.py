@@ -49,7 +49,7 @@ def validate_catalog(data):
         if not SLUG.fullmatch(item["id"]) or item["id"] in seen:
             raise ValueError(f"Invalid or duplicate item ID: {item['id']}")
         seen.add(item["id"])
-        if item["type"] not in KINDS:
+        if not isinstance(item["type"], str) or item["type"] not in KINDS:
             raise ValueError(f"Invalid item type: {item['type']}")
         path = item["path"]
         parts = PurePosixPath(path).parts
@@ -84,7 +84,7 @@ def validate_catalog(data):
                 if not isinstance(client, str) or not SLUG.fullmatch(client):
                     raise ValueError("Invalid client key")
                 _fields(record, {"status"}, {"tested_version", "platform", "evidence"}, "compatibility record")
-                if record["status"] not in STATUSES:
+                if not isinstance(record["status"], str) or record["status"] not in STATUSES:
                     raise ValueError("Invalid compatibility status")
                 for field in ("tested_version", "platform", "evidence"):
                     if field in record:
