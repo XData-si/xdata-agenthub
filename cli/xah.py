@@ -119,7 +119,9 @@ def main():
     update.add_argument("id")
     update.add_argument("--target", default=".")
     update.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
-    update.add_argument("--dry-run", action="store_true", required=True)
+    mode = update.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--dry-run", action="store_true")
+    mode.add_argument("--apply", action="store_true")
     status = sub.add_parser("status", help="Report installed-file modification states")
     status.add_argument("--target", default=".")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
@@ -152,7 +154,11 @@ def main():
                 if item["id"] == "project-agents" and args.agent != "generic":
                     rel = pathlib.Path("CLAUDE.md" if args.agent == "claude" else "AGENTS.md")
                 planned = [(source(item), target / rel)]
-            result = plan_update(target, args.id, planned)
+            if args.apply:
+                from update_apply import apply_update
+                result = apply_update(target, args.id, planned)
+            else:
+                result = plan_update(target, args.id, planned)
             for action, rel in result:
                 print(f"{action:10} {rel}")
             if any(action == "conflict" for action, _ in result):
