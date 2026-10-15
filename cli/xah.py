@@ -112,6 +112,8 @@ def main():
     search.add_argument("--json", action="store_true", help="Emit JSON array")
     inspect = sub.add_parser("inspect", help="Print a catalog item")
     inspect.add_argument("id")
+    inspect.add_argument("--target", help="Inspect installed-file states in this project")
+    inspect.add_argument("--json", action="store_true", help="Emit structured metadata")
     add = sub.add_parser("add", help="Copy a vetted template into a project")
     add.add_argument("id")
     add.add_argument("--target", default=".")
@@ -152,9 +154,23 @@ def main():
                 for item in found:
                     print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
         elif args.cmd == "inspect":
+            from inspect_metadata import inspect_metadata
             item = entry(args.id)
-            print(f'# {item["name"]} ({item["id"]})\nSource: {item["source"]}\nLicense: {item["license"]}\n')
-            print(source(item).read_text(encoding="utf-8"))
+            metadata = inspect_metadata(item, source(item), args.target)
+            if args.json:
+                print(json.dumps(metadata, sort_keys=True, indent=2, ensure_ascii=False))
+            else:
+                print(f'# {item["name"]} ({item["id"]})')
+                print(f'Source (declared): {item["source"]}')
+                print(f'License (declared): {item["license"]}')
+                print(f'Version (declared): {item.get("version", "not provided")}')
+                print(f'Local SHA-256 (computed): {metadata["local_sha256"]["value"]}')
+                print(f'Catalog digest comparison: {metadata["digest_matches"] if metadata["digest_matches"] is not None else "not available"}')
+                print('Compatibility: catalog declarations only; native runtime not verified')
+                for installed in metadata["installed_files"]:
+                    print(f'Installed: {installed["state"]} {installed["path"]}')
+                print()
+                print(source(item).read_text(encoding="utf-8"))
         elif args.cmd == "update":
             from update_plan import plan_update
             target = pathlib.Path(args.target).expanduser().resolve()
