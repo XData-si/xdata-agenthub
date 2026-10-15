@@ -37,6 +37,7 @@ def main():
     add = sub.add_parser("add", help="Copy a vetted template into a project")
     add.add_argument("id")
     add.add_argument("--target", default=".")
+    add.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
     init = sub.add_parser("init", help="Install a curated local starter profile")
     init.add_argument("--target", default=".")
     init.add_argument("--profile", choices=["developer", "research", "devops"], default="developer")
@@ -118,6 +119,9 @@ def main():
             rel = pathlib.Path(item["path"])
             if rel.is_absolute() or ".." in rel.parts:
                 raise ValueError("Unsafe destination")
+            if item["type"] == "skill" and args.agent != "generic":
+                agent_roots = {"claude": ".claude/skills", "codex": ".agents/skills", "opencode": ".opencode/skills"}
+                rel = pathlib.Path(agent_roots[args.agent]) / item["id"] / "SKILL.md"
             dest = target / rel
             if dest.is_symlink() or any(p.is_symlink() for p in dest.parents if p != target.parent):
                 raise ValueError("Symlink destination refused")
