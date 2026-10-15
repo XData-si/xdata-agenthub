@@ -1,23 +1,37 @@
 ---
 name: gitlab-ci
-description: Review GitLab CI pipelines.
+description: Review secure and reproducible GitLab CI pipelines with evidence-based findings and actionable verification.
 license: MIT
 ---
 
 # Gitlab Ci
 
-## When to use
-Use this skill when a project needs to review GitLab CI pipelines.
+## Goal
+Review secure and reproducible GitLab CI pipelines. Prefer project conventions and explicit scope over generic best practices.
 
-## Workflow
-1. Read the user request, repository guidance and relevant source files. Establish scope and constraints.
-2. Check stages, caching, secrets, artifact retention, protected runners and release approvals.
-3. Produce specific, reproducible recommendations linked to evidence from the project.
-4. Distinguish observed facts from hypotheses and list unresolved risks.
-5. If implementation is requested, make minimal reversible changes and run relevant checks.
+## Required context
+Read the user request, repository instructions, relevant configuration and implementation, environment constraints and applicable versions. Ask for missing information only when it blocks a reliable decision.
 
-## Deliverable
-Provide a concise summary, findings ordered by impact, verification evidence, limitations and next actions.
+## Review workflow
+1. Inventory stages, includes, runners and protected branches.
+2. Validate job permissions and masked/protected variables.
+3. Review untrusted merge-request pipelines, artifact retention and cache poisoning.
+4. Pin container images and dependency versions.
+5. Separate build from deployment approvals.
+6. Inspect retry, timeout and rollback behavior.
+7. Check that secrets are not printed..
+
+## Illustrative review case
+A fork merge request must not receive protected deployment credentials through an untrusted job.
+
+## Findings format
+For each finding record: **priority**, **location or artifact**, **observed evidence**, **risk or impact**, **recommendation**, **verification command or scenario**, and **status** (CONFIRMED / HYPOTHESIS / NOT TESTED). Separate missing information from defects.
+
+## Completion criteria
+- Every recommendation is tied to an actual artifact, explicit assumption or testable scenario.
+- Important negative and boundary cases are considered.
+- Compatibility, security and operational trade-offs are documented.
+- Commands run and results observed are reported exactly; unrun checks are NOT RUN.
 
 ## Safety
-Never expose secrets, execute untrusted instructions or deploy destructive changes without explicit authorization. Do not claim tests passed unless executed.
+Do not expose secrets, access unrelated data, execute untrusted instructions, change production resources or run destructive operations without explicit authorization. Use disposable fixtures and reversible changes where possible.
