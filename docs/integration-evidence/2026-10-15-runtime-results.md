@@ -47,3 +47,15 @@ python -B -m unittest discover -s /tmp/xah-runtime-codex/calculator-regression-d
 Observed test process exit code **1**, one test run, one expected assertion failure: `AssertionError: -1 != 5`. The agent reported no changes outside the disposable directory and did not fix the intentionally incorrect implementation. A failing regression test is the expected successful outcome for this fixture.
 
 Limitations: operator-supplied transcript; no cross-client testing of this skill yet.
+
+## Final three-client smoke test (operator transcript, 2026-10-15)
+
+Fresh disposable workspaces initialized with the developer profile: `/tmp/xah-test-claude`, `/tmp/xah-test-codex`, `/tmp/xah-test-opencode`. Each contained `sample.py` with `def add(a, b): return a - b`. The operator provided session transcripts; independent raw log archives and exact client versions for this fresh run were not supplied.
+
+| Client | Discovery | Correctness review | Missing-file negative case | Outcome |
+|---|---|---|---|---|
+| Claude Code | Reported two skills in session-native catalog; paths confirmed by filesystem find | Visible `Skill(code-review)` succeeded; correctly proposed `a + b`; no edits | Visible `Skill(code-review)` succeeded; checked missing `nonexistent.py`; no invented review or edits | PASS for three smoke scenarios |
+| Codex | Reported two skills from native catalog, without reading skill files for discovery | Read `.agents/skills/code-review/SKILL.md` directly; correctly proposed `a + b`; no edits | Verified file missing; reused previously read skill instructions; no edits | PASS for three smoke scenarios; native invocation tool not observed |
+| OpenCode (Nemotron 3.5 Super VL Free) | `code-review` and `documentation` visible in `<available_skills>`; explicit `search(namespace=skills)` failed; exact path confirmed by filesystem inspection | Visible native `Skill "code-review"` call, reported `skill(id="code-review")` returned skill content; correctly proposed `a + b`; no edits | Verified file missing; reused prior skill context without another invocation; no edits | PASS for review and negative case; discovery mechanism partially verified |
+
+The OpenCode search-tool failure does **not** negate the successful native skill invocation in the next turn. Discovery-tool availability remains an evidence limitation, not a demonstrated incompatibility. The tests validate only the `code-review` skill and disposable local workflows; they do not establish comprehensive compatibility for all 31 skills, other models, or platforms. No release tag was created by this documentation update.
