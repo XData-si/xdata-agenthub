@@ -52,9 +52,9 @@ def validate():
                 failures.append(f"{label}: invalid YAML frontmatter boundaries")
             else:
                 header = content.split("---", 2)[1]
-                if not re.search(r"(?m)^name:\\s*" + re.escape(label) + r"\\s*$", header):
+                if not re.search(r"(?m)^name:\s*" + re.escape(label) + r"\s*$", header):
                     failures.append(f"{label}: frontmatter name mismatch")
-                if not re.search(r"(?m)^description:\\s*\\S", header):
+                if not re.search(r"(?m)^description:\s*\S", header):
                     failures.append(f"{label}: frontmatter description missing")
             for child in file.parent.rglob("*"):
                 if child.is_symlink() or (not child.is_file() and not child.is_dir()):
