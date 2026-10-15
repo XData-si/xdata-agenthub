@@ -180,5 +180,23 @@ class CliTests(unittest.TestCase):
             self.assertNotEqual(again.returncode, 0)
             self.assertIn("Error:", again.stderr)
 
+    def test_readme_has_no_literal_newline_escapes(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertNotIn(r"\\n", readme)
+        self.assertIn("## Supported project layouts", readme)
+        self.assertIn("| Claude Code |", readme)
+
+    def test_skill_frontmatter(self):
+        catalog = json.loads((ROOT / "registry/catalog.json").read_text(encoding="utf-8"))["items"]
+        for item in catalog:
+            if item["type"] != "skill":
+                continue
+            with self.subTest(skill=item["id"]):
+                content = (ROOT / item["path"]).read_text(encoding="utf-8")
+                self.assertTrue(content.startswith("---\\n"))
+                header = content.split("---", 2)[1]
+                self.assertIn("name: " + item["id"], header)
+                self.assertIn("description:", header)
+
 if __name__ == "__main__":
     unittest.main()
