@@ -1,6 +1,7 @@
 import json
 import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -79,6 +80,7 @@ class CliTests(unittest.TestCase):
                 self.assertIn("## Goal", content)
                 self.assertGreater(len(content), 1000)
 
+    @unittest.skipUnless(shutil.which('bash') and os.name != 'nt', 'Bash installer requires POSIX shell')
     def test_installer_repeat_upgrade_preserves_backups(self):
         with tempfile.TemporaryDirectory() as tmp:
             env = os.environ.copy()
@@ -93,6 +95,7 @@ class CliTests(unittest.TestCase):
                                     capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
 
+    @unittest.skipUnless(shutil.which('bash') and os.name != 'nt', 'Bash installer requires POSIX shell')
     def test_installer_refuses_unmanaged_launcher(self):
         with tempfile.TemporaryDirectory() as tmp:
             bin_dir = pathlib.Path(tmp) / "bin"
@@ -107,6 +110,7 @@ class CliTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(launcher.read_text(), "#!/bin/sh\\necho existing\\n")
 
+    @unittest.skipUnless(shutil.which('bash') and os.name != 'nt', 'Bash installer requires POSIX shell')
     def test_installer_upgrades_legacy_launcher(self):
         with tempfile.TemporaryDirectory() as tmp:
             prefix = pathlib.Path(tmp) / "share"
