@@ -36,3 +36,21 @@ The external directory contains heterogeneous items and risk labels. Its securit
 ## Policy
 
 No bulk scraping, no direct shell execution from listings, no automatic third-party installer invocation, no license assumptions, and no inflated catalog counts. The public curated catalog continues to count only locally shipped resources.
+
+## Source review notes — 2026-10-15
+
+### obra/superpowers
+- **Confirmed from upstream:** agentic workflow framework, real `skills/writing-skills/SKILL.md`, MIT license stated in repository README, and documented support for multiple agent clients.
+- **Operational consideration:** upstream README describes optional remote image telemetry for its visual companion; imported instructions and assets require explicit review before adoption.
+- **Decision:** retain as `skill_collection` candidate. No copying, execution or compatibility certification yet.
+- Sources: [repository](https://github.com/obra/superpowers), [writing-skills source](https://github.com/obra/superpowers/blob/main/skills/writing-skills/SKILL.md).
+
+### github/awesome-copilot
+- **Confirmed from upstream:** skills are packaged in directories with `SKILL.md` and may include bundled assets; the collection also includes agents, instructions and plugins. The repository describes its contents as community contributed and displays an MIT repository license.
+- **Decision:** retain as `skill_collection`; evaluate individual file provenance and instructions before import.
+- Sources: [repository](https://github.com/github/awesome-copilot), [skills documentation](https://github.com/github/awesome-copilot/blob/main/docs/README.skills.md).
+
+### modelcontextprotocol/servers and tooling references
+- MCP servers and tools such as promptfoo, Langfuse and LiteLLM are not automatically installable `SKILL.md` packages. Keep these entries in a separate discovery class until the registry and CLI explicitly support their resource type.
+
+**Review scope:** this is an initial source and packaging assessment, not a source-code security audit. No external candidate has been promoted into the 31 shipped skills.
