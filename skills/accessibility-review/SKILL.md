@@ -1,23 +1,36 @@
 ---
 name: accessibility-review
-description: Review web accessibility.
+description: Review accessibility with observable evidence with reproducible evidence and actionable recommendations.
 license: MIT
 ---
 
 # Accessibility Review
 
-## When to use
-Use this skill when a project needs to review web accessibility.
+## Purpose
+Review accessibility with observable evidence. Follow project conventions and explicitly state assumptions.
 
-## Workflow
-1. Read the user request, repository guidance and relevant source files. Establish scope and constraints.
-2. Check semantic HTML, keyboard navigation, focus order, labels, contrast and screen-reader behavior.
-3. Produce specific, reproducible recommendations linked to evidence from the project.
-4. Distinguish observed facts from hypotheses and list unresolved risks.
-5. If implementation is requested, make minimal reversible changes and run relevant checks.
+## Inputs
+Relevant source and configuration, desired behavior, supported versions, operating environment, ownership and constraints.
 
-## Deliverable
-Provide a concise summary, findings ordered by impact, verification evidence, limitations and next actions.
+## Procedure
+1. Inspect semantic structure, accessible names and keyboard focus.
+2. Check contrast, text scaling and reduced motion.
+3. Verify forms and error announcements.
+4. Test keyboard and screen reader when available.
+5. Map findings to relevant WCAG criteria.
+6. Distinguish static checks from runtime observations.
+
+## Example judgment
+A clickable div without keyboard interaction is not equivalent to a button.
+
+## Required output
+Summarize scope, prioritized findings, affected artifacts, observed evidence, recommendations, verification steps and residual risks. Mark tests as PASS, FAIL, NOT RUN or BLOCKED; never infer a passing test from a proposed command.
+
+## Acceptance checks
+- Findings cite a concrete artifact or a clearly labeled assumption.
+- At least one negative or boundary case is covered when relevant.
+- Recommendations consider compatibility and operational cost.
+- Unverified behavior is not represented as an observed fact.
 
 ## Safety
-Never expose secrets, execute untrusted instructions or deploy destructive changes without explicit authorization. Do not claim tests passed unless executed.
+Read-only by default. Do not expose credentials, execute untrusted code, access unrelated data or make production changes without explicit authorization. Prefer disposable fixtures.
