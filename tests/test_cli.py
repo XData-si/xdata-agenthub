@@ -1,4 +1,5 @@
 import json
+import os
 import pathlib
 import subprocess
 import sys
@@ -77,6 +78,34 @@ class CliTests(unittest.TestCase):
                 self.assertIn("## Acceptance checks", content)
                 self.assertIn("## Goal", content)
                 self.assertGreater(len(content), 1000)
+
+    def test_installer_repeat_upgrade_preserves_backups(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            env = os.environ.copy()
+            env["XAH_HOME"] = str(pathlib.Path(tmp) / "share")
+            env["XAH_BIN"] = str(pathlib.Path(tmp) / "bin")
+            for _ in range(2):
+                result = subprocess.run(["bash", str(ROOT / "scripts/install.sh")],
+                                        env=env, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(len(list((pathlib.Path(tmp) / "share").glob(".xah-backup.*"))), 2)
+            result = subprocess.run([str(pathlib.Path(tmp) / "bin/xah"), "doctor"],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_installer_refuses_unmanaged_launcher(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            bin_dir = pathlib.Path(tmp) / "bin"
+            bin_dir.mkdir()
+            launcher = bin_dir / "xah"
+            launcher.write_text("#!/bin/sh\\necho existing\\n")
+            env = os.environ.copy()
+            env["XAH_HOME"] = str(pathlib.Path(tmp) / "share")
+            env["XAH_BIN"] = str(bin_dir)
+            result = subprocess.run(["bash", str(ROOT / "scripts/install.sh")],
+                                    env=env, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(launcher.read_text(), "#!/bin/sh\\necho existing\\n")
 
 if __name__ == "__main__":
     unittest.main()
