@@ -11,8 +11,8 @@
 - [ ] Create GitHub issue templates, Discussions, repository topics and homepage.
 
 ## P1 — compelling product
-- [ ] Add 25+ original, useful skills with tested examples and acceptance checks.
-- [ ] Build adapters for Claude Code, Codex and OpenCode with explicit compatibility tests.
+- [x] Add 25+ original skills (31 currently).\n- [ ] Deepen each skill with domain-specific examples, fixtures and acceptance checks.
+- [x] Add path-based skill installers for Claude Code, Codex and OpenCode with unit tests.\n- [ ] Verify actual client discovery in supported versions; implement semantic adapters where needed.
 - [x] Add basic `xah init` starter profiles and dry-run mode.
 - [ ] Add interactive stack builder, richer profiles and agent-specific adapters.
 - [ ] Add provenance manifests, license metadata and version pinning.
