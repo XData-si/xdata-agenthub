@@ -198,5 +198,27 @@ class CliTests(unittest.TestCase):
                 self.assertIn("name: " + item["id"], header)
                 self.assertIn("description:", header)
 
+    def test_add_installs_complete_skill_package(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli("add", "api-design", "--agent", "codex", "--target", tmp)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            root = pathlib.Path(tmp) / ".agents/skills/api-design"
+            self.assertTrue((root / "SKILL.md").is_file())
+            self.assertTrue((root / "references/REVIEW_CHECKLIST.md").is_file())
+            self.assertTrue((root / "assets/openapi-example.yaml").is_file())
+            second = self.run_cli("add", "api-design", "--agent", "codex", "--target", tmp)
+            self.assertNotEqual(second.returncode, 0)
+
+    def test_package_collision_prevents_partial_copy(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp) / ".claude/skills/api-design"
+            (root / "references").mkdir(parents=True)
+            existing = root / "references/REVIEW_CHECKLIST.md"
+            existing.write_text("keep original")
+            result = self.run_cli("add", "api-design", "--agent", "claude", "--target", tmp)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(existing.read_text(), "keep original")
+            self.assertFalse((root / "SKILL.md").exists())
+
 if __name__ == "__main__":
     unittest.main()
