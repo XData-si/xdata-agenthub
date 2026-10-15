@@ -101,3 +101,31 @@ def record_install(target, item_id, planned):
             raise ValueError(f"Missing installed file: {rel}")
         data["files"][rel] = {"sha256": _digest(destination), "item_id": item_id}
     save_manifest(target, data)
+
+def record_installs(target, ownership, planned, copier):
+    """Preflight the manifest and persist all files as one unit; undo copies on failure."""
+    data = load_manifest(target)
+    if len({str(dest) for _, dest in ownership}) != len(ownership):
+        raise ValueError("Duplicate installation destination")
+    for item_id, dest in ownership:
+        rel = _relative(target, dest)
+        if rel in data["files"]:
+            raise ValueError(f"Already tracked: {rel}")
+    manifest_path = target / MANIFEST_NAME
+    if manifest_path.is_symlink():
+        raise ValueError("Symlinked manifest refused")
+    temp_path = target / (MANIFEST_NAME + ".tmp")
+    if temp_path.exists() or temp_path.is_symlink():
+        raise ValueError("Temporary manifest path already exists")
+    copier(planned)
+    try:
+        for item_id, dest in ownership:
+            rel = _relative(target, dest)
+            if not dest.is_file():
+                raise ValueError(f"Missing installed file: {rel}")
+            data["files"][rel] = {"sha256": _digest(dest), "item_id": item_id}
+        save_manifest(target, data)
+    except Exception:
+        for _, dest in reversed(planned):
+            dest.unlink(missing_ok=True)
+        raise
