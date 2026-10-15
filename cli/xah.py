@@ -8,6 +8,7 @@ import shutil
 import platform
 import sys
 from catalog_schema import validate_catalog
+from installed_manifest import file_states, record_install, load_manifest
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "registry" / "catalog.json"
@@ -114,6 +115,8 @@ def main():
     init.add_argument("--profile", choices=["developer", "research", "devops"], default="developer")
     init.add_argument("--dry-run", action="store_true")
     init.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
+    status = sub.add_parser("status", help="Report installed-file modification states")
+    status.add_argument("--target", default=".")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
@@ -127,6 +130,12 @@ def main():
             item = entry(args.id)
             print(f'# {item["name"]} ({item["id"]})\nSource: {item["source"]}\nLicense: {item["license"]}\n')
             print(source(item).read_text(encoding="utf-8"))
+        elif args.cmd == "status":
+            target = pathlib.Path(args.target).expanduser().resolve()
+            if not target.is_dir():
+                raise ValueError("Target must be an existing directory")
+            for rel, state in file_states(target).items():
+                print(f"{state:10} {rel}")
         elif args.cmd == "doctor":
             print(f"Python: {platform.python_version()}")
             print(f"Catalog: {CATALOG}")
@@ -154,12 +163,22 @@ def main():
             planned = []
             for item_id in profiles[args.profile]:
                 planned.extend(install_plan(entry(item_id), target, args.agent))
+            if not args.dry_run:
+                load_manifest(target)
             copy_plan(planned, args.dry_run)
+            if not args.dry_run:
+                for item_id in profiles[args.profile]:
+                    item_plan = [(src, dest) for src, dest in planned if (item_id == "project-agents" and dest.name in ("AGENTS.md", "CLAUDE.md")) or (item_id != "project-agents" and item_id in dest.parts)]
+                    if item_plan:
+                        record_install(target, item_id, item_plan)
         elif args.cmd == "add":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
-            copy_plan(install_plan(entry(args.id), target, args.agent))
+            load_manifest(target)
+            planned = install_plan(entry(args.id), target, args.agent)
+            copy_plan(planned)
+            record_install(target, args.id, planned)
         elif args.cmd == "audit":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
