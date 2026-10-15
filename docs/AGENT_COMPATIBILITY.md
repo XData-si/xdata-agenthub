@@ -20,3 +20,7 @@ python3 cli/xah.py init --agent claude --profile developer --target /tmp/agenthu
 No file is overwritten. The current implementation installs project guidance as a plain Markdown copy; future releases should provide native, validated agent-specific instructions.
 
 References: [Claude skills](https://code.claude.com/docs/en/skills), [OpenCode skills](https://docs.opencode.ai/docs/skills/), [OpenAI agents examples](https://github.com/openai/openai-agents-python).
+
+## Runtime verification
+
+Use [AGENT_RUNTIME_TESTS.md](AGENT_RUNTIME_TESTS.md) to record real skill discovery and invocation for each client version. The compatibility table above documents intended installation paths, **not** verified runtime compatibility.
