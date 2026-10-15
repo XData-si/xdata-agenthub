@@ -1,7 +1,7 @@
 # TODO — What remains before a public launch
 
 ## P0 — must do
-- [ ] Move this scaffold out of the private bridge folder into a dedicated **public** GitHub repository; confirm ownership and visibility.
+- [x] Move this scaffold into a dedicated **public** GitHub repository; confirm ownership and visibility.
 - [ ] Review name and branding with XData; create original logo and social preview (1280×640).
 - [ ] Run smoke tests on Linux, macOS and Windows (WSL); test Python 3.10–3.13.
 - [ ] Perform security review of installer, path handling and untrusted Markdown content.
@@ -13,7 +13,8 @@
 ## P1 — compelling product
 - [ ] Add 25+ original, useful skills with tested examples and acceptance checks.
 - [ ] Build adapters for Claude Code, Codex and OpenCode with explicit compatibility tests.
-- [ ] Add `xah init` interactive stack builder and dry-run mode.
+- [x] Add basic `xah init` starter profiles and dry-run mode.
+- [ ] Add interactive stack builder, richer profiles and agent-specific adapters.
 - [ ] Add provenance manifests, license metadata and version pinning.
 - [ ] Implement meaningful security scanning (the current audit is only a simple heuristic).
 - [ ] Build a browsable searchable website and documentation.
