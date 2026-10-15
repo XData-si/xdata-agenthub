@@ -45,6 +45,8 @@ xah --help
 
 See [compatibility details](docs/AGENT_COMPATIBILITY.md) and [demo storyboard](docs/SHOWCASE.md). These are path-level adapters, not full semantic conversions.
 
+See the [categorized skill catalog](docs/CATALOG.md) for all entries and their intended uses.
+
 ## What's included
 - **Skills**: reusable capabilities for code review, testing, API design, infrastructure, security and agent workflows; quality and depth vary by entry.
 - **Instructions**: portable AGENTS.md starter for repositories.
@@ -61,7 +63,7 @@ See [compatibility details](docs/AGENT_COMPATIBILITY.md) and [demo storyboard](d
 5. No misleading star counters, fake usage statistics or inflated catalog counts.
 
 ## Roadmap
-See [TODO.md](TODO.md), [ROADMAP.md](ROADMAP.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+See [TODO.md](TODO.md), [ROADMAP.md](ROADMAP.md), [architecture](docs/ARCHITECTURE.md) and the [release process](docs/RELEASE_PROCESS.md).
 
 ## Community
 See [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [SECURITY.md](SECURITY.md). Contributions are welcome. See [Quickstart](docs/QUICKSTART.md) and [Launch checklist](docs/LAUNCH_CHECKLIST.md).
