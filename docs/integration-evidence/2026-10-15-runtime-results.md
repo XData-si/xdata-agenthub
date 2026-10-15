@@ -33,3 +33,17 @@ Result: **PASS for skill-instruction consumption and static analysis of the synt
 The review identified concatenation of untrusted input into SQL as a potential injection risk, distinguished source-observed concatenation from conditional exploitability, noted unknown database adapter and input validation, and recommended adapter-specific parameter binding. It proposed a recording-fake-database test and isolated in-memory regression checks. No code or tests were executed and no files were modified according to the transcript.
 
 Limitations: operator-supplied transcript only; no real application assessed, no exploitability demonstrated, and no regression test executed.
+
+## Python testing: Codex CLI 0.162.1
+
+Operator-provided transcript, 2026-10-15. Codex directly read `.agents/skills/python-testing/SKILL.md`, `AGENTS.md`, and `EXTENDED_SKILL_TESTS.md`; native skill-loader invocation was **not verified**.
+
+Result: **PASS for skill-instruction consumption and regression-test execution**. In the disposable `calculator-regression-disposable` directory, the agent created `calculator.py` with intentionally incorrect subtraction and `test_calculator.py` asserting `add(2, 3) == 5`. It ran:
+
+```sh
+python -B -m unittest discover -s /tmp/xah-runtime-codex/calculator-regression-disposable -p 'test_*.py' -v
+```
+
+Observed test process exit code **1**, one test run, one expected assertion failure: `AssertionError: -1 != 5`. The agent reported no changes outside the disposable directory and did not fix the intentionally incorrect implementation. A failing regression test is the expected successful outcome for this fixture.
+
+Limitations: operator-supplied transcript; no cross-client testing of this skill yet.
