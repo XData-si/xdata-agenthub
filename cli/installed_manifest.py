@@ -18,7 +18,7 @@ def _digest(path):
 def _relative(target, destination):
     target = target.resolve()
     # Reject symlinked destinations and any symlinked parent.
-    raw = Path(destination)
+    raw = Path(destination).absolute()
     if not raw.is_relative_to(target):
         raise ValueError("Manifest destination outside target")
     rel = raw.relative_to(target)
