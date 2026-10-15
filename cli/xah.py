@@ -26,6 +26,70 @@ def source(item):
         raise ValueError("Unsafe or missing catalog path")
     return path
 
+def skill_files(item):
+    """Inspect complete local skill package without following symlinks."""
+    main_file = source(item)
+    if item["type"] != "skill":
+        return [(main_file, pathlib.Path(main_file.name))]
+    root = main_file.parent
+    found = []
+    for candidate in sorted(root.rglob("*")):
+        if candidate.is_symlink():
+            raise ValueError(f"Symlink in skill package refused: {candidate}")
+        if candidate.is_dir():
+            continue
+        if not candidate.is_file() or not candidate.resolve().is_relative_to(root.resolve()):
+            raise ValueError(f"Unsafe skill package entry: {candidate}")
+        found.append((candidate, candidate.relative_to(root)))
+    return found
+
+
+def install_plan(item, target, agent):
+    roots = {"generic": "skills", "claude": ".claude/skills",
+             "codex": ".agents/skills", "opencode": ".opencode/skills"}
+    if item["type"] == "skill":
+        base = pathlib.Path(roots[agent]) / item["id"]
+        package = skill_files(item)
+        if not any(rel == pathlib.Path("SKILL.md") for _, rel in package):
+            raise ValueError("Missing SKILL.md in skill package")
+        planned = [(src, target / base / rel) for src, rel in package]
+    else:
+        rel = pathlib.Path(item["path"])
+        if rel.is_absolute() or ".." in rel.parts:
+            raise ValueError("Unsafe destination")
+        if item["id"] == "project-agents" and agent != "generic":
+            rel = pathlib.Path("CLAUDE.md" if agent == "claude" else "AGENTS.md")
+        planned = [(source(item), target / rel)]
+    for _, dest in planned:
+        if dest.exists() or dest.is_symlink():
+            raise ValueError(f"Destination already exists: {dest}")
+        for parent in dest.parents:
+            if parent == target.parent:
+                break
+            if parent.is_symlink():
+                raise ValueError(f"Symlink destination refused: {parent}")
+    return planned
+
+
+def copy_plan(planned, dry_run=False):
+    if dry_run:
+        for _, dest in planned:
+            print(f"Would install: {dest}")
+        return
+    written = []
+    try:
+        for src, dest in planned:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            with dest.open("xb") as handle:
+                handle.write(src.read_bytes())
+            written.append(dest)
+            print(f"Installed: {dest}")
+    except OSError:
+        for dest in reversed(written):
+            dest.unlink(missing_ok=True)
+        raise
+
+
 def main():
     parser = argparse.ArgumentParser(prog="xah", description="XData AgentHub — portable agent resources")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -79,56 +143,14 @@ def main():
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             planned = []
-            agent_roots = {"generic": "skills", "claude": ".claude/skills", "codex": ".agents/skills", "opencode": ".opencode/skills"}
             for item_id in profiles[args.profile]:
-                item = entry(item_id)
-                src = source(item)
-                rel = pathlib.Path(item["path"])
-                if rel.is_absolute() or ".." in rel.parts:
-                    raise ValueError("Unsafe destination")
-                if item["type"] == "skill":
-                    rel = pathlib.Path(agent_roots[args.agent]) / item["id"] / "SKILL.md"
-                elif item["id"] == "project-agents" and args.agent != "generic":
-                    rel = pathlib.Path("AGENTS.md" if args.agent == "codex" else ("CLAUDE.md" if args.agent == "claude" else "AGENTS.md"))
-                dest = target / rel
-                if dest.exists() or dest.is_symlink():
-                    raise ValueError(f"Destination already exists: {dest}")
-                parent = dest.parent
-                while parent != target.parent:
-                    if parent.is_symlink():
-                        raise ValueError(f"Symlink destination refused: {parent}")
-                    if parent == target:
-                        break
-                    parent = parent.parent
-                planned.append((src, dest))
-            for src, dest in planned:
-                if args.dry_run:
-                    print(f"Would install: {dest}")
-                    continue
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                with dest.open("x", encoding="utf-8") as handle:
-                    handle.write(src.read_text(encoding="utf-8"))
-                print(f"Installed: {dest}")
+                planned.extend(install_plan(entry(item_id), target, args.agent))
+            copy_plan(planned, args.dry_run)
         elif args.cmd == "add":
-            item = entry(args.id)
-            src = source(item)
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
-            # Avoid overwriting an existing AGENTS.md and avoid symlink traversal.
-            rel = pathlib.Path(item["path"])
-            if rel.is_absolute() or ".." in rel.parts:
-                raise ValueError("Unsafe destination")
-            if item["type"] == "skill" and args.agent != "generic":
-                agent_roots = {"claude": ".claude/skills", "codex": ".agents/skills", "opencode": ".opencode/skills"}
-                rel = pathlib.Path(agent_roots[args.agent]) / item["id"] / "SKILL.md"
-            dest = target / rel
-            if dest.is_symlink() or any(p.is_symlink() for p in dest.parents if p != target.parent):
-                raise ValueError("Symlink destination refused")
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            with dest.open("x", encoding="utf-8") as handle:
-                handle.write(src.read_text(encoding="utf-8"))
-            print(f"Installed {item['id']} -> {dest}")
+            copy_plan(install_plan(entry(args.id), target, args.agent))
         elif args.cmd == "audit":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
