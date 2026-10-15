@@ -5,7 +5,7 @@
 - [x] README, contributing, security and MIT license
 - [x] CI workflow committed
 - [x] Baseline cross-platform CI passed (run 38812938810; prior to latest release changes)
-- [ ] Confirm latest release-gate CI passes on GitHub Actions
+- [x] Release-validation workflow reported successful by operator on 2026-10-15 (cross-platform and Linux installer); exact run URL/SHA still to be recorded
 - [ ] Verify macOS, Linux and Windows/WSL behavior
 - [x] Source-level review of installer, launcher and symlink protections (see SECURITY_RELEASE_REVIEW.md)
 - [ ] Verify interrupted-upgrade recovery and restore from backup
@@ -17,6 +17,6 @@
 
 ## v0.1.0 release blockers
 - [ ] Final release validation on exact release commit, including provenance gate and audit
-- [ ] Native Claude Code, Codex and OpenCode end-to-end evidence (not merely file reads)
+- [x] Claude Code, Codex and OpenCode code-review smoke-test evidence documented (native invocation observed for Claude/OpenCode; Codex used SKILL.md directly; OpenCode discovery partial). See docs/integration-evidence/2026-10-15-runtime-results.md
 - [ ] Fresh install from release candidate tag and documented archive SHA-256
 - [ ] Publish GitHub release only after checks pass
