@@ -7,12 +7,13 @@ import re
 import shutil
 import platform
 import sys
+from catalog_schema import validate_catalog
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "registry" / "catalog.json"
 
 def items():
-    return json.loads(CATALOG.read_text(encoding="utf-8"))["items"]
+    return validate_catalog(json.loads(CATALOG.read_text(encoding="utf-8")))
 
 def entry(item_id):
     for item in items():
