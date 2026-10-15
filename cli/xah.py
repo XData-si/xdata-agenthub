@@ -41,6 +41,7 @@ def main():
     init.add_argument("--target", default=".")
     init.add_argument("--profile", choices=["developer", "research", "devops"], default="developer")
     init.add_argument("--dry-run", action="store_true")
+    init.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
@@ -77,12 +78,17 @@ def main():
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             planned = []
+            agent_roots = {"generic": "skills", "claude": ".claude/skills", "codex": ".agents/skills", "opencode": ".opencode/skills"}
             for item_id in profiles[args.profile]:
                 item = entry(item_id)
                 src = source(item)
                 rel = pathlib.Path(item["path"])
                 if rel.is_absolute() or ".." in rel.parts:
                     raise ValueError("Unsafe destination")
+                if item["type"] == "skill":
+                    rel = pathlib.Path(agent_roots[args.agent]) / item["id"] / "SKILL.md"
+                elif item["id"] == "project-agents" and args.agent != "generic":
+                    rel = pathlib.Path("AGENTS.md" if args.agent == "codex" else ("CLAUDE.md" if args.agent == "claude" else "AGENTS.md"))
                 dest = target / rel
                 if dest.exists() or dest.is_symlink():
                     raise ValueError(f"Destination already exists: {dest}")
