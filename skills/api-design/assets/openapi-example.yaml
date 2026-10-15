@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: Example Items API
+  version: 0.1.0
+paths:
+  /items/{id}:
+    get:
+      summary: Retrieve an item owned by the authenticated caller
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Item found and authorized
+        "401":
+          description: Authentication required
+        "403":
+          description: Forbidden
+        "404":
+          description: Item not found
