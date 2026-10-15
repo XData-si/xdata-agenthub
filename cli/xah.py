@@ -115,6 +115,11 @@ def main():
     init.add_argument("--profile", choices=["developer", "research", "devops"], default="developer")
     init.add_argument("--dry-run", action="store_true")
     init.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
+    update = sub.add_parser("update", help="Preview updates to a tracked item (read-only)")
+    update.add_argument("id")
+    update.add_argument("--target", default=".")
+    update.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
+    update.add_argument("--dry-run", action="store_true", required=True)
     status = sub.add_parser("status", help="Report installed-file modification states")
     status.add_argument("--target", default=".")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
@@ -130,6 +135,28 @@ def main():
             item = entry(args.id)
             print(f'# {item["name"]} ({item["id"]})\nSource: {item["source"]}\nLicense: {item["license"]}\n')
             print(source(item).read_text(encoding="utf-8"))
+        elif args.cmd == "update":
+            from update_plan import plan_update
+            target = pathlib.Path(args.target).expanduser().resolve()
+            if not target.is_dir():
+                raise ValueError("Target must be an existing directory")
+            item = entry(args.id)
+            roots = {"generic": "skills", "claude": ".claude/skills", "codex": ".agents/skills", "opencode": ".opencode/skills"}
+            if item["type"] == "skill":
+                base = pathlib.Path(roots[args.agent]) / item["id"]
+                planned = [(src, target / base / rel) for src, rel in skill_files(item)]
+            else:
+                rel = pathlib.Path(item["path"])
+                if rel.is_absolute() or ".." in rel.parts or "\\\\" in item["path"]:
+                    raise ValueError("Unsafe destination")
+                if item["id"] == "project-agents" and args.agent != "generic":
+                    rel = pathlib.Path("CLAUDE.md" if args.agent == "claude" else "AGENTS.md")
+                planned = [(source(item), target / rel)]
+            result = plan_update(target, args.id, planned)
+            for action, rel in result:
+                print(f"{action:10} {rel}")
+            if any(action == "conflict" for action, _ in result):
+                return 2
         elif args.cmd == "status":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
