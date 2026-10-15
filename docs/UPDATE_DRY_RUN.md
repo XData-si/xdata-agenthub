@@ -16,3 +16,13 @@ This command **never writes files**, and requires the explicit `--dry-run` flag.
 Exit code `2` means at least one conflict. Exit code `1` means invalid arguments, unsafe paths or malformed manifest. No automatic overwrite or update is implemented in XAH-203; apply and rollback belong to later milestones.
 
 The plan uses the currently bundled local source, so it is offline and deterministic for a fixed catalog and target. It does not contact upstream registries.
+
+## Apply and recovery (XAH-204)
+
+Preview first: `xah update code-review --target ./project --dry-run`.
+Only when the preview is conflict-free, explicitly run
+`xah update code-review --target ./project --apply`.
+
+The updater refuses unmanaged, missing, modified or symlinked destinations. It stages replacement content in the destination directory, updates the manifest after file writes, and restores previous bytes on ordinary exceptions. Tests inject failure after multiple replacements.
+
+**Limitations:** This is not crash-safe. Power loss or forced termination during the operation can leave partial updates. Stop and inspect `xah status --target ./project`, compare affected files with the catalog and your backups, then manually restore or reinstall as appropriate. If rollback itself fails, the command reports `ROLLBACK INCOMPLETE`; do not rerun blindly. Concurrent writers are not supported; run updates in an exclusive workspace and keep a version-control checkpoint or backup. File permission and timestamp metadata are not guaranteed to be restored.
