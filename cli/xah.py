@@ -32,6 +32,8 @@ def skill_files(item):
     if item["type"] != "skill":
         return [(main_file, pathlib.Path(main_file.name))]
     root = main_file.parent
+    if pathlib.Path(ROOT / item["path"]).is_symlink() or root.is_symlink():
+        raise ValueError("Symlinked skill entry refused")
     found = []
     for candidate in sorted(root.rglob("*")):
         if candidate.is_symlink():
@@ -48,6 +50,8 @@ def install_plan(item, target, agent):
     roots = {"generic": "skills", "claude": ".claude/skills",
              "codex": ".agents/skills", "opencode": ".opencode/skills"}
     if item["type"] == "skill":
+        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", item["id"]):
+            raise ValueError("Unsafe skill identifier")
         base = pathlib.Path(roots[agent]) / item["id"]
         package = skill_files(item)
         if not any(rel == pathlib.Path("SKILL.md") for _, rel in package):
@@ -55,12 +59,14 @@ def install_plan(item, target, agent):
         planned = [(src, target / base / rel) for src, rel in package]
     else:
         rel = pathlib.Path(item["path"])
-        if rel.is_absolute() or ".." in rel.parts:
+        if rel.is_absolute() or ".." in rel.parts or "\\" in item["path"]:
             raise ValueError("Unsafe destination")
         if item["id"] == "project-agents" and agent != "generic":
             rel = pathlib.Path("CLAUDE.md" if agent == "claude" else "AGENTS.md")
         planned = [(source(item), target / rel)]
     for _, dest in planned:
+        if not dest.is_relative_to(target):
+            raise ValueError("Destination escapes target")
         if dest.exists() or dest.is_symlink():
             raise ValueError(f"Destination already exists: {dest}")
         for parent in dest.parents:
@@ -132,6 +138,8 @@ def main():
                     raise ValueError("Duplicate catalog ID: " + item["id"])
                 seen.add(item["id"])
                 source(item)
+                if item["type"] == "skill":
+                    skill_files(item)
             print(f"OK: {len(catalog)} catalog entries, all local paths valid")
         elif args.cmd == "init":
             profiles = {
