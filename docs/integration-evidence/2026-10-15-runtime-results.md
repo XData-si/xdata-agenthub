@@ -1,0 +1,15 @@
+# Runtime skill integration results (2026-10-15)
+
+Scope: developer profile, local disposable workspaces, code-review skill only. Evidence supplied as terminal excerpts by the operator; raw machine logs not retained in this repository.
+
+| Client | Version | Discovery | Skill usage | Negative test | Status |
+|---|---|---|---|---|---|
+| Claude Code | 2.1.301 | PASS | Agent reported native Skill invocation; direct trace not provided | PASS | Provisional |
+| Codex CLI | 0.162.1 | PASS | Read local code-review SKILL.md in tool trace | PASS | Verified for tested scenario |
+| OpenCode | 2.0.11 | PASS | Native Skill tool invocation visible | PASS | Verified for tested scenario |
+
+All three identified a defect in a sample add function returning subtraction and proposed addition. Claude Code additionally reported executing the corrected function with add(2,3)==5. OpenCode ran using Nemotron 3.5 Super VL Free. The model versions for other clients were not recorded.
+
+Verified means only the specified scenario was demonstrated. It does not certify every skill, every client version, or production safety. Claude Code requires an independently visible native Skill invocation trace to upgrade its status.
+
+Next: collect redacted raw traces, model identifiers, and repeat tests with other skills. See docs/AGENT_RUNTIME_TESTS.md.
