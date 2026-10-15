@@ -161,24 +161,23 @@ def main():
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             planned = []
+            ownership = []
             for item_id in profiles[args.profile]:
-                planned.extend(install_plan(entry(item_id), target, args.agent))
-            if not args.dry_run:
-                load_manifest(target)
-            copy_plan(planned, args.dry_run)
-            if not args.dry_run:
-                for item_id in profiles[args.profile]:
-                    item_plan = [(src, dest) for src, dest in planned if (item_id == "project-agents" and dest.name in ("AGENTS.md", "CLAUDE.md")) or (item_id != "project-agents" and item_id in dest.parts)]
-                    if item_plan:
-                        record_install(target, item_id, item_plan)
+                item_plan = install_plan(entry(item_id), target, args.agent)
+                planned.extend(item_plan)
+                ownership.extend((item_id, dest) for _, dest in item_plan)
+            if args.dry_run:
+                copy_plan(planned, True)
+            else:
+                from installed_manifest import record_installs
+                record_installs(target, ownership, planned, copy_plan)
         elif args.cmd == "add":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
-            load_manifest(target)
             planned = install_plan(entry(args.id), target, args.agent)
-            copy_plan(planned)
-            record_install(target, args.id, planned)
+            from installed_manifest import record_installs
+            record_installs(target, [(args.id, dest) for _, dest in planned], planned, copy_plan)
         elif args.cmd == "audit":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
