@@ -107,5 +107,23 @@ class CliTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(launcher.read_text(), "#!/bin/sh\\necho existing\\n")
 
+    def test_installer_upgrades_legacy_launcher(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            prefix = pathlib.Path(tmp) / "share"
+            bin_dir = pathlib.Path(tmp) / "bin"
+            bin_dir.mkdir()
+            legacy = '#!/usr/bin/env bash\\nexec python3 "' + str(prefix) + '/cli/xah.py" "$@"\\n'
+            (bin_dir / "xah").write_text(legacy)
+            env = os.environ.copy()
+            env["XAH_HOME"] = str(prefix)
+            env["XAH_BIN"] = str(bin_dir)
+            result = subprocess.run(["bash", str(ROOT / "scripts/install.sh")],
+                                    env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("XData AgentHub managed launcher", (bin_dir / "xah").read_text())
+            check = subprocess.run([str(bin_dir / "xah"), "doctor"],
+                                   capture_output=True, text=True)
+            self.assertEqual(check.returncode, 0, check.stderr)
+
 if __name__ == "__main__":
     unittest.main()
