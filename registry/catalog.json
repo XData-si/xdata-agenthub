@@ -60,6 +60,306 @@
       "targets": [
         "generic"
       ]
+    },
+    {
+      "id": "api-design",
+      "type": "skill",
+      "name": "Api Design",
+      "description": "Review and guide api design workflows",
+      "path": "skills/api-design/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "python-testing",
+      "type": "skill",
+      "name": "Python Testing",
+      "description": "Review and guide python testing workflows",
+      "path": "skills/python-testing/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "typescript-testing",
+      "type": "skill",
+      "name": "Typescript Testing",
+      "description": "Review and guide typescript testing workflows",
+      "path": "skills/typescript-testing/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "security-review",
+      "type": "skill",
+      "name": "Security Review",
+      "description": "Review and guide security review workflows",
+      "path": "skills/security-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "docker-hardening",
+      "type": "skill",
+      "name": "Docker Hardening",
+      "description": "Review and guide docker hardening workflows",
+      "path": "skills/docker-hardening/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "kubernetes-review",
+      "type": "skill",
+      "name": "Kubernetes Review",
+      "description": "Review and guide kubernetes review workflows",
+      "path": "skills/kubernetes-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "terraform-review",
+      "type": "skill",
+      "name": "Terraform Review",
+      "description": "Review and guide terraform review workflows",
+      "path": "skills/terraform-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "postgres-performance",
+      "type": "skill",
+      "name": "Postgres Performance",
+      "description": "Review and guide postgres performance workflows",
+      "path": "skills/postgres-performance/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "rag-evaluation",
+      "type": "skill",
+      "name": "Rag Evaluation",
+      "description": "Review and guide rag evaluation workflows",
+      "path": "skills/rag-evaluation/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "prompt-injection-defense",
+      "type": "skill",
+      "name": "Prompt Injection Defense",
+      "description": "Review and guide prompt injection defense workflows",
+      "path": "skills/prompt-injection-defense/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "llm-cost-analysis",
+      "type": "skill",
+      "name": "Llm Cost Analysis",
+      "description": "Review and guide llm cost analysis workflows",
+      "path": "skills/llm-cost-analysis/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "incident-response",
+      "type": "skill",
+      "name": "Incident Response",
+      "description": "Review and guide incident response workflows",
+      "path": "skills/incident-response/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "observability",
+      "type": "skill",
+      "name": "Observability",
+      "description": "Review and guide observability workflows",
+      "path": "skills/observability/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "gitlab-ci",
+      "type": "skill",
+      "name": "Gitlab Ci",
+      "description": "Review and guide gitlab ci workflows",
+      "path": "skills/gitlab-ci/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "github-actions",
+      "type": "skill",
+      "name": "Github Actions",
+      "description": "Review and guide github actions workflows",
+      "path": "skills/github-actions/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "release-management",
+      "type": "skill",
+      "name": "Release Management",
+      "description": "Review and guide release management workflows",
+      "path": "skills/release-management/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "architecture-decision",
+      "type": "skill",
+      "name": "Architecture Decision",
+      "description": "Review and guide architecture decision workflows",
+      "path": "skills/architecture-decision/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "accessibility-review",
+      "type": "skill",
+      "name": "Accessibility Review",
+      "description": "Review and guide accessibility review workflows",
+      "path": "skills/accessibility-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "performance-profiling",
+      "type": "skill",
+      "name": "Performance Profiling",
+      "description": "Review and guide performance profiling workflows",
+      "path": "skills/performance-profiling/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "dependency-audit",
+      "type": "skill",
+      "name": "Dependency Audit",
+      "description": "Review and guide dependency audit workflows",
+      "path": "skills/dependency-audit/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
     }
   ]
 }
