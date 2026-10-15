@@ -8,7 +8,9 @@
 
 **XData AgentHub is a public alpha project.** No unsupported claims of certification or compatibility. This project currently ships a dependency-free Python CLI and local curated templates; it does **not** install arbitrary remote code.
 
-**34 curated local resources · 31 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.\n\n## Why
+**34 curated local resources · 31 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.
+
+## Why
 AI development instructions are scattered across repositories and incompatible conventions. AgentHub starts with a small, inspectable catalog and a local-first installer.
 
 ## Quick start
@@ -22,8 +24,8 @@ mkdir -p /tmp/xah-demo
 python3 cli/xah.py init --agent claude --profile developer --target /tmp/xah-demo --dry-run
 python3 cli/xah.py init --agent claude --profile developer --target /tmp/xah-demo
 python3 cli/xah.py inspect code-review
-python3 cli/xah.py add mcp-review --agent codex --target /path/to/your/project
-python3 cli/xah.py audit --target /path/to/your/project
+python3 cli/xah.py add mcp-review --agent claude --target /tmp/xah-demo
+python3 cli/xah.py audit --target /tmp/xah-demo
 ```
 
 Install the CLI to your user directory (no sudo):
@@ -33,7 +35,17 @@ bash scripts/install.sh
 xah --help
 ```
 
-## Supported project layouts\n\n| Target | Skill path | Guidance |\n|---|---|---|\n| Claude Code | `.claude/skills/` | `CLAUDE.md` |\n| Codex | `.agents/skills/` | `AGENTS.md` |\n| OpenCode | `.opencode/skills/` | `AGENTS.md` |\n\nSee [compatibility details](docs/AGENT_COMPATIBILITY.md) and [demo storyboard](docs/SHOWCASE.md). These are path-level adapters, not full semantic conversions.\n\n## What's included
+## Supported project layouts
+
+| Target | Skill path | Guidance |
+|---|---|---|
+| Claude Code | `.claude/skills/` | `CLAUDE.md` |
+| Codex | `.agents/skills/` | `AGENTS.md` |
+| OpenCode | `.opencode/skills/` | `AGENTS.md` |
+
+See [compatibility details](docs/AGENT_COMPATIBILITY.md) and [demo storyboard](docs/SHOWCASE.md). These are path-level adapters, not full semantic conversions.
+
+## What's included
 - **Skills**: reusable capabilities for code review, testing, API design, infrastructure, security and agent workflows; quality and depth vary by entry.
 - **Instructions**: portable AGENTS.md starter for repositories.
 - **Agents**: example agent roles, not running autonomous services.
