@@ -169,5 +169,16 @@ class CliTests(unittest.TestCase):
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
             self.assertIn("REVIEW:", result.stdout)
 
+    def test_add_skill_to_codex_native_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self.run_cli("add", "mcp-review", "--agent", "codex", "--target", tmp)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            dest = pathlib.Path(tmp) / ".agents/skills/mcp-review/SKILL.md"
+            self.assertTrue(dest.is_file())
+            self.assertIn("name: mcp-review", dest.read_text(encoding="utf-8"))
+            again = self.run_cli("add", "mcp-review", "--agent", "codex", "--target", tmp)
+            self.assertNotEqual(again.returncode, 0)
+            self.assertIn("Error:", again.stderr)
+
 if __name__ == "__main__":
     unittest.main()
