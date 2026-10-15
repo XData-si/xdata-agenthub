@@ -360,6 +360,141 @@
         "codex",
         "opencode"
       ]
+    },
+    {
+      "id": "api-integration",
+      "type": "skill",
+      "name": "Api Integration",
+      "description": "Review and guide api integration workflows",
+      "path": "skills/api-integration/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "backup-restore",
+      "type": "skill",
+      "name": "Backup Restore",
+      "description": "Review and guide backup restore workflows",
+      "path": "skills/backup-restore/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "secrets-management",
+      "type": "skill",
+      "name": "Secrets Management",
+      "description": "Review and guide secrets management workflows",
+      "path": "skills/secrets-management/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "agent-evaluation",
+      "type": "skill",
+      "name": "Agent Evaluation",
+      "description": "Review and guide agent evaluation workflows",
+      "path": "skills/agent-evaluation/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "data-privacy",
+      "type": "skill",
+      "name": "Data Privacy",
+      "description": "Review and guide data privacy workflows",
+      "path": "skills/data-privacy/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "mcp-review",
+      "type": "skill",
+      "name": "Mcp Review",
+      "description": "Review and guide mcp review workflows",
+      "path": "skills/mcp-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "technical-writing",
+      "type": "skill",
+      "name": "Technical Writing",
+      "description": "Review and guide technical writing workflows",
+      "path": "skills/technical-writing/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "sql-review",
+      "type": "skill",
+      "name": "Sql Review",
+      "description": "Review and guide sql review workflows",
+      "path": "skills/sql-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "frontend-review",
+      "type": "skill",
+      "name": "Frontend Review",
+      "description": "Review and guide frontend review workflows",
+      "path": "skills/frontend-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
     }
   ]
 }
