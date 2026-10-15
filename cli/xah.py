@@ -103,7 +103,13 @@ def main():
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list", help="List catalog items")
     search = sub.add_parser("search", help="Search local catalog")
-    search.add_argument("query")
+    search.add_argument("query", nargs="?", default="")
+    search.add_argument("--kind", choices=["skill", "instruction", "workflow", "agent"])
+    search.add_argument("--tag")
+    search.add_argument("--agent")
+    search.add_argument("--license")
+    search.add_argument("--provenance")
+    search.add_argument("--json", action="store_true", help="Emit JSON array")
     inspect = sub.add_parser("inspect", help="Print a catalog item")
     inspect.add_argument("id")
     add = sub.add_parser("add", help="Copy a vetted template into a project")
@@ -130,8 +136,14 @@ def main():
     args = parser.parse_args()
     try:
         if args.cmd in ("list", "search"):
-            for item in items():
-                if args.cmd == "list" or args.query.lower() in json.dumps(item).lower():
+            from catalog_search import filter_items
+            found = (sorted(items(), key=lambda item: item["id"]) if args.cmd == "list" else
+                     filter_items(items(), query=args.query, kind=args.kind, tag=args.tag,
+                                  agent=args.agent, license=args.license, provenance=args.provenance))
+            if args.cmd == "search" and args.json:
+                print(json.dumps(found, indent=2, ensure_ascii=False))
+            else:
+                for item in found:
                     print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
         elif args.cmd == "inspect":
             item = entry(args.id)
