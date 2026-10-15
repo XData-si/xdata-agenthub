@@ -18,6 +18,18 @@ class CliTests(unittest.TestCase):
         for item in json.loads((ROOT / "registry/catalog.json").read_text())["items"]:
             self.assertTrue((ROOT / item["path"]).is_file())
 
+    def test_release_metadata_gate(self):
+        result = subprocess.run([sys.executable, str(ROOT / "scripts/validate_release.py")],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("34 local resources", result.stdout)
+
+    def test_project_instructions_are_actionable(self):
+        template = (ROOT / "instructions/AGENTS.md").read_text(encoding="utf-8")
+        for heading in ("## Project context", "## Security and privacy",
+                        "## Definition of done", "## Project-specific overrides"):
+            self.assertIn(heading, template)
+
     def test_list(self):
         result = self.run_cli("list")
         self.assertEqual(result.returncode, 0)
