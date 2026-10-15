@@ -193,7 +193,7 @@ class CliTests(unittest.TestCase):
                 continue
             with self.subTest(skill=item["id"]):
                 content = (ROOT / item["path"]).read_text(encoding="utf-8")
-                self.assertTrue(content.startswith("---\\n"))
+                self.assertTrue(content.startswith("---\n"))
                 header = content.split("---", 2)[1]
                 self.assertIn("name: " + item["id"], header)
                 self.assertIn("description:", header)
