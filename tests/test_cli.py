@@ -45,5 +45,15 @@ class CliTests(unittest.TestCase):
             second = self.run_cli("init", "--target", tmp, "--profile", "research")
             self.assertNotEqual(second.returncode, 0)
 
+    def test_agent_native_skill_paths(self):
+        cases = {"claude": ".claude/skills/code-review/SKILL.md",
+                 "codex": ".agents/skills/code-review/SKILL.md",
+                 "opencode": ".opencode/skills/code-review/SKILL.md"}
+        for agent, expected in cases.items():
+            with self.subTest(agent=agent), tempfile.TemporaryDirectory() as tmp:
+                result = self.run_cli("init", "--target", tmp, "--agent", agent)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertTrue((pathlib.Path(tmp) / expected).is_file())
+
 if __name__ == "__main__":
     unittest.main()
