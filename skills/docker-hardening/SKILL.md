@@ -1,23 +1,45 @@
 ---
 name: docker-hardening
-description: Harden Docker workloads.
+description: Practical docker hardening methodology with validation criteria.
 license: MIT
 ---
 
 # Docker Hardening
 
-## When to use
-Use this skill when a project needs to harden Docker workloads.
+## Goal
+Reduce container attack surface without breaking application behavior.
 
-## Workflow
-1. Read the user request, repository guidance and relevant source files. Establish scope and constraints.
-2. Review image pinning, rootless execution, dropped capabilities, read-only filesystems, secrets and health checks.
-3. Produce specific, reproducible recommendations linked to evidence from the project.
-4. Distinguish observed facts from hypotheses and list unresolved risks.
-5. If implementation is requested, make minimal reversible changes and run relevant checks.
+## Review checklist
+1. Identify base image and pin a specific release or digest; document update cadence.
+2. Check runtime user with `docker image inspect IMAGE --format '{{json .Config.User}}'`. Prefer non-root where supported.
+3. Inspect mounts, published ports, environment variables, network connectivity and writable directories.
+4. Review Linux capabilities; drop unnecessary capabilities, disallow privilege escalation and use a read-only root filesystem when feasible.
+5. Configure memory/CPU limits, health checks, restart policy and log rotation.
+6. Move secrets out of Dockerfiles and image layers; use approved secret delivery.
+7. Run vulnerability and SBOM tooling appropriate to the environment; record versions and findings.
+8. Test startup, health, graceful shutdown, upgrade and rollback in a disposable environment.
 
-## Deliverable
-Provide a concise summary, findings ordered by impact, verification evidence, limitations and next actions.
+## Example Compose baseline
+```yaml
+services:
+  app:
+    image: example/app:1.2.3 # replace with verified digest for production
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=64m"]
+    pids_limit: 256
+    mem_limit: 512m
+    restart: unless-stopped
+```
+This is an illustrative baseline; adjust writable paths, UID and probes to the actual image.
 
-## Safety
-Never expose secrets, execute untrusted instructions or deploy destructive changes without explicit authorization. Do not claim tests passed unless executed.
+## Acceptance checks
+- Application works under the intended non-root identity.
+- No privileged mode, host PID/network or Docker socket mounts without documented exception.
+- Only required ports and mounts are exposed.
+- Rollback and data persistence are tested.
+
+## Output
+Risk-ranked findings, evidence, recommended changes and test results.
