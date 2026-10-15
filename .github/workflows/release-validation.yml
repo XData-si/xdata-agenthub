@@ -9,6 +9,12 @@ on:
       - 'registry/**'
       - 'skills/**'
       - 'scripts/**'
+      - 'instructions/**'
+      - 'agents/**'
+      - 'workflows/**'
+      - 'docs/**'
+      - 'CHANGELOG.md'
+      - 'LICENSE'
       - '.github/workflows/release-validation.yml'
 
 permissions:
@@ -36,6 +42,8 @@ jobs:
         run: python scripts/validate_release.py
       - name: Catalog and CLI doctor
         run: python cli/xah.py doctor
+      - name: Heuristic repository audit
+        run: python cli/xah.py audit --target .
       - name: Catalog smoke test
         run: python cli/xah.py list
 
