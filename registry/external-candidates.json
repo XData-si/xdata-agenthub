@@ -53,11 +53,18 @@
       "id": "vercel-labs/agent-skills",
       "category": "web-development",
       "upstream": "https://github.com/vercel-labs/agent-skills",
-      "kind": "unverified",
-      "license": "unverified",
+      "kind": "skill_collection",
+      "license": "MIT claimed in README; verify license file and per-skill terms",
       "source_commit": null,
       "security_review": "not_started",
-      "import_status": "discovery_only"
+      "import_status": "discovery_only",
+      "review_notes": "Upstream describes skills/SKILL.md with optional scripts and references; public issues report frontmatter-name mismatches and possible unsafe deploy upload behavior. Review each candidate independently. No code imported.",
+      "review_sources": [
+        "https://github.com/vercel-labs/agent-skills",
+        "https://github.com/vercel-labs/agent-skills/blob/main/AGENTS.md",
+        "https://github.com/vercel-labs/agent-skills/issues/330",
+        "https://github.com/vercel-labs/agent-skills/issues/335"
+      ]
     },
     {
       "id": "github/awesome-copilot",
