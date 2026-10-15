@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "code-review",
+      "type": "skill",
+      "name": "Code Review",
+      "description": "Structured security-minded code review",
+      "path": "skills/code-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic"
+      ]
+    },
+    {
+      "id": "documentation",
+      "type": "skill",
+      "name": "Documentation",
+      "description": "Maintain accurate project documentation",
+      "path": "skills/documentation/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic"
+      ]
+    },
+    {
+      "id": "project-agents",
+      "type": "instruction",
+      "name": "Project AGENTS.md",
+      "description": "Portable project instructions template",
+      "path": "instructions/AGENTS.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "agents-md"
+      ]
+    },
+    {
+      "id": "devops-review",
+      "type": "workflow",
+      "name": "DevOps Review",
+      "description": "Human-reviewed deployment checklist",
+      "path": "workflows/devops-review.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic"
+      ]
+    },
+    {
+      "id": "research-agent",
+      "type": "agent",
+      "name": "Research Agent",
+      "description": "Research agent role specification",
+      "path": "agents/research-agent.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic"
+      ]
+    }
+  ]
+}
