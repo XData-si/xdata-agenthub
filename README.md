@@ -35,6 +35,10 @@ bash scripts/install.sh
 xah --help
 ```
 
+## v0.2.0 development migration and operations
+
+For safe v0.1.0-to-development migration, read the [migration guide](docs/MIGRATION_v0.2.0.md) and [operator runbook](docs/OPERATOR_RUNBOOK.md). They cover backups (including hidden files and manifests), conflict-safe updates, recovery, troubleshooting and release sign-off. **v0.2.0 is not released yet**; native agent compatibility evidence remains incomplete.
+
 ## Supported project layouts
 
 | Target | Skill path | Guidance |
