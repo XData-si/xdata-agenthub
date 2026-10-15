@@ -46,6 +46,8 @@ jobs:
         run: python cli/xah.py audit --target .
       - name: Catalog smoke test
         run: python cli/xah.py list
+      - name: Offline upgrade and rollback smoke gate
+        run: python scripts/smoke_release_gates.py
 
   linux-installer:
     runs-on: ubuntu-24.04
@@ -77,5 +79,6 @@ jobs:
           echo "## Release validation" >> "$GITHUB_STEP_SUMMARY"
           echo "- Cross-platform: $CROSS_PLATFORM" >> "$GITHUB_STEP_SUMMARY"
           echo "- Linux installer: $INSTALLER" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Offline upgrade/rollback/schema smoke: included in cross-platform jobs" >> "$GITHUB_STEP_SUMMARY"
           echo "- Native Claude/Codex/OpenCode runtime: NOT TESTED by this workflow" >> "$GITHUB_STEP_SUMMARY"
           if [ "$CROSS_PLATFORM" != success ] || [ "$INSTALLER" != success ]; then exit 1; fi
