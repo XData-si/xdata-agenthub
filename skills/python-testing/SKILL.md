@@ -27,6 +27,7 @@ Turn a bug report or requirement into tests that fail for the right reason, are 
 
 ## Example: CLI negative test
 
+<!-- xah-audit: fixture -->
 ```python
 import pathlib
 import subprocess
