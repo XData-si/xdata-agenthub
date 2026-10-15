@@ -6,18 +6,23 @@
 - [ ] Run smoke tests on Linux, macOS and Windows (WSL); test Python 3.10–3.13.
 - [ ] Perform security review of installer, path handling and untrusted Markdown content.
 - [ ] Choose licensing and obtain clearance for every third-party item before importing it.
-- [ ] Establish automated CI lint/test, releases, tags and checksums.
+- [x] Establish automated CI unit-test workflow.
+- [ ] Add release automation, tags and checksums.
 - [ ] Validate that CLI installs into an isolated target and does not overwrite existing files.
-- [ ] Create GitHub issue templates, Discussions, repository topics and homepage.
+- [x] Create GitHub issue templates.
+- [ ] Enable Discussions, set repository topics and homepage in GitHub settings.
 
 ## P1 — compelling product
-- [x] Add 25+ original skills (31 currently).\n- [ ] Deepen each skill with domain-specific examples, fixtures and acceptance checks.
-- [x] Add path-based skill installers for Claude Code, Codex and OpenCode with unit tests.\n- [ ] Verify actual client discovery in supported versions; implement semantic adapters where needed.
+- [x] Add 25+ original skills (31 currently).
+- [ ] Complete editorial review of every skill for domain-specific examples, fixtures and acceptance checks (substantial first pass committed).
+- [x] Add path-based skill installers for Claude Code, Codex and OpenCode with unit tests.
+- [ ] Verify actual client discovery in supported versions; implement semantic adapters where needed.
 - [x] Add basic `xah init` starter profiles and dry-run mode.
 - [ ] Add interactive stack builder, richer profiles and agent-specific adapters.
 - [ ] Add provenance manifests, license metadata and version pinning.
 - [ ] Implement meaningful security scanning (the current audit is only a simple heuristic).
-- [ ] Build a browsable searchable website and documentation.
+- [x] Publish categorized Markdown catalog and documentation.
+- [ ] Build a browsable searchable website.
 - [ ] Add offline fixture-based tests, schema validation and JSON output.
 
 ## P2 — growth
