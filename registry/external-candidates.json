@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "description": "Discovery-only external candidate references; no import, security verification, license clearance or compatibility certification implied.",
+  "directory": "https://agentskillshub.dev/skills/",
+  "reviewed_at": "2026-10-15",
+  "items": [
+    {
+      "id": "obra/superpowers",
+      "category": "agent-workflows",
+      "upstream": "https://github.com/obra/superpowers",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "affaan-m/everything-claude-code",
+      "category": "multi-agent-workflows",
+      "upstream": "https://github.com/affaan-m/everything-claude-code",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "sickn33/antigravity-awesome-skills",
+      "category": "skill-collection",
+      "upstream": "https://github.com/sickn33/antigravity-awesome-skills",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "VoltAgent/awesome-agent-skills",
+      "category": "skill-collection",
+      "upstream": "https://github.com/VoltAgent/awesome-agent-skills",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "vercel-labs/agent-skills",
+      "category": "web-development",
+      "upstream": "https://github.com/vercel-labs/agent-skills",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "github/awesome-copilot",
+      "category": "copilot-skills",
+      "upstream": "https://github.com/github/awesome-copilot",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "czlonkowski/n8n-skills",
+      "category": "workflow-automation",
+      "upstream": "https://github.com/czlonkowski/n8n-skills",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "muratcankoylan/Agent-Skills-for-Context-Engineering",
+      "category": "context-engineering",
+      "upstream": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "promptfoo/promptfoo",
+      "category": "evaluation-tooling",
+      "upstream": "https://github.com/promptfoo/promptfoo",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "langfuse/langfuse",
+      "category": "observability-tooling",
+      "upstream": "https://github.com/langfuse/langfuse",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "modelcontextprotocol/servers",
+      "category": "mcp-servers",
+      "upstream": "https://github.com/modelcontextprotocol/servers",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "ComposioHQ/composio",
+      "category": "tool-integrations",
+      "upstream": "https://github.com/ComposioHQ/composio",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "mem0ai/mem0",
+      "category": "agent-memory",
+      "upstream": "https://github.com/mem0ai/mem0",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "BerriAI/litellm",
+      "category": "llm-gateway",
+      "upstream": "https://github.com/BerriAI/litellm",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "openai/openai-cookbook",
+      "category": "examples",
+      "upstream": "https://github.com/openai/openai-cookbook",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "agent-infra/sandbox",
+      "category": "agent-sandbox",
+      "upstream": "https://github.com/agent-infra/sandbox",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "K-Dense-AI/claude-scientific-skills",
+      "category": "scientific-skills",
+      "upstream": "https://github.com/K-Dense-AI/claude-scientific-skills",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    },
+    {
+      "id": "kepano/obsidian-skills",
+      "category": "knowledge-work",
+      "upstream": "https://github.com/kepano/obsidian-skills",
+      "kind": "unverified",
+      "license": "unverified",
+      "source_commit": null,
+      "security_review": "not_started",
+      "import_status": "discovery_only"
+    }
+  ]
+}
