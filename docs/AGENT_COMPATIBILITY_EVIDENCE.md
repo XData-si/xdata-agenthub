@@ -1,6 +1,6 @@
 # Agent compatibility evidence matrix (XAH-205)
 
-**Status: awaiting real client testing.** The fixture currently records `not_tested` for Claude Code, Codex, OpenCode and generic consumers. This is not a compatibility claim.
+**Status: awaiting real client testing.** For reproducible isolated setup and observation templates, see [Client test kit](CLIENT_TEST_KIT.md). The fixture currently records `not_tested` for Claude Code, Codex, OpenCode and generic consumers. This is not a compatibility claim.
 
 For each client, capture the exact client version, operating system and version, date, and installation mode (`xah add code-review --agent claude|codex|opencode|generic --target <temporary-project>`). Run these three separate checks:
 
