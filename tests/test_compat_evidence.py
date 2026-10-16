@@ -11,11 +11,18 @@ BASE = ROOT / "tests/fixtures/agent_compatibility_evidence.json"
 
 
 class CompatibilityEvidenceTests(unittest.TestCase):
-    def test_baseline_valid_and_not_claiming_success(self):
+    def test_baseline_valid_and_operator_accepted_evidence(self):
         data = json.loads(BASE.read_text(encoding="utf-8"))
         validate_evidence(data)
-        self.assertEqual(data["evidence"], [])
-        self.assertTrue(all(c["status"] == "not_tested" for c in data["clients"]))
+        expected = {(client, method) for client in ("claude", "codex", "opencode")
+                    for method in ("discovery", "native_invocation", "direct_read")}
+        self.assertEqual({(r["client"], r["method"]) for r in data["evidence"]}, expected)
+        self.assertEqual(len(data["evidence"]), 9)
+        self.assertTrue(all(r["result"] == "pass" and r["redacted"] is True
+                            for r in data["evidence"]))
+        statuses = {c["client"]: c["status"] for c in data["clients"]}
+        self.assertEqual(statuses, {"claude": "tested", "codex": "tested",
+                                    "opencode": "tested", "generic": "not_tested"})
 
     def test_rejects_unredacted_and_incomplete_evidence(self):
         data = json.loads(BASE.read_text(encoding="utf-8"))
