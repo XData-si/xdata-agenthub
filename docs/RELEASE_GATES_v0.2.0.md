@@ -4,7 +4,7 @@ The release-validation workflow runs on Ubuntu 24.04, macOS and Windows, with Py
 
 The offline smoke gate checks compatibility-evidence schema, catalog doctor, installed-file manifest, read-only dry-run, conflict refusal, and rollback restoration after injected failure. The Linux installer gate remains separate. All jobs must pass before merge.
 
-**Limitations:** CI does not execute native Claude Code, Codex or OpenCode clients. Evidence remains `not_tested` until real runs are recorded. A passing CI run is not proof of crash consistency, concurrent update safety, or agent native discovery.
+**Limitations:** CI does not execute native Claude Code, Codex or OpenCode clients. As of 2026-10-16, operator-reported manual tests have been recorded for Claude Code, Codex CLI and OpenCode (three methods each); generic remains `not_tested`. See [XAH-205 acceptance](integration-evidence/XAH-205-ACCEPTANCE.md). Original runtime traces were not independently audited. A passing CI run is not proof of crash consistency, concurrent update safety, or agent native discovery.
 
 ## Tested SHA and release sign-off
 
