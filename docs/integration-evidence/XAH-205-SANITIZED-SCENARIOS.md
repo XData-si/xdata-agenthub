@@ -1,6 +1,6 @@
 # XAH-205 — Sanitized scenario excerpts for review
 
-**Provenance:** User-pasted, operator-reported client outputs in a ChatGPT conversation on 2026-10-16. The excerpts below are manually selected and sanitized; **no original logs are published**. This document is a review aid, **not independent verification** of runtime execution. Client model, permission mode and precise per-test UTC timestamps were not collected. Do not infer a precise UTC timestamp from the conversation's displayed local times.
+**Provenance:** User-pasted, operator-reported client outputs in a ChatGPT conversation on 2026-10-16. The excerpts below are manually selected and sanitized; **no original logs are published**. This document is a review aid, **not independent verification** of runtime execution. OpenCode model **LL Alpha Free** was reported by the operator; Claude Code and Codex CLI models were **not recorded**. Permission modes and precise per-test UTC timestamps were not collected. Do not infer a precise UTC timestamp from the conversation's displayed local times.
 
 | Client | Version | A: discovery | B: native invocation | C: direct read | D: missing file | E: unknown skill |
 |---|---|---|---|---|---|---|
@@ -37,7 +37,9 @@
 - **Observed functional coverage:** 15 operator-reported passing scenario outcomes, with the Codex E distinction above.
 - **Sanitization of this file:** no credential values, home usernames, machine names, private service config or raw logs reproduced. **This does not establish that original traces have been fully redacted or independently reviewed.**
 - **Credential response:** Operator stated on 2026-10-16 that remediation was completed. Rotation/revocation has **not been independently verified**; do not record it as independently verified.
-- **Missing:** independently verified original evidence provenance; exact model and permission settings; Ubuntu release; precise test timestamps; independent reviewer sign-off.
+- **Models:** OpenCode **LL Alpha Free** (operator-reported, not independently verified); Claude Code **not recorded**; Codex CLI **not recorded**.
+- **Operator sign-off:** The operator confirmed on 2026-10-16 that the tests were actually performed and the sanitized summaries reflect the outcomes, and approved documenting unknown metadata as not recorded. This does **not** constitute independent review of raw traces.
+- **Missing:** independently verified original evidence provenance; permission settings; Ubuntu release; precise test timestamps; independent reviewer sign-off.
 - **Fixture:** leave `tests/fixtures/agent_compatibility_evidence.json` unchanged until reviewer approval of source traces and redaction; `redacted: true` cannot truthfully be asserted merely because this summary is sanitized.
 
 See [review checklist](XAH-205-REVIEW-CHECKLIST.md) and [operator observations](XAH-205-2026-10-16-operator-observations.md).
