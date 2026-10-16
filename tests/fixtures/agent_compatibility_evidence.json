@@ -1,10 +1,167 @@
 {
   "schema_version": 1,
-  "evidence": [],
+  "evidence": [
+    {
+      "client": "claude",
+      "client_version": "2.1.301",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "discovery",
+      "result": "pass",
+      "prompt": "List available project skills without reading skill files.",
+      "steps": [
+        "Start Claude Code in disposable Claude workspace",
+        "Inspect the session-provided project skills list"
+      ],
+      "evidence": "Operator-reported startup skills catalog included code-review without opening SKILL.md. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "claude",
+      "client_version": "2.1.301",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "native_invocation",
+      "result": "pass",
+      "prompt": "Invoke code-review to review sample.py without executing or editing.",
+      "steps": [
+        "Select Skill(code-review)",
+        "Inspect skill-loading trace and review findings"
+      ],
+      "evidence": "Tool trace reported successful Skill(code-review) load and identified subtraction defect; proposed return a + b. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "claude",
+      "client_version": "2.1.301",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "direct_read",
+      "result": "pass",
+      "prompt": "Read the project code-review SKILL.md directly.",
+      "steps": [
+        "Open .claude/skills/code-review/SKILL.md",
+        "Inspect frontmatter and steps"
+      ],
+      "evidence": "File read returned 21 lines and expected skill instructions. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "codex",
+      "client_version": "0.162.1",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "discovery",
+      "result": "pass",
+      "prompt": "List available project skills without reading SKILL.md.",
+      "steps": [
+        "Start Codex CLI in disposable Codex workspace",
+        "Inspect Available skills catalog"
+      ],
+      "evidence": "Native Available skills catalog listed code-review under .agents/skills. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "codex",
+      "client_version": "0.162.1",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "native_invocation",
+      "result": "pass",
+      "prompt": "Invoke $code-review and review sample.py.",
+      "steps": [
+        "Issue explicit $code-review request",
+        "Inspect attached skill and review"
+      ],
+      "evidence": "Second explicit invocation provided structured skill attachment; initial natural-language attempt only read SKILL.md and is not counted. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "codex",
+      "client_version": "0.162.1",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "direct_read",
+      "result": "pass",
+      "prompt": "Read .agents/skills/code-review/SKILL.md directly.",
+      "steps": [
+        "Run direct shell read of SKILL.md",
+        "Inspect result"
+      ],
+      "evidence": "Shell file read succeeded with exit code 0 and returned skill metadata and sections. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "opencode",
+      "client_version": "2.0.11",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "discovery",
+      "result": "pass",
+      "prompt": "List available project skills without manually opening SKILL.md.",
+      "steps": [
+        "Start OpenCode in disposable workspace",
+        "Inspect session skill metadata"
+      ],
+      "evidence": "Session provided code-review metadata and watched .opencode/skills; agent later opened SKILL.md. Original transcript containing unrelated credential excluded. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "opencode",
+      "client_version": "2.0.11",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "native_invocation",
+      "result": "pass",
+      "prompt": "Use Skill(code-review) to review sample.py without executing or editing.",
+      "steps": [
+        "Call native Skill with code-review name",
+        "Inspect skill content and review"
+      ],
+      "evidence": "After empty-argument retry, native Skill call returned skill_content for code-review; proposed return a + b. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    },
+    {
+      "client": "opencode",
+      "client_version": "2.0.11",
+      "os": "Linux (Ubuntu)",
+      "os_version": "kernel 7.0.0-31-generic, x86_64; distro release not recorded",
+      "method": "direct_read",
+      "result": "pass",
+      "prompt": "Read .opencode/skills/code-review/SKILL.md directly.",
+      "steps": [
+        "Open project SKILL.md via file reader",
+        "Inspect file content"
+      ],
+      "evidence": "File reader reported 21 lines, frontmatter and skill steps. Operator-reviewed sanitized summary; source test time not recorded. Evidence record timestamp denotes operator acceptance, not test execution. See docs/integration-evidence/XAH-205-SANITIZED-SCENARIOS.md for negative tests and caveats.",
+      "redacted": true,
+      "timestamp_utc": "2026-10-16T16:16:37Z"
+    }
+  ],
   "clients": [
-    {"client": "claude", "status": "not_tested"},
-    {"client": "codex", "status": "not_tested"},
-    {"client": "opencode", "status": "not_tested"},
-    {"client": "generic", "status": "not_tested"}
+    {
+      "client": "claude",
+      "status": "tested"
+    },
+    {
+      "client": "codex",
+      "status": "tested"
+    },
+    {
+      "client": "opencode",
+      "status": "tested"
+    },
+    {
+      "client": "generic",
+      "status": "not_tested"
+    }
   ]
 }
