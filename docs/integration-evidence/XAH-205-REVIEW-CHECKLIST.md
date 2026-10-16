@@ -13,12 +13,13 @@ The original OpenCode discovery transcript included a credential from a local `s
 - [ ] Review source transcripts privately; remove secrets, usernames, hostnames, home paths, account IDs and unrelated configuration.
 - [ ] Confirm actual CLI versions: Claude Code 2.1.301, Codex CLI 0.162.1, OpenCode 2.0.11.
 - [ ] Confirm OS release (e.g. `cat /etc/os-release`) and document kernel 7.0.0-31-generic, x86_64.
-- [ ] Record model names and permission modes for each client; if unavailable, explicitly note the gap.
+- [x] Document known model (OpenCode LL Alpha Free) and unknown Claude/Codex models as **not recorded**; permission modes remain **not recorded**.
 - [ ] Record per-scenario UTC timestamps from trustworthy local logs where available; do not invent timestamps from narrative descriptions.
 - [ ] Preserve three distinct evidence methods: discovery, native invocation, direct read. Do not treat a file read as native invocation.
 - [ ] Preserve Codex E caveat: nonexistent skill was rejected by catalog discovery; no native invocation failure was observed.
 - [ ] Verify negative scenarios D and E from sanitized excerpts.
-- [ ] Record reviewer identity/role, date and explicit approval, without sensitive identifiers.
+- [x] Record operator confirmation on 2026-10-16 that tests were performed and sanitized summaries reflect results; operator approved recording unknown metadata as **not recorded**.
+- [ ] Obtain independent reviewer sign-off on original evidence provenance and redaction (operator confirmation alone is insufficient).
 - [ ] Only after reviewed excerpts are available, add the required entries to `tests/fixtures/agent_compatibility_evidence.json` with `redacted: true`, and mark the corresponding client `tested`.
 - [ ] Run `python3 cli/compat_evidence.py tests/fixtures/agent_compatibility_evidence.json` and `python3 -m unittest discover -s tests -v`.
 - [ ] Review the final PR and close #5 only after acceptance criteria are met.
