@@ -1,6 +1,6 @@
 # XAH-205 — Evidence review and security sign-off
 
-This checklist supplements [operator observations](XAH-205-2026-10-16-operator-observations.md). The operator reported 15/15 successful functional scenarios on 2026-10-16. These are **not yet independently reviewed or authenticated compatibility evidence**.
+This checklist supplements [operator observations](XAH-205-2026-10-16-operator-observations.md) and [sanitized scenario excerpts](XAH-205-SANITIZED-SCENARIOS.md). The operator reported 15/15 successful functional scenarios on 2026-10-16. These are **not yet independently reviewed or authenticated compatibility evidence**.
 
 ## Immediate security action (outside GitHub)
 
@@ -8,7 +8,8 @@ The original OpenCode discovery transcript included a credential from a local `s
 
 ## Evidence reviewer checklist
 
-- [ ] Confirm credential rotation/revocation, without disclosing the value.
+- [x] Operator confirmed credential remediation on 2026-10-16 (self-report only; no secret or proof collected).
+- [ ] Independently confirm credential rotation/revocation, without disclosing the value.
 - [ ] Review source transcripts privately; remove secrets, usernames, hostnames, home paths, account IDs and unrelated configuration.
 - [ ] Confirm actual CLI versions: Claude Code 2.1.301, Codex CLI 0.162.1, OpenCode 2.0.11.
 - [ ] Confirm OS release (e.g. `cat /etc/os-release`) and document kernel 7.0.0-31-generic, x86_64.
