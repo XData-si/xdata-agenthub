@@ -141,6 +141,8 @@ def main():
     recovery = sub.add_parser("recovery", help="Read-only inspection of update journals")
     recovery.add_argument("--target", default=".")
     recovery.add_argument("--json", action="store_true")
+    recovery.add_argument("--lock-status", action="store_true",
+                          help="Read-only writer lock diagnostic; never removes a lock")
     recovery.add_argument("--rollback-plan", metavar="TRANSACTION_ID",
                           help="Read-only rollback eligibility and file action plan")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
@@ -215,13 +217,18 @@ def main():
                 print(f"{state:10} {rel}")
         elif args.cmd == "recovery":
             from recovery_inspect import inspect_transactions
-            if args.rollback_plan:
+            if args.lock_status:
+                from recovery_lock_inspect import inspect_writer_lock
+                result = inspect_writer_lock(pathlib.Path(args.target).expanduser())
+            elif args.rollback_plan:
                 from recovery_preflight import rollback_preflight
                 result = rollback_preflight(pathlib.Path(args.target).expanduser(), args.rollback_plan)
             else:
                 result = inspect_transactions(pathlib.Path(args.target).expanduser())
             if args.json:
                 print(json.dumps(result, sort_keys=True, indent=2))
+            elif args.lock_status:
+                print("Writer lock: " + result["status"] + " (removal not authorized)")
             elif args.rollback_plan:
                 print("Read-only rollback plan: " + result["transaction_id"])
                 for op in result["operations"]:
