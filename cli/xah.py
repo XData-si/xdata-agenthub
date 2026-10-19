@@ -49,12 +49,11 @@ def skill_files(item):
 
 
 def install_plan(item, target, agent):
-    roots = {"generic": "skills", "claude": ".claude/skills",
-             "codex": ".agents/skills", "opencode": ".opencode/skills"}
+    from adapter_contract import destination_for
     if item["type"] == "skill":
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", item["id"]):
             raise ValueError("Unsafe skill identifier")
-        base = pathlib.Path(roots[agent]) / item["id"]
+        base = pathlib.Path(destination_for(agent, item["id"], "skill"))
         package = skill_files(item)
         if not any(rel == pathlib.Path("SKILL.md") for _, rel in package):
             raise ValueError("Missing SKILL.md in skill package")
@@ -64,7 +63,7 @@ def install_plan(item, target, agent):
         if rel.is_absolute() or ".." in rel.parts or "\\" in item["path"]:
             raise ValueError("Unsafe destination")
         if item["id"] == "project-agents" and agent != "generic":
-            rel = pathlib.Path("CLAUDE.md" if agent == "claude" else "AGENTS.md")
+            rel = pathlib.Path(destination_for(agent, item["id"], "instruction"))
         planned = [(source(item), target / rel)]
     for _, dest in planned:
         if not dest.is_relative_to(target):
@@ -102,6 +101,9 @@ def main():
     parser = argparse.ArgumentParser(prog="xah", description="XData AgentHub — portable agent resources")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list", help="List catalog items")
+    trust = sub.add_parser("trust", help="Inspect declared catalog provenance (not certification)")
+    trust.add_argument("id", nargs="?")
+    trust.add_argument("--json", action="store_true")
     search = sub.add_parser("search", help="Search local catalog")
     search.add_argument("query", nargs="?", default="")
     search.add_argument("--kind", choices=["skill", "instruction", "workflow", "agent"])
@@ -110,6 +112,15 @@ def main():
     search.add_argument("--license")
     search.add_argument("--provenance")
     search.add_argument("--json", action="store_true", help="Emit JSON array")
+    browse = sub.add_parser("browse", help="Browse local catalog with facets and pagination")
+    browse.add_argument("--query", default="", help="Case-insensitive search")
+    browse.add_argument("--kind", choices=["skill", "instruction", "workflow", "agent"])
+    browse.add_argument("--tag")
+    browse.add_argument("--agent")
+    browse.add_argument("--license")
+    browse.add_argument("--offset", type=int, default=0)
+    browse.add_argument("--limit", type=int, default=20)
+    browse.add_argument("--json", action="store_true")
     inspect = sub.add_parser("inspect", help="Print a catalog item")
     inspect.add_argument("id")
     inspect.add_argument("--target", help="Inspect installed-file states in this project")
@@ -143,10 +154,15 @@ def main():
     recovery.add_argument("--json", action="store_true")
     recovery.add_argument("--rollback", metavar="TRANSACTION_ID",
                           help="Explicitly restore verified original files; refuses existing locks")
+    recovery.add_argument("--resolution-check", metavar="TRANSACTION_ID",
+                          help="Read-only restored file and manifest verification")
     recovery.add_argument("--lock-status", action="store_true",
                           help="Read-only writer lock diagnostic; never removes a lock")
     recovery.add_argument("--rollback-plan", metavar="TRANSACTION_ID",
                           help="Read-only rollback eligibility and file action plan")
+    gates = sub.add_parser("release-check", help="Evaluate explicit release evidence JSON (no publishing)")
+    gates.add_argument("--evidence", required=True, help="Path to evidence JSON")
+    gates.add_argument("--json", action="store_true")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
@@ -162,6 +178,31 @@ def main():
             else:
                 for item in found:
                     print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
+        elif args.cmd == "browse":
+            from catalog_browse import facets, page
+            from catalog_search import filter_items
+            catalog = filter_items(items(), query=args.query, kind=args.kind,
+                                   tag=args.tag, agent=args.agent, license=args.license)
+            result = page(catalog, offset=args.offset, limit=args.limit)
+            result["facets"] = facets(catalog)
+            if args.json:
+                print(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False))
+            else:
+                print(f'Catalog: {result["total"]} entries (offset {args.offset}, limit {args.limit})')
+                for item in result["items"]:
+                    print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
+                print("Facets:")
+                for name, values in result["facets"].items():
+                    print(f'  {name}: ' + ", ".join(f"{k}={v}" for k, v in values.items()))
+        elif args.cmd == "trust":
+            from catalog_trust import classify_provenance
+            selected = [entry(args.id)] if args.id else items()
+            results = [{"id": item["id"], **classify_provenance(item)} for item in selected]
+            if args.json:
+                print(json.dumps(results, indent=2, sort_keys=True))
+            else:
+                for result in results:
+                    print(f'{result["id"]:20} {result["trust"]:16} {result["reason"]}')
         elif args.cmd == "inspect":
             from inspect_metadata import inspect_metadata
             item = entry(args.id)
@@ -186,16 +227,16 @@ def main():
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             item = entry(args.id)
-            roots = {"generic": "skills", "claude": ".claude/skills", "codex": ".agents/skills", "opencode": ".opencode/skills"}
+            from adapter_contract import destination_for
             if item["type"] == "skill":
-                base = pathlib.Path(roots[args.agent]) / item["id"]
+                base = pathlib.Path(destination_for(args.agent, item["id"], "skill"))
                 planned = [(src, target / base / rel) for src, rel in skill_files(item)]
             else:
                 rel = pathlib.Path(item["path"])
                 if rel.is_absolute() or ".." in rel.parts or "\\\\" in item["path"]:
                     raise ValueError("Unsafe destination")
                 if item["id"] == "project-agents" and args.agent != "generic":
-                    rel = pathlib.Path("CLAUDE.md" if args.agent == "claude" else "AGENTS.md")
+                    rel = pathlib.Path(destination_for(args.agent, item["id"], "instruction"))
                 planned = [(source(item), target / rel)]
             if args.apply:
                 from update_apply import apply_update
@@ -238,7 +279,7 @@ def main():
             elif args.rollback:
                 print("Rollback completed: " + result["transaction_id"])
             elif args.resolution_check:
-                print("Restored files verified; manifest and writer ownership NOT verified: " + result["transaction_id"])
+                print("Restored files and manifest verified; writer ownership NOT verified: " + result["transaction_id"])
             elif args.lock_status:
                 print("Writer lock: " + result["status"] + " (removal not authorized)")
             elif args.rollback_plan:
@@ -251,6 +292,20 @@ def main():
                     print(f'{tx["transaction_id"]} {tx["state"]} {tx["item_id"]}')
                     for op in tx["operations"]:
                         print(f'  {op["file_state"]:15} backup={op["backup_state"]:15} {op["path"]}')
+        elif args.cmd == "release-check":
+            from release_gates import evaluate
+            evidence_path = pathlib.Path(args.evidence).expanduser()
+            if evidence_path.is_symlink() or not evidence_path.is_file() or evidence_path.stat().st_size > 100_000:
+                raise ValueError("Missing, symlinked or oversized evidence file")
+            result = evaluate(json.loads(evidence_path.read_text(encoding="utf-8")))
+            if args.json:
+                print(json.dumps(result, sort_keys=True, indent=2))
+            else:
+                for name, gate in result["gates"].items():
+                    print(f'{name:24} {gate["status"]}')
+                print("READY" if result["ready"] else "NOT READY")
+            if not result["ready"]:
+                return 2
         elif args.cmd == "doctor":
             print(f"Python: {platform.python_version()}")
             print(f"Catalog: {CATALOG}")
