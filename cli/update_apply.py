@@ -5,6 +5,7 @@ from installed_manifest import load_manifest, save_manifest, _relative, _digest
 from update_plan import plan_update
 from update_lock import update_lock
 from journal_prepare import prepare_journal
+from recovery_journal import transition_journal
 
 
 def apply_update(target, item_id, planned, *, fail_after=None):
@@ -33,7 +34,10 @@ def _apply_update_locked(target, item_id, planned, *, fail_after=None):
     if pending:
         journal = prepare_journal(target, item_id, pending)
     changed = []
+    if journal is not None:
+        transition_journal(journal, "applying")
     try:
+        journal_index = 0
         for action, rel in actions:
             if action == "skip":
                 continue
@@ -58,11 +62,16 @@ def _apply_update_locked(target, item_id, planned, *, fail_after=None):
                 if os.path.exists(name):
                     os.unlink(name)
             changed.append((action, rel))
+            if journal is not None:
+                transition_journal(journal, "applying", completed=journal_index)
+                journal_index += 1
             data["files"][rel] = {"sha256": _digest(dest), "item_id": item_id}
             if fail_after is not None and len(changed) >= fail_after:
                 raise RuntimeError("Injected update failure")
         if changed:
             save_manifest(target, data)
+        if journal is not None:
+            transition_journal(journal, "committed")
         # Preserve journal for explicit operator review; no automatic cleanup.
     except Exception:
         errors = []
@@ -84,7 +93,12 @@ def _apply_update_locked(target, item_id, planned, *, fail_after=None):
                             os.unlink(name)
             except OSError as exc:
                 errors.append(f"{rel}: {exc}")
+        if journal is not None:
+            try:
+                transition_journal(journal, "recovery_required")
+            except Exception as journal_error:
+                errors.append("journal: " + str(journal_error))
         if errors:
-            raise RuntimeError("ROLLBACK INCOMPLETE; manual recovery required: " + "; ".join(errors))
+            raise RuntimeError("ROLLBACK INCOMPLETE OR JOURNAL ERROR; manual recovery required: " + "; ".join(errors))
         raise
     return actions
