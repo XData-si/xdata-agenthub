@@ -141,6 +141,8 @@ def main():
     recovery = sub.add_parser("recovery", help="Read-only inspection of update journals")
     recovery.add_argument("--target", default=".")
     recovery.add_argument("--json", action="store_true")
+    recovery.add_argument("--rollback", metavar="TRANSACTION_ID",
+                          help="Explicitly restore verified original files; refuses existing locks")
     recovery.add_argument("--lock-status", action="store_true",
                           help="Read-only writer lock diagnostic; never removes a lock")
     recovery.add_argument("--rollback-plan", metavar="TRANSACTION_ID",
@@ -217,7 +219,10 @@ def main():
                 print(f"{state:10} {rel}")
         elif args.cmd == "recovery":
             from recovery_inspect import inspect_transactions
-            if args.resolution_check:
+            if args.rollback:
+                from recovery_execute import rollback_transaction
+                result = rollback_transaction(pathlib.Path(args.target).expanduser(), args.rollback)
+            elif args.resolution_check:
                 from recovery_resolution_preflight import resolution_preflight
                 result = resolution_preflight(pathlib.Path(args.target).expanduser(), args.resolution_check)
             elif args.lock_status:
@@ -230,6 +235,8 @@ def main():
                 result = inspect_transactions(pathlib.Path(args.target).expanduser())
             if args.json:
                 print(json.dumps(result, sort_keys=True, indent=2))
+            elif args.rollback:
+                print("Rollback completed: " + result["transaction_id"])
             elif args.resolution_check:
                 print("Restored files verified; manifest and writer ownership NOT verified: " + result["transaction_id"])
             elif args.lock_status:
