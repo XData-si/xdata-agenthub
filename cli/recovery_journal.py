@@ -7,7 +7,7 @@ from pathlib import PurePosixPath
 
 HEX = re.compile(r"^[0-9a-f]{64}$")
 TXID = re.compile(r"^[0-9a-f]{32}$")
-STATES = {"prepared", "applying", "committed", "cleaned", "recovery_required"}
+STATES = {"prepared", "applying", "committed", "cleaned", "recovery_required", "resolved"}
 ACTIONS = {"add", "update"}
 
 
@@ -97,10 +97,11 @@ def transition_journal(tx, state, *, completed=None):
     validate_journal(data)
     old_state = data["state"]
     allowed = {
-        "prepared": {"applying", "recovery_required"},
-        "applying": {"applying", "committed", "recovery_required"},
+        "prepared": {"applying", "recovery_required", "resolved"},
+        "applying": {"applying", "committed", "recovery_required", "resolved"},
         "committed": {"cleaned"},
-        "recovery_required": set(),
+        "recovery_required": {"resolved"},
+        "resolved": set(),
         "cleaned": set(),
     }
     if state not in allowed[old_state]:
