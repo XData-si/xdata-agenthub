@@ -5,11 +5,12 @@ import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "cli"))
 from installed_manifest import _digest, load_manifest, save_manifest
-from recovery_execute import rollback_transaction
+from recovery_execute import rollback_transaction, _rollback_locked
 from recovery_guard import require_no_pending_transactions
 from update_apply import apply_update
 from journal_prepare import prepare_journal
 from recovery_journal import transition_journal
+from recovery_inspect import inspect_transactions
 
 
 class RecoveryExecuteTests(unittest.TestCase):
@@ -73,6 +74,31 @@ class RecoveryExecuteTests(unittest.TestCase):
             result = rollback_transaction(root, tx.name)
             self.assertEqual(result["state"], "resolved")
             self.assertFalse(dest.exists())
+
+
+    def test_external_edit_before_mutation_is_preserved(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            tx, source, dest = self.fixture(root)
+            dest.write_bytes(b"new")
+            def concurrent_writer(path, action):
+                path.write_bytes(b"external edit")
+            with self.assertRaisesRegex(ValueError, "Destination changed before rollback mutation"):
+                _rollback_locked(root, tx.name, _before_mutation=concurrent_writer)
+            self.assertEqual(dest.read_bytes(), b"external edit")
+            self.assertEqual(inspect_transactions(root)[0]["state"], "applying")
+
+    def test_interruption_before_mutation_keeps_journal_pending(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            tx, source, dest = self.fixture(root)
+            dest.write_bytes(b"new")
+            def interrupt(path, action):
+                raise KeyboardInterrupt("simulated interruption")
+            with self.assertRaises(KeyboardInterrupt):
+                _rollback_locked(root, tx.name, _before_mutation=interrupt)
+            self.assertEqual(dest.read_bytes(), b"new")
+            self.assertEqual(inspect_transactions(root)[0]["state"], "applying")
 
 
 if __name__ == "__main__":
