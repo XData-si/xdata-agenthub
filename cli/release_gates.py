@@ -1,9 +1,11 @@
-"""Offline pre-release gate evaluation from explicit evidence.
+"""Offline release gate evaluation with explicit evidence references.
 
-This does not publish releases, create tags, or claim external CI success.
+This evaluates submitted evidence; it does not authenticate CI providers.
+No release, tag, or publication is performed.
 """
 REQUIRED = ("unit_tests", "integration_tests", "security_review",
             "operator_walkthrough", "documentation", "ci_matrix")
+
 
 def evaluate(evidence):
     if not isinstance(evidence, dict):
@@ -11,6 +13,13 @@ def evaluate(evidence):
     gates = {}
     for name in REQUIRED:
         value = evidence.get(name)
-        gates[name] = {"passed": value is True, "status":
-                       "pass" if value is True else "fail" if value is False else "missing"}
+        if not isinstance(value, dict):
+            gates[name] = {"passed": False, "status": "missing" if value is None else "invalid"}
+            continue
+        passed = (value.get("passed") is True
+                  and isinstance(value.get("reference"), str)
+                  and bool(value["reference"].strip())
+                  and isinstance(value.get("reviewer"), str)
+                  and bool(value["reviewer"].strip()))
+        gates[name] = {"passed": passed, "status": "pass" if passed else "invalid"}
     return {"ready": all(gate["passed"] for gate in gates.values()), "gates": gates}
