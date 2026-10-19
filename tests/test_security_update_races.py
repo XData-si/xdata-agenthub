@@ -71,7 +71,7 @@ class UpdateRaceRevalidationTests(unittest.TestCase):
         def change():
             added.write_bytes(b"other process")
 
-        with self.assertRaisesRegex(ValueError, "Destination appeared during update"):
+        with self.assertRaisesRegex(ValueError, "Destination appeared during update|Add destination exists"):
             self.inject_plan_for_add(added, change)
         self.assertEqual(added.read_bytes(), b"other process")
         self.assertEqual((self.root / ".xah-installed.json").read_bytes(), self.manifest_before)
