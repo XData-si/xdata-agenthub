@@ -251,6 +251,20 @@ def main():
                     print(f'{tx["transaction_id"]} {tx["state"]} {tx["item_id"]}')
                     for op in tx["operations"]:
                         print(f'  {op["file_state"]:15} backup={op["backup_state"]:15} {op["path"]}')
+        elif args.cmd == "release-check":
+            from release_gates import evaluate
+            evidence_path = pathlib.Path(args.evidence).expanduser()
+            if evidence_path.is_symlink() or not evidence_path.is_file() or evidence_path.stat().st_size > 100_000:
+                raise ValueError("Missing, symlinked or oversized evidence file")
+            result = evaluate(json.loads(evidence_path.read_text(encoding="utf-8")))
+            if args.json:
+                print(json.dumps(result, sort_keys=True, indent=2))
+            else:
+                for name, gate in result["gates"].items():
+                    print(f'{name:24} {gate["status"]}')
+                print("READY" if result["ready"] else "NOT READY")
+            if not result["ready"]:
+                return 2
         elif args.cmd == "doctor":
             print(f"Python: {platform.python_version()}")
             print(f"Catalog: {CATALOG}")
