@@ -275,6 +275,8 @@ def main():
                 from installed_manifest import record_installs
                 from update_lock import update_lock
                 with update_lock(target):
+                    from recovery_guard import require_no_pending_transactions
+                    require_no_pending_transactions(target)
                     planned = []
                     ownership = []
                     for item_id in profiles[args.profile]:
@@ -289,6 +291,8 @@ def main():
             from installed_manifest import record_installs
             from update_lock import update_lock
             with update_lock(target):
+                from recovery_guard import require_no_pending_transactions
+                require_no_pending_transactions(target)
                 planned = install_plan(entry(args.id), target, args.agent)
                 record_installs(target, [(args.id, dest) for _, dest in planned], planned, copy_plan)
         elif args.cmd == "audit":
