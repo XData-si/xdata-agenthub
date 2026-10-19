@@ -32,9 +32,14 @@ def inspect_transactions(target):
         journal = tx / "journal.json"
         if journal.is_symlink() or not journal.is_file():
             raise ValueError("Missing or symlinked transaction journal")
+        if journal.stat().st_size > 2_000_000:
+            raise ValueError("Oversized transaction journal")
         data = validate_journal(json.loads(journal.read_text(encoding="utf-8")))
         if data["transaction_id"] != tx.name:
             raise ValueError("Transaction directory ID mismatch")
+        originals = tx / "originals"
+        if originals.is_symlink() or not originals.is_dir():
+            raise ValueError("Unsafe originals directory")
         operations = []
         for index, op in enumerate(data["operations"]):
             destination = root / op["path"]
