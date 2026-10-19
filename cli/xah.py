@@ -49,12 +49,11 @@ def skill_files(item):
 
 
 def install_plan(item, target, agent):
-    roots = {"generic": "skills", "claude": ".claude/skills",
-             "codex": ".agents/skills", "opencode": ".opencode/skills"}
+    from adapter_contract import destination_for
     if item["type"] == "skill":
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", item["id"]):
             raise ValueError("Unsafe skill identifier")
-        base = pathlib.Path(roots[agent]) / item["id"]
+        base = pathlib.Path(destination_for(agent, item["id"], "skill"))
         package = skill_files(item)
         if not any(rel == pathlib.Path("SKILL.md") for _, rel in package):
             raise ValueError("Missing SKILL.md in skill package")
@@ -64,7 +63,7 @@ def install_plan(item, target, agent):
         if rel.is_absolute() or ".." in rel.parts or "\\" in item["path"]:
             raise ValueError("Unsafe destination")
         if item["id"] == "project-agents" and agent != "generic":
-            rel = pathlib.Path("CLAUDE.md" if agent == "claude" else "AGENTS.md")
+            rel = pathlib.Path(destination_for(agent, item["id"], "instruction"))
         planned = [(source(item), target / rel)]
     for _, dest in planned:
         if not dest.is_relative_to(target):
@@ -186,16 +185,16 @@ def main():
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             item = entry(args.id)
-            roots = {"generic": "skills", "claude": ".claude/skills", "codex": ".agents/skills", "opencode": ".opencode/skills"}
+            from adapter_contract import destination_for
             if item["type"] == "skill":
-                base = pathlib.Path(roots[args.agent]) / item["id"]
+                base = pathlib.Path(destination_for(args.agent, item["id"], "skill"))
                 planned = [(src, target / base / rel) for src, rel in skill_files(item)]
             else:
                 rel = pathlib.Path(item["path"])
                 if rel.is_absolute() or ".." in rel.parts or "\\\\" in item["path"]:
                     raise ValueError("Unsafe destination")
                 if item["id"] == "project-agents" and args.agent != "generic":
-                    rel = pathlib.Path("CLAUDE.md" if args.agent == "claude" else "AGENTS.md")
+                    rel = pathlib.Path(destination_for(args.agent, item["id"], "instruction"))
                 planned = [(source(item), target / rel)]
             if args.apply:
                 from update_apply import apply_update
