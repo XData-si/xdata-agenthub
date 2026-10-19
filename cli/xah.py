@@ -110,6 +110,10 @@ def main():
     search.add_argument("--license")
     search.add_argument("--provenance")
     search.add_argument("--json", action="store_true", help="Emit JSON array")
+    browse = sub.add_parser("browse", help="Browse local catalog with facets and pagination")
+    browse.add_argument("--offset", type=int, default=0)
+    browse.add_argument("--limit", type=int, default=20)
+    browse.add_argument("--json", action="store_true")
     inspect = sub.add_parser("inspect", help="Print a catalog item")
     inspect.add_argument("id")
     inspect.add_argument("--target", help="Inspect installed-file states in this project")
@@ -162,6 +166,20 @@ def main():
             else:
                 for item in found:
                     print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
+        elif args.cmd == "browse":
+            from catalog_browse import facets, page
+            catalog = items()
+            result = page(catalog, offset=args.offset, limit=args.limit)
+            result["facets"] = facets(catalog)
+            if args.json:
+                print(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False))
+            else:
+                print(f'Catalog: {result["total"]} entries (offset {args.offset}, limit {args.limit})')
+                for item in result["items"]:
+                    print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
+                print("Facets:")
+                for name, values in result["facets"].items():
+                    print(f'  {name}: ' + ", ".join(f"{k}={v}" for k, v in values.items()))
         elif args.cmd == "inspect":
             from inspect_metadata import inspect_metadata
             item = entry(args.id)
