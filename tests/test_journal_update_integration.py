@@ -30,7 +30,7 @@ class JournalIntegrationTests(unittest.TestCase):
             self.assertEqual(len(journals), 1)
             metadata = json.loads(journals[0].read_text())
             validate_journal(metadata)
-            self.assertEqual(metadata["state"], "prepared")
+            self.assertEqual(metadata["state"], "committed")
             self.assertEqual((journals[0].parent / "originals" / "0").read_bytes(), b"old")
             self.assertEqual(destination.read_bytes(), b"new")
             self.assertFalse((root / ".xah-update.lock").exists())
@@ -53,7 +53,7 @@ class JournalIntegrationTests(unittest.TestCase):
             self.assertEqual(destination.read_bytes(), b"old")
             journals = list((root / ".xah-transactions").glob("*/journal.json"))
             self.assertEqual(len(journals), 1)
-            self.assertEqual(json.loads(journals[0].read_text())["state"], "prepared")
+            self.assertEqual(json.loads(journals[0].read_text())["state"], "recovery_required")
 
 
 if __name__ == "__main__":
