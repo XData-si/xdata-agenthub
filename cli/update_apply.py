@@ -4,6 +4,7 @@ import tempfile
 from installed_manifest import load_manifest, save_manifest, _relative, _digest
 from update_plan import plan_update
 from update_lock import update_lock
+from journal_prepare import prepare_journal
 
 
 def apply_update(target, item_id, planned, *, fail_after=None):
@@ -27,6 +28,10 @@ def _apply_update_locked(target, item_id, planned, *, fail_after=None):
     data = load_manifest(target)
     original = {rel: dest.read_bytes() for action, rel in actions
                 if action == "update" for _, dest in [by_path[rel]]}
+    journal = None
+    pending = [(action, *by_path[rel]) for action, rel in actions if action != "skip"]
+    if pending:
+        journal = prepare_journal(target, item_id, pending)
     changed = []
     try:
         for action, rel in actions:
@@ -58,6 +63,7 @@ def _apply_update_locked(target, item_id, planned, *, fail_after=None):
                 raise RuntimeError("Injected update failure")
         if changed:
             save_manifest(target, data)
+        # Preserve journal for explicit operator review; no automatic cleanup.
     except Exception:
         errors = []
         for action, rel in reversed(changed):
