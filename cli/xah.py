@@ -162,6 +162,15 @@ def main():
             else:
                 for item in found:
                     print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
+        elif args.cmd == "trust":
+            from catalog_trust import classify_provenance
+            selected = [entry(args.id)] if args.id else items()
+            results = [{"id": item["id"], **classify_provenance(item)} for item in selected]
+            if args.json:
+                print(json.dumps(results, indent=2, sort_keys=True))
+            else:
+                for result in results:
+                    print(f'{result["id"]:20} {result["trust"]:16} {result["reason"]}')
         elif args.cmd == "inspect":
             from inspect_metadata import inspect_metadata
             item = entry(args.id)
