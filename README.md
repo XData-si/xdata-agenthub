@@ -35,9 +35,15 @@ bash scripts/install.sh
 xah --help
 ```
 
+## v0.3.0 RC1 preparation (not published)
+
+The development `main` branch now includes `xah browse`, `xah trust`, `xah release-check`, the shared adapter destination contract, and additional recovery tests. `browse` supports local catalog facets/pagination; `trust` reports **declared metadata only**, not verified publisher identity; `release-check` validates evidence-file structure, not reviewer authenticity. None of these commands downloads or executes third-party code.
+
+**No v0.3.0 RC1 tag or GitHub Release has been published.** The [RC1 readiness checklist](docs/RC1_v0.3.0_READINESS.md) lists pending operator, security and frozen-SHA verification. Rollback remains non-atomic across multiple files and its lock cannot prevent writes by unrelated processes.
+
 ## v0.2.0 development migration and operations
 
-For safe v0.1.0-to-development migration, read the [migration guide](docs/MIGRATION_v0.2.0.md) and [operator runbook](docs/OPERATOR_RUNBOOK.md). They cover backups (including hidden files and manifests), conflict-safe updates, recovery, troubleshooting and release sign-off. **v0.2.0 is not released yet**; operator-accepted native compatibility evidence is recorded for Claude Code, Codex CLI and OpenCode, with documented provenance limitations and no independent source-trace audit. See [XAH-205 acceptance](docs/integration-evidence/XAH-205-ACCEPTANCE.md).
+For safe v0.1.0-to-development migration, read the [migration guide](docs/MIGRATION_v0.2.0.md) and [operator runbook](docs/OPERATOR_RUNBOOK.md). They cover backups (including hidden files and manifests), conflict-safe updates, recovery, troubleshooting and release sign-off. **The v0.2.0 migration guide describes development behavior, not proof of a published release**; operator-accepted native compatibility evidence is recorded for Claude Code, Codex CLI and OpenCode, with documented provenance limitations and no independent source-trace audit. See [XAH-205 acceptance](docs/integration-evidence/XAH-205-ACCEPTANCE.md).
 
 ## Supported project layouts
 
@@ -57,7 +63,7 @@ See the [categorized skill catalog](docs/CATALOG.md) for all entries and their i
 - **Agents**: example agent roles, not running autonomous services.
 - **Workflows**: transparent checklists for human-reviewed delivery.
 - **Registry**: a small JSON index with provenance and local paths.
-- **CLI**: `list`, `search`, `inspect`, `add`, `init`, `doctor`, `audit`; local-only, no external dependencies.
+- **CLI**: local catalog browsing, search, inspection, declared-provenance trust reporting, add/init/update, recovery inspection and explicit rollback, doctor, heuristic audit and evidence checklist; local-first, standard-library Python.
 
 ## Design principles
 1. Useful without registration, telemetry or a hosted service.
