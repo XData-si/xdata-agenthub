@@ -242,14 +242,24 @@ def main():
                 copy_plan(planned, True)
             else:
                 from installed_manifest import record_installs
-                record_installs(target, ownership, planned, copy_plan)
+                from update_lock import update_lock
+                with update_lock(target):
+                    planned = []
+                    ownership = []
+                    for item_id in profiles[args.profile]:
+                        item_plan = install_plan(entry(item_id), target, args.agent)
+                        planned.extend(item_plan)
+                        ownership.extend((item_id, dest) for _, dest in item_plan)
+                    record_installs(target, ownership, planned, copy_plan)
         elif args.cmd == "add":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
-            planned = install_plan(entry(args.id), target, args.agent)
             from installed_manifest import record_installs
-            record_installs(target, [(args.id, dest) for _, dest in planned], planned, copy_plan)
+            from update_lock import update_lock
+            with update_lock(target):
+                planned = install_plan(entry(args.id), target, args.agent)
+                record_installs(target, [(args.id, dest) for _, dest in planned], planned, copy_plan)
         elif args.cmd == "audit":
             target = pathlib.Path(args.target).expanduser().resolve()
             if not target.is_dir():
