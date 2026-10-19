@@ -22,7 +22,7 @@ def rollback_transaction(target, transaction_id):
         return _rollback_locked(root, transaction_id)
 
 
-def _rollback_locked(root, transaction_id):
+def _rollback_locked(root, transaction_id, *, _before_mutation=None):
     matches = [tx for tx in inspect_transactions(root)
                if tx["transaction_id"] == transaction_id]
     if len(matches) != 1:
@@ -72,12 +72,20 @@ def _rollback_locked(root, transaction_id):
             new_manifest["files"].pop(rel, None)
             operations.append(("remove" if state == "intended" else "unchanged", dest, None, intended_digest, index))
     # All metadata and backup checks complete before first destination write.
+    # The hook is reserved for deterministic fault-injection tests; never pass
+    # it from untrusted CLI or catalog input.
     for action, dest, backup, expected, index in reversed(operations):
         _relative(root, dest)
         if action == "unchanged":
             continue
         if not dest.is_file() or dest.is_symlink() or _digest(dest) != expected:
             raise ValueError("Destination changed during rollback: " + str(dest))
+        if _before_mutation is not None:
+            _before_mutation(dest, action)
+        # Revalidate after the test hook: an external writer may have changed
+        # the file between preflight and mutation.
+        if not dest.is_file() or dest.is_symlink() or _digest(dest) != expected:
+            raise ValueError("Destination changed before rollback mutation: " + str(dest))
         if action == "remove":
             dest.unlink()
         else:
