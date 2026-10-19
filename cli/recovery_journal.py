@@ -77,3 +77,51 @@ def validate_journal(data):
     if data["state"] in ("committed", "cleaned") and not all(op["completed"] for op in ops):
         raise ValueError("Committed transaction has incomplete operations")
     return data
+
+def transition_journal(tx, state, *, completed=None):
+    """Atomically persist a validated journal state/progress update.
+
+    Caller holds the cooperative writer lock. Does not perform recovery.
+    """
+    import json
+    import os
+    import tempfile
+    from pathlib import Path
+    from journal_prepare import _sync_directory
+
+    tx = Path(tx)
+    path = tx / "journal.json"
+    if tx.is_symlink() or path.is_symlink():
+        raise ValueError("Symlink journal path refused")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    validate_journal(data)
+    old_state = data["state"]
+    allowed = {
+        "prepared": {"applying", "recovery_required"},
+        "applying": {"applying", "committed", "recovery_required"},
+        "committed": {"cleaned"},
+        "recovery_required": set(),
+        "cleaned": set(),
+    }
+    if state not in allowed[old_state]:
+        raise ValueError("Invalid journal state transition")
+    if completed is not None:
+        if type(completed) is not int or not 0 <= completed < len(data["operations"]):
+            raise ValueError("Invalid completed operation index")
+        if state != "applying":
+            raise ValueError("Completion requires applying state")
+        data["operations"][completed]["completed"] = True
+    data["state"] = state
+    validate_journal(data)
+    fd, name = tempfile.mkstemp(prefix=".xah-journal-", dir=str(tx))
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write((json.dumps(data, sort_keys=True, indent=2) + "\n").encode("utf-8"))
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(name, path)
+        _sync_directory(tx)
+    finally:
+        if os.path.exists(name):
+            os.unlink(name)
+    return data
