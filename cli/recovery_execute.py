@@ -40,6 +40,11 @@ def _rollback_locked(root, transaction_id):
     new_manifest = {"schema_version": 1, "files": dict(manifest["files"])}
     operations = []
     journal_root = root / ".xah-transactions" / transaction_id
+    from recovery_journal import validate_journal
+    import json
+    metadata = validate_journal(json.loads((journal_root / "journal.json").read_text()))
+    if metadata["transaction_id"] != transaction_id or metadata["state"] != tx["state"]:
+        raise ValueError("Journal changed during rollback preflight")
     for index, op in enumerate(tx["operations"]):
         rel = op["path"]
         dest = root / rel
@@ -49,9 +54,6 @@ def _rollback_locked(root, transaction_id):
         record = manifest["files"].get(rel)
         # A manifest can be old or fully updated if a crash occurred around
         # save_manifest. Never accept a digest unrelated to this journal.
-        from recovery_journal import validate_journal
-        import json
-        metadata = validate_journal(json.loads((journal_root / "journal.json").read_text()))
         original_digest = metadata["operations"][index]["original_sha256"]
         intended_digest = metadata["operations"][index]["intended_sha256"]
         if op["action"] == "update":
@@ -61,16 +63,16 @@ def _rollback_locked(root, transaction_id):
                 raise ValueError("Unexpected installed manifest record: " + rel)
             backup = journal_root / "originals" / str(index)
             new_manifest["files"][rel] = {"sha256": original_digest, "item_id": tx["item_id"]}
-            operations.append(("restore" if state == "intended" else "unchanged", dest, backup, intended_digest))
+            operations.append(("restore" if state == "intended" else "unchanged", dest, backup, intended_digest, index))
         else:
             if op["backup_state"] != "not_applicable" or state not in ("missing", "intended"):
                 raise ValueError("Unsafe added destination: " + rel)
             if record is not None and (record["item_id"] != tx["item_id"] or record["sha256"] != intended_digest):
                 raise ValueError("Unexpected installed manifest record: " + rel)
             new_manifest["files"].pop(rel, None)
-            operations.append(("remove" if state == "intended" else "unchanged", dest, None, intended_digest))
+            operations.append(("remove" if state == "intended" else "unchanged", dest, None, intended_digest, index))
     # All metadata and backup checks complete before first destination write.
-    for action, dest, backup, expected in reversed(operations):
+    for action, dest, backup, expected, index in reversed(operations):
         _relative(root, dest)
         if action == "unchanged":
             continue
@@ -84,7 +86,7 @@ def _rollback_locked(root, transaction_id):
                 raise ValueError("Backup changed during rollback")
             content = backup.read_bytes()
             import hashlib
-            if hashlib.sha256(content).hexdigest() != metadata["operations"][operations.index((action, dest, backup, expected))]["backup_sha256"]:
+            if hashlib.sha256(content).hexdigest() != metadata["operations"][index]["backup_sha256"]:
                 raise ValueError("Backup changed during rollback")
             fd, stage = tempfile.mkstemp(prefix=".xah-rollback-", dir=str(dest.parent))
             try:
