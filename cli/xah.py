@@ -141,6 +141,8 @@ def main():
     recovery = sub.add_parser("recovery", help="Read-only inspection of update journals")
     recovery.add_argument("--target", default=".")
     recovery.add_argument("--json", action="store_true")
+    recovery.add_argument("--rollback-plan", metavar="TRANSACTION_ID",
+                          help="Read-only rollback eligibility and file action plan")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
@@ -213,9 +215,18 @@ def main():
                 print(f"{state:10} {rel}")
         elif args.cmd == "recovery":
             from recovery_inspect import inspect_transactions
-            result = inspect_transactions(pathlib.Path(args.target).expanduser())
+            if args.rollback_plan:
+                from recovery_preflight import rollback_preflight
+                result = rollback_preflight(pathlib.Path(args.target).expanduser(), args.rollback_plan)
+            else:
+                result = inspect_transactions(pathlib.Path(args.target).expanduser())
             if args.json:
                 print(json.dumps(result, sort_keys=True, indent=2))
+            elif args.rollback_plan:
+                print("Read-only rollback plan: " + result["transaction_id"])
+                for op in result["operations"]:
+                    print("  " + op["action"] + " " + op["path"])
+                print(result["warning"])
             else:
                 for tx in result:
                     print(f'{tx["transaction_id"]} {tx["state"]} {tx["item_id"]}')
