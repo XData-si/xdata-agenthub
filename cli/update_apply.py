@@ -20,6 +20,8 @@ def _apply_update_locked(target, item_id, planned, *, fail_after=None):
     Not a crash-consistent transaction: process termination/power loss needs manual recovery.
     """
     target = target.resolve()
+    from recovery_guard import require_no_pending_transactions
+    require_no_pending_transactions(target)
     actions = plan_update(target, item_id, planned)
     if any(action == "conflict" for action, _ in actions):
         raise ValueError("Update refused: conflicts found; run update --dry-run")
