@@ -217,7 +217,10 @@ def main():
                 print(f"{state:10} {rel}")
         elif args.cmd == "recovery":
             from recovery_inspect import inspect_transactions
-            if args.lock_status:
+            if args.resolution_check:
+                from recovery_resolution_preflight import resolution_preflight
+                result = resolution_preflight(pathlib.Path(args.target).expanduser(), args.resolution_check)
+            elif args.lock_status:
                 from recovery_lock_inspect import inspect_writer_lock
                 result = inspect_writer_lock(pathlib.Path(args.target).expanduser())
             elif args.rollback_plan:
@@ -227,6 +230,8 @@ def main():
                 result = inspect_transactions(pathlib.Path(args.target).expanduser())
             if args.json:
                 print(json.dumps(result, sort_keys=True, indent=2))
+            elif args.resolution_check:
+                print("Restored files verified; manifest and writer ownership NOT verified: " + result["transaction_id"])
             elif args.lock_status:
                 print("Writer lock: " + result["status"] + " (removal not authorized)")
             elif args.rollback_plan:
