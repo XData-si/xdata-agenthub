@@ -3,9 +3,16 @@ import os
 import tempfile
 from installed_manifest import load_manifest, save_manifest, _relative, _digest
 from update_plan import plan_update
+from update_lock import update_lock
 
 
 def apply_update(target, item_id, planned, *, fail_after=None):
+    target = target.resolve()
+    with update_lock(target):
+        return _apply_update_locked(target, item_id, planned, fail_after=fail_after)
+
+
+def _apply_update_locked(target, item_id, planned, *, fail_after=None):
     """Apply a conflict-free plan; restore all changed files on ordinary failures.
 
     Not a crash-consistent transaction: process termination/power loss needs manual recovery.
