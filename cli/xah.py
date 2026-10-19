@@ -138,6 +138,9 @@ def main():
     refresh.add_argument("--offline", action="store_true")
     status = sub.add_parser("status", help="Report installed-file modification states")
     status.add_argument("--target", default=".")
+    recovery = sub.add_parser("recovery", help="Read-only inspection of update journals")
+    recovery.add_argument("--target", default=".")
+    recovery.add_argument("--json", action="store_true")
     sub.add_parser("doctor", help="Check Python version, catalog and template paths")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
@@ -208,6 +211,16 @@ def main():
                 raise ValueError("Target must be an existing directory")
             for rel, state in file_states(target).items():
                 print(f"{state:10} {rel}")
+        elif args.cmd == "recovery":
+            from recovery_inspect import inspect_transactions
+            result = inspect_transactions(pathlib.Path(args.target).expanduser())
+            if args.json:
+                print(json.dumps(result, sort_keys=True, indent=2))
+            else:
+                for tx in result:
+                    print(f'{tx["transaction_id"]} {tx["state"]} {tx["item_id"]}')
+                    for op in tx["operations"]:
+                        print(f'  {op["file_state"]:15} backup={op["backup_state"]:15} {op["path"]}')
         elif args.cmd == "doctor":
             print(f"Python: {platform.python_version()}")
             print(f"Catalog: {CATALOG}")
