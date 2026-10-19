@@ -168,7 +168,9 @@ def main():
                     print(f'{item["id"]:20} {item["type"]:12} {item["description"]}')
         elif args.cmd == "browse":
             from catalog_browse import facets, page
-            catalog = items()
+            from catalog_search import filter_items
+            catalog = filter_items(items(), query=args.query, kind=args.kind,
+                                   tag=args.tag, agent=args.agent, license=args.license)
             result = page(catalog, offset=args.offset, limit=args.limit)
             result["facets"] = facets(catalog)
             if args.json:
