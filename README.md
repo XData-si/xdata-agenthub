@@ -6,12 +6,34 @@
 
 [![Status](https://img.shields.io/badge/status-alpha-orange)](#roadmap) [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Made by XData](https://img.shields.io/badge/maintained%20by-XData-111827)](https://xdata.si)
 
-**XData AgentHub is a public alpha project.** No unsupported claims of certification or compatibility. This project currently ships a dependency-free Python CLI and local curated templates; it does **not** install arbitrary remote code.
+**Curated, security-first agent skills for real engineering work** — 61 original skills for Claude Code, Codex, OpenCode and any client that reads the [Agent Skills](https://agentskills.io/specification) format.
 
-**63 curated local resources · 60 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.
+[![Skills](https://img.shields.io/badge/skills-61-2563eb)](docs/CATALOG.md) [![Agent Skills spec](https://img.shields.io/badge/Agent%20Skills-spec%20checked-16a34a)](https://agentskills.io/specification) [![Tests](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml/badge.svg)](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml)
 
-## Why
-AI development instructions are scattered across repositories and incompatible conventions. AgentHub starts with a small, inspectable catalog and a local-first installer.
+## Install in one command
+
+| Client | Command |
+|---|---|
+| **Claude Code** (plugin marketplace) | `/plugin marketplace add XData-si/xdata-agenthub` then `/plugin install xdata-agenthub@xdata-agenthub` |
+| Claude Code, topic bundles only | `/plugin install xdata-security@xdata-agenthub` · `xdata-engineering` · `xdata-ops` · `xdata-ai` |
+| **Any agent** via the community `skills` CLI | `npx skills add XData-si/xdata-agenthub` — discovers the `skills/` directory; not yet verified by maintainers |
+| **Codex, OpenCode, Claude Code** without Node | `python3 cli/xah.py add <skill> --agent codex --scope user` (see [Quick start](#quick-start)) |
+
+Start with `agenthub-router`: it picks the right skill (or a short sequence) for the task and reports each skill's acceptance checks.
+
+## Why AgentHub
+
+Public skill registries grew to hundreds of thousands of entries in 2026 — and became an attack surface: poisoned `SKILL.md` files on open marketplaces were used to trick agents and users into installing malware. AgentHub takes the opposite approach:
+
+- **Small and curated, not scraped.** Every skill is original, MIT-licensed, reviewed in pull requests and listed with provenance in [`registry/catalog.json`](registry/catalog.json).
+- **Instructions only.** No bundled scripts, no remote includes, no download links; CI rejects entries that break the [release gates](scripts/validate_release.py), and `xah audit` flags piped downloads.
+- **Built to be verified.** Each skill has an example fixture, acceptance checks with negative cases and an explicit safety section, following the [skill quality standard](docs/SKILL_QUALITY_STANDARD.md).
+- **Vendor-neutral and offline-first.** Plain Markdown in the open Agent Skills format; the `xah` CLI is dependency-free Python that never executes downloaded code.
+- **Production topics.** Threat modeling, OAuth/OIDC, supply-chain provenance, EU AI Act readiness, SLOs, incident response, MCP servers, agent guardrails, local LLM serving — not just prompts.
+
+See the [honest comparison](docs/COMPARISON.md) with other skill hubs, and the [categorized catalog](docs/CATALOG.md).
+
+**Status: public alpha.** No certification or compatibility claims beyond the [recorded evidence](docs/integration-evidence/2026-10-15-runtime-results.md); skills are documentation-level drafts until marked Verified.
 
 ## Quick start
 

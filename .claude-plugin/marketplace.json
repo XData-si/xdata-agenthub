@@ -1,0 +1,185 @@
+{
+  "name": "xdata-agenthub",
+  "description": "Curated, security-first agent skills for engineering, security, operations and AI systems — by XData.",
+  "owner": {
+    "name": "XData",
+    "url": "https://xdata.si"
+  },
+  "plugins": [
+    {
+      "name": "xdata-agenthub",
+      "displayName": "XData AgentHub (all skills)",
+      "source": "./",
+      "description": "All 61 curated, security-first XData AgentHub skills, including the agenthub-router meta-skill.",
+      "skills": [
+        "./skills/"
+      ],
+      "category": "development",
+      "keywords": [
+        "agent-skills",
+        "security",
+        "devops",
+        "ai"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/XData-si/xdata-agenthub",
+      "repository": "https://github.com/XData-si/xdata-agenthub",
+      "author": {
+        "name": "XData",
+        "url": "https://xdata.si"
+      }
+    },
+    {
+      "name": "xdata-engineering",
+      "displayName": "XData Engineering",
+      "source": "./",
+      "description": "Spec-driven development, onboarding, debugging, TDD, refactoring, upgrades, code and API review, testing and documentation skills.",
+      "skills": [
+        "./skills/spec-driven-development",
+        "./skills/repository-onboarding",
+        "./skills/git-workflow",
+        "./skills/debugging-root-cause",
+        "./skills/test-driven-development",
+        "./skills/refactoring-safety",
+        "./skills/dependency-upgrade",
+        "./skills/skill-authoring",
+        "./skills/code-review",
+        "./skills/error-handling-review",
+        "./skills/documentation",
+        "./skills/technical-writing",
+        "./skills/api-design",
+        "./skills/api-integration",
+        "./skills/python-testing",
+        "./skills/typescript-testing",
+        "./skills/shell-script-review",
+        "./skills/sql-review",
+        "./skills/database-migrations",
+        "./skills/frontend-review",
+        "./skills/accessibility-review",
+        "./skills/performance-profiling"
+      ],
+      "category": "development",
+      "keywords": [
+        "engineering",
+        "testing",
+        "code-review",
+        "spec-driven",
+        "tdd"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/XData-si/xdata-agenthub",
+      "repository": "https://github.com/XData-si/xdata-agenthub",
+      "author": {
+        "name": "XData",
+        "url": "https://xdata.si"
+      }
+    },
+    {
+      "name": "xdata-security",
+      "displayName": "XData Security",
+      "source": "./",
+      "description": "Threat modeling, security review, OAuth/OIDC, supply-chain provenance, secrets, privacy, EU AI Act readiness and MCP review skills.",
+      "skills": [
+        "./skills/security-review",
+        "./skills/threat-modeling",
+        "./skills/oauth-oidc-review",
+        "./skills/prompt-injection-defense",
+        "./skills/dependency-audit",
+        "./skills/supply-chain-provenance",
+        "./skills/secrets-management",
+        "./skills/data-privacy",
+        "./skills/eu-ai-act-readiness",
+        "./skills/mcp-review",
+        "./skills/architecture-decision"
+      ],
+      "category": "security",
+      "keywords": [
+        "security",
+        "threat-modeling",
+        "supply-chain",
+        "privacy",
+        "eu-ai-act"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/XData-si/xdata-agenthub",
+      "repository": "https://github.com/XData-si/xdata-agenthub",
+      "author": {
+        "name": "XData",
+        "url": "https://xdata.si"
+      }
+    },
+    {
+      "name": "xdata-ops",
+      "displayName": "XData Ops & Reliability",
+      "source": "./",
+      "description": "Linux and container hardening, reverse proxy/TLS, email deliverability, CI pipelines, SLOs, incidents, runbooks, postmortems and backups.",
+      "skills": [
+        "./skills/linux-server-hardening",
+        "./skills/docker-hardening",
+        "./skills/kubernetes-review",
+        "./skills/terraform-review",
+        "./skills/reverse-proxy-tls",
+        "./skills/email-deliverability",
+        "./skills/postgres-performance",
+        "./skills/gitlab-ci",
+        "./skills/github-actions",
+        "./skills/release-management",
+        "./skills/backup-restore",
+        "./skills/observability",
+        "./skills/slo-error-budgets",
+        "./skills/log-analysis",
+        "./skills/incident-response",
+        "./skills/runbook-authoring",
+        "./skills/postmortem"
+      ],
+      "category": "devops",
+      "keywords": [
+        "devops",
+        "sre",
+        "kubernetes",
+        "docker",
+        "incident-response"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/XData-si/xdata-agenthub",
+      "repository": "https://github.com/XData-si/xdata-agenthub",
+      "author": {
+        "name": "XData",
+        "url": "https://xdata.si"
+      }
+    },
+    {
+      "name": "xdata-ai",
+      "displayName": "XData AI Systems",
+      "source": "./",
+      "description": "Prompt design, LLM evaluation, RAG ingestion and evaluation, agent guardrails, MCP server development, local LLM serving and LLM gateways.",
+      "skills": [
+        "./skills/prompt-design-review",
+        "./skills/llm-output-evaluation",
+        "./skills/rag-ingestion-design",
+        "./skills/rag-evaluation",
+        "./skills/agent-evaluation",
+        "./skills/agent-guardrails",
+        "./skills/mcp-server-development",
+        "./skills/llm-gateway-routing",
+        "./skills/local-llm-serving",
+        "./skills/llm-cost-analysis"
+      ],
+      "category": "ai",
+      "keywords": [
+        "llm",
+        "rag",
+        "agents",
+        "mcp",
+        "evaluation"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/XData-si/xdata-agenthub",
+      "repository": "https://github.com/XData-si/xdata-agenthub",
+      "author": {
+        "name": "XData",
+        "url": "https://xdata.si"
+      }
+    }
+  ]
+}

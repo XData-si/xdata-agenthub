@@ -1,6 +1,9 @@
 # Skill catalog
 
-XData AgentHub ships **60 local skills**, plus three non-skill resources. Entries are authored locally, inspectable and not automatically executed.
+XData AgentHub ships **61 local skills**, plus three non-skill resources. Entries are authored locally, inspectable and not automatically executed.
+
+## Start here
+- `agenthub-router` — route a task to the right AgentHub skills and report their acceptance checks
 
 ## Engineering workflow
 - `spec-driven-development` — specification, plan and tasks before code

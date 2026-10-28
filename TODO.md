@@ -13,7 +13,7 @@
 - [ ] Enable Discussions, set repository topics and homepage in GitHub settings.
 
 ## P1 — compelling product
-- [x] Add 25+ original skills (60 currently).
+- [x] Add 25+ original skills (61 currently).
 - [ ] Complete editorial review of every skill for domain-specific examples, fixtures and acceptance checks (substantial first pass committed).
 - [x] Add path-based skill installers for Claude Code, Codex and OpenCode with unit tests.
 - [ ] Verify actual client discovery in supported versions; implement semantic adapters where needed.
@@ -26,6 +26,13 @@
 - [ ] Add offline fixture-based tests, schema validation and JSON output.
 
 ## P2 — growth
+- [x] Claude Code plugin marketplace (`.claude-plugin/marketplace.json`) with topic bundles; `agenthub-router` meta-skill.
+- [ ] Verify `npx skills add XData-si/xdata-agenthub` and record evidence; appear on the skills.sh directory.
+- [ ] Submit the marketplace to Anthropic's plugin directory and to curated awesome lists (follow each list's rules).
+- [ ] Mark the first skills **Verified** with recorded runtime evidence (Claude Code, Codex, OpenCode).
+- [ ] Add "common rationalizations" sections to workflow skills (reasons agents skip steps, and the rebuttal).
+- [ ] Publish a static catalog site (GitHub Pages) generated from `registry/catalog.json`.
+- [ ] Tag a release with checksums and release notes; publish a social preview image.
 - [ ] Publish demo video/GIF, benchmark reproducibility notes and honest comparison matrix.
 - [ ] Prepare Show HN, Dev.to, Reddit and LinkedIn launch posts; follow community rules.
 - [ ] Publish starter kits for Python, TypeScript, Kubernetes and AI/RAG projects.
