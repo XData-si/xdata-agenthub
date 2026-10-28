@@ -2,6 +2,7 @@
 """XData AgentHub local-first alpha CLI. Python 3.10+, standard library only."""
 import argparse
 import json
+import os
 import pathlib
 import re
 import shutil
@@ -12,9 +13,41 @@ from installed_manifest import file_states, record_install, load_manifest
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "registry" / "catalog.json"
+# Additional local catalogs (e.g. private organisation skills) from --catalog or XAH_CATALOGS
+# (os.pathsep-separated). Item paths in an additional catalog are relative to that catalog file's directory.
+EXTRA_CATALOGS_ENV = "XAH_CATALOGS"
+_extra_catalogs = []
+_item_roots = {}
+
+def catalog_files():
+    files = [(CATALOG, ROOT)]
+    configured = list(_extra_catalogs) + [p for p in os.environ.get(EXTRA_CATALOGS_ENV, "").split(os.pathsep) if p]
+    for value in configured:
+        path = pathlib.Path(value).expanduser().resolve()
+        if not path.is_file():
+            raise ValueError(f"Additional catalog not found: {path}")
+        if path in [existing for existing, _ in files]:
+            continue
+        files.append((path, path.parent))
+    return files
 
 def items():
-    return validate_catalog(json.loads(CATALOG.read_text(encoding="utf-8")))
+    merged = []
+    roots = {}
+    for path, root in catalog_files():
+        for item in validate_catalog(json.loads(path.read_text(encoding="utf-8"))):
+            if item["id"] in roots:
+                raise ValueError(f"Duplicate item ID across catalogs: {item['id']} ({path})")
+            roots[item["id"]] = root
+            merged.append(item)
+    _item_roots.clear()
+    _item_roots.update(roots)
+    return merged
+
+def item_root(item):
+    if item["id"] not in _item_roots:
+        items()
+    return _item_roots.get(item["id"], ROOT)
 
 def entry(item_id):
     for item in items():
@@ -23,8 +56,9 @@ def entry(item_id):
     raise ValueError(f"Unknown item: {item_id}")
 
 def source(item):
-    path = (ROOT / item["path"]).resolve()
-    if not path.is_relative_to(ROOT.resolve()) or not path.is_file():
+    root = item_root(item)
+    path = (root / item["path"]).resolve()
+    if not path.is_relative_to(root.resolve()) or not path.is_file():
         raise ValueError("Unsafe or missing catalog path")
     return path
 
@@ -34,7 +68,7 @@ def skill_files(item):
     if item["type"] != "skill":
         return [(main_file, pathlib.Path(main_file.name))]
     root = main_file.parent
-    if pathlib.Path(ROOT / item["path"]).is_symlink() or root.is_symlink():
+    if pathlib.Path(item_root(item) / item["path"]).is_symlink() or root.is_symlink():
         raise ValueError("Symlinked skill entry refused")
     found = []
     for candidate in sorted(root.rglob("*")):
@@ -48,17 +82,19 @@ def skill_files(item):
     return found
 
 
-def install_plan(item, target, agent):
+def install_plan(item, target, agent, scope="project"):
     from adapter_contract import destination_for
     if item["type"] == "skill":
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", item["id"]):
             raise ValueError("Unsafe skill identifier")
-        base = pathlib.Path(destination_for(agent, item["id"], "skill"))
+        base = pathlib.Path(destination_for(agent, item["id"], "skill", scope))
         package = skill_files(item)
         if not any(rel == pathlib.Path("SKILL.md") for _, rel in package):
             raise ValueError("Missing SKILL.md in skill package")
         planned = [(src, target / base / rel) for src, rel in package]
     else:
+        if scope != "project":
+            raise ValueError(f"{scope} scope supports skill items only")
         rel = pathlib.Path(item["path"])
         if rel.is_absolute() or ".." in rel.parts or "\\" in item["path"]:
             raise ValueError("Unsafe destination")
@@ -97,8 +133,17 @@ def copy_plan(planned, dry_run=False):
         raise
 
 
+def resolve_target(args):
+    """--scope user installs relative to the home directory; an explicit --target overrides it."""
+    if getattr(args, "scope", "project") == "user" and args.target == ".":
+        return pathlib.Path.home().resolve()
+    return pathlib.Path(args.target).expanduser().resolve()
+
+
 def main():
     parser = argparse.ArgumentParser(prog="xah", description="XData AgentHub — portable agent resources")
+    parser.add_argument("--catalog", action="append", default=[], metavar="PATH",
+                        help=f"Additional local catalog JSON (repeatable; also {EXTRA_CATALOGS_ENV})")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list", help="List catalog items")
     trust = sub.add_parser("trust", help="Inspect declared catalog provenance (not certification)")
@@ -129,6 +174,8 @@ def main():
     add.add_argument("id")
     add.add_argument("--target", default=".")
     add.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
+    add.add_argument("--scope", choices=["project", "user"], default="project",
+                     help="user: install a skill into the agent's user-level directory under the home directory")
     init = sub.add_parser("init", help="Install a curated local starter profile")
     init.add_argument("--target", default=".")
     init.add_argument("--profile", choices=["developer", "research", "devops"], default="developer")
@@ -138,6 +185,7 @@ def main():
     update.add_argument("id")
     update.add_argument("--target", default=".")
     update.add_argument("--agent", choices=["generic", "claude", "codex", "opencode"], default="generic")
+    update.add_argument("--scope", choices=["project", "user"], default="project")
     mode = update.add_mutually_exclusive_group(required=True)
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--apply", action="store_true")
@@ -167,6 +215,7 @@ def main():
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
     args = parser.parse_args()
+    _extra_catalogs[:] = args.catalog
     try:
         if args.cmd in ("list", "search"):
             from catalog_search import filter_items
@@ -223,15 +272,17 @@ def main():
                 print(source(item).read_text(encoding="utf-8"))
         elif args.cmd == "update":
             from update_plan import plan_update
-            target = pathlib.Path(args.target).expanduser().resolve()
+            target = resolve_target(args)
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             item = entry(args.id)
             from adapter_contract import destination_for
             if item["type"] == "skill":
-                base = pathlib.Path(destination_for(args.agent, item["id"], "skill"))
+                base = pathlib.Path(destination_for(args.agent, item["id"], "skill", args.scope))
                 planned = [(src, target / base / rel) for src, rel in skill_files(item)]
             else:
+                if args.scope != "project":
+                    raise ValueError(f"{args.scope} scope supports skill items only")
                 rel = pathlib.Path(item["path"])
                 if rel.is_absolute() or ".." in rel.parts or "\\\\" in item["path"]:
                     raise ValueError("Unsafe destination")
@@ -308,7 +359,8 @@ def main():
                 return 2
         elif args.cmd == "doctor":
             print(f"Python: {platform.python_version()}")
-            print(f"Catalog: {CATALOG}")
+            for path, _ in catalog_files():
+                print(f"Catalog: {path}")
             if sys.version_info < (3, 10):
                 raise ValueError("Python 3.10+ required")
             catalog = items()
@@ -352,7 +404,7 @@ def main():
                         ownership.extend((item_id, dest) for _, dest in item_plan)
                     record_installs(target, ownership, planned, copy_plan)
         elif args.cmd == "add":
-            target = pathlib.Path(args.target).expanduser().resolve()
+            target = resolve_target(args)
             if not target.is_dir():
                 raise ValueError("Target must be an existing directory")
             from installed_manifest import record_installs
@@ -360,7 +412,7 @@ def main():
             with update_lock(target):
                 from recovery_guard import require_no_pending_transactions
                 require_no_pending_transactions(target)
-                planned = install_plan(entry(args.id), target, args.agent)
+                planned = install_plan(entry(args.id), target, args.agent, args.scope)
                 record_installs(target, [(args.id, dest) for _, dest in planned], planned, copy_plan)
         elif args.cmd == "audit":
             target = pathlib.Path(args.target).expanduser().resolve()

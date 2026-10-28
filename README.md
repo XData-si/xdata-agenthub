@@ -53,6 +53,10 @@ For safe v0.1.0-to-development migration, read the [migration guide](docs/MIGRAT
 | Codex | `.agents/skills/` | `AGENTS.md` |
 | OpenCode | `.opencode/skills/` | `AGENTS.md` |
 
+Skills can also be installed at user scope (`add --scope user`: `~/.claude/skills`, `~/.agents/skills`,
+`~/.config/opencode/skills`), and private skills can live in [additional local catalogs](docs/ADDITIONAL_CATALOGS.md)
+(`--catalog` / `XAH_CATALOGS`) without forking this repository.
+
 See [compatibility details](docs/AGENT_COMPATIBILITY.md) and [demo storyboard](docs/SHOWCASE.md). These are path-level adapters, not full semantic conversions.
 
 See the [categorized skill catalog](docs/CATALOG.md) for all entries and their intended uses.
