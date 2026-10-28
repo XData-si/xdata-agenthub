@@ -22,6 +22,8 @@ class BuildSiteTests(unittest.TestCase):
             self.assertNotIn("<script src", page)
             self.assertNotIn("stylesheet", page)
             self.assertTrue((out / "catalog.json").is_file())
+            self.assertNotIn("{{", page)
+            self.assertIn(f"<b>{len(skills)}</b><span>skills</span>", page)
 
     def test_descriptions_are_escaped(self):
         with tempfile.TemporaryDirectory() as tmp:

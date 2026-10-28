@@ -1,4 +1,5 @@
-<p align="center"><img src="docs/assets/logo.svg" width="96" alt="XData AgentHub logo"></p>
+<p align="center"><a href="https://xdata-si.github.io/xdata-agenthub/"><img src="docs/assets/hero-banner.svg" alt="XData AgentHub — agent skills you can trust: security gate, AI review, maintainer review, seal, signed release"></a></p>
+<p align="center"><a href="https://xdata-si.github.io/xdata-agenthub/"><b>Browse the catalog</b></a> · <a href="#install-in-one-command">Install</a> · <a href="CONTRIBUTING.md">Contribute a skill</a> · <a href="docs/SEAL.md">Seal of approval</a></p>
 
 # XData AgentHub
 
@@ -8,9 +9,9 @@
 
 [![Status](https://img.shields.io/badge/status-alpha-orange)](#roadmap) [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Made by XData](https://img.shields.io/badge/maintained%20by-XData-111827)](https://xdata.si)
 
-**Curated, security-first agent skills for real engineering work** — 64 original skills for Claude Code, Codex, OpenCode and any client that reads the [Agent Skills](https://agentskills.io/specification) format.
+**Curated, security-reviewed agent skills for real engineering work** — 104 original skills for Claude Code, Codex, OpenCode and any client that reads the [Agent Skills](https://agentskills.io/specification) format.
 
-[![Skills](https://img.shields.io/badge/skills-64-2563eb)](docs/CATALOG.md) [![Agent Skills spec](https://img.shields.io/badge/Agent%20Skills-spec%20checked-16a34a)](https://agentskills.io/specification) [![Tests](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml/badge.svg)](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml)
+[![Skills](https://img.shields.io/badge/skills-104-2563eb)](docs/CATALOG.md) [![Agent Skills spec](https://img.shields.io/badge/Agent%20Skills-spec%20checked-16a34a)](https://agentskills.io/specification) [![Tests](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml/badge.svg)](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml)
 
 ## Install in one command
 
@@ -34,6 +35,15 @@ Public skill registries grew to hundreds of thousands of entries in 2026 — and
 - **Production topics.** Threat modeling, OAuth/OIDC, supply-chain provenance, EU AI Act readiness, SLOs, incident response, MCP servers, agent guardrails, local LLM serving — not just prompts.
 
 Browse the [searchable catalog site](https://xdata-si.github.io/xdata-agenthub/), the [categorized catalog](docs/CATALOG.md) and the [honest comparison](docs/COMPARISON.md) with other skill hubs.
+
+### Every skill is security-reviewed — including community contributions
+
+```mermaid
+flowchart LR
+  A[Skill contribution] --> B[Security gate] --> C[AI security review] --> D[Maintainer review] --> E[Seal bound to digest] --> F[Signed release & marketplace]
+```
+
+No skill is distributed without passing the deterministic security gate, an AI security review and a maintainer review. Want to add yours? See [CONTRIBUTING.md](CONTRIBUTING.md) — your skill gets the same review and the same seal.
 
 **Seal of approval:** every skill change passes a deterministic security gate and an AI review in CI; maintainers grant **XData Reviewed**, **XData Verified** (runtime evidence) and **EU Ready** seals that are bound to the skill's digest and expire on any change — see [docs/SEAL.md](docs/SEAL.md).
 

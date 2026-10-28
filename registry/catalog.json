@@ -1200,7 +1200,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "0af7d6a36e3b690b7616927647a408ca9296a4a126e10c3c0a4173c7ef74f550"
+        "value": "245ae1f6ad5b025d8a079d8190afd5097eb9e984e054103dc698c65bb57cd3e9"
       }
     },
     {
@@ -1258,6 +1258,766 @@
       "digest": {
         "algorithm": "sha256",
         "value": "3702e61684ab31f1cc30096eaa8429ef160657a5161efa13fb8b9dd5511f352f"
+      }
+    },
+    {
+      "id": "go-development",
+      "type": "skill",
+      "name": "Go Development",
+      "description": "Idiomatic Go: errors, context, goroutines, races, tests",
+      "path": "skills/go-development/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "743070fab638dacfeed9ac7971cf364a654351d74906c0c507856e08ca628bee"
+      }
+    },
+    {
+      "id": "rust-review",
+      "type": "skill",
+      "name": "Rust Review",
+      "description": "Unsafe, panics, errors, async and dependency hygiene",
+      "path": "skills/rust-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e683cd35136dd85582d4d8c7bcffd6acd5e8680954cb9a02f27a04b209a020f3"
+      }
+    },
+    {
+      "id": "java-spring-review",
+      "type": "skill",
+      "name": "Java Spring Review",
+      "description": "Spring Security, transactions, JPA N+1, Actuator",
+      "path": "skills/java-spring-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2d767b2fa902155b01dfd93a18449c98bd3e02de1e1646b31dd119078ef6070f"
+      }
+    },
+    {
+      "id": "react-component-review",
+      "type": "skill",
+      "name": "React Component Review",
+      "description": "Hooks, state, rendering, accessibility and XSS",
+      "path": "skills/react-component-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "ce7a8ea6c7e33313edd8a135906df66b9076026109b5cae0308de440bf789885"
+      }
+    },
+    {
+      "id": "node-backend-review",
+      "type": "skill",
+      "name": "Node Backend Review",
+      "description": "Validation, async errors, event loop, secure defaults",
+      "path": "skills/node-backend-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "57b8981bebe31608db9e015ea20026be438e4b0f5f46858bc78ff917caf05711"
+      }
+    },
+    {
+      "id": "python-web-review",
+      "type": "skill",
+      "name": "Python Web Review",
+      "description": "Django and FastAPI security, ORM and async pitfalls",
+      "path": "skills/python-web-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "d95aaa17456adf93bb2e52f9ed0598def38279d89ccaf6244872b252b33ba5d9"
+      }
+    },
+    {
+      "id": "mobile-app-review",
+      "type": "skill",
+      "name": "Mobile App Review",
+      "description": "iOS/Android storage, network, privacy and release",
+      "path": "skills/mobile-app-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "944a869e1edc14200d8c1ab31f013174707242e6f1cd596146f7123cc001c4a3"
+      }
+    },
+    {
+      "id": "graphql-api-review",
+      "type": "skill",
+      "name": "GraphQL API Review",
+      "description": "Field authorization, query limits, batching, schema evolution",
+      "path": "skills/graphql-api-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "d4f5cdcef780c93efb534131eb333f60f66ab3bef79561f3b6827b505900cc70"
+      }
+    },
+    {
+      "id": "event-driven-architecture",
+      "type": "skill",
+      "name": "Event-Driven Architecture",
+      "description": "Idempotent consumers, outbox, ordering, DLQ, schemas",
+      "path": "skills/event-driven-architecture/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e76506eddf0f6ed9e8b76b1d990521bd85a23a506fc5208aa6e3e829d1673695"
+      }
+    },
+    {
+      "id": "caching-strategy",
+      "type": "skill",
+      "name": "Caching Strategy",
+      "description": "Keys, invalidation, stampedes and per-user isolation",
+      "path": "skills/caching-strategy/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "29338fa203c6e739200a6e617a209c6666d70260dc8cba53d7e3bcca3b73811d"
+      }
+    },
+    {
+      "id": "data-pipeline-review",
+      "type": "skill",
+      "name": "Data Pipeline Review",
+      "description": "Idempotent ETL/ELT, late data, schema drift, backfills",
+      "path": "skills/data-pipeline-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "1024f0ac1db7ed347144c60651c084c097f9f4b662b3c9113ab78a61f07cd2a3"
+      }
+    },
+    {
+      "id": "data-quality-checks",
+      "type": "skill",
+      "name": "Data Quality Checks",
+      "description": "Data contracts, freshness, volume and reconciliation checks",
+      "path": "skills/data-quality-checks/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2db348f0eada81c9c4337fc8f2fdb2eae4afd1e55b847e7b4f9b277dece8fa19"
+      }
+    },
+    {
+      "id": "feature-flags",
+      "type": "skill",
+      "name": "Feature Flags",
+      "description": "Progressive delivery, kill switches and flag cleanup",
+      "path": "skills/feature-flags/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "9ab2bce809289fda61ecc03b2ae7f9969ea592b2026f8a094e6749d9a09a0d9f"
+      }
+    },
+    {
+      "id": "i18n-localization",
+      "type": "skill",
+      "name": "Internationalization",
+      "description": "ICU plurals, locale formats, pseudo-localization",
+      "path": "skills/i18n-localization/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "48cf5b137913b75d66f01122a7d337efe15240ffc8586e34643fcc10109c432a"
+      }
+    },
+    {
+      "id": "ci-cd-pipeline-design",
+      "type": "skill",
+      "name": "CI/CD Pipeline Design",
+      "description": "Build once, promote by digest, gates and rollback",
+      "path": "skills/ci-cd-pipeline-design/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "6131365670c13c0cf61e709764a7a9fa97c8f5755aaf1cabced7ce6b3226720d"
+      }
+    },
+    {
+      "id": "container-image-optimization",
+      "type": "skill",
+      "name": "Container Image Optimization",
+      "description": "Multi-stage, minimal bases, cache, non-root",
+      "path": "skills/container-image-optimization/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "78aa509ebf2835c837bb3bbe0604c836de9474143877cfec11fb77a635e11824"
+      }
+    },
+    {
+      "id": "helm-chart-review",
+      "type": "skill",
+      "name": "Helm Chart Review",
+      "description": "Values schema, secure defaults, upgrades and CRDs",
+      "path": "skills/helm-chart-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "1dc11437996d94d9c3e4e45e089f997f86f15bef8998ffa5353b0c869f2d2bfb"
+      }
+    },
+    {
+      "id": "ansible-review",
+      "type": "skill",
+      "name": "Ansible Review",
+      "description": "Idempotency, check mode, vault and Molecule tests",
+      "path": "skills/ansible-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b95bb732826ed190b2a65924dfe3ea89981367ccbfb1910cba045fdb9143fac4"
+      }
+    },
+    {
+      "id": "cloud-cost-optimization",
+      "type": "skill",
+      "name": "Cloud Cost Optimization",
+      "description": "FinOps: allocation, waste, right-sizing, AI spend",
+      "path": "skills/cloud-cost-optimization/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "53254ec0d8c86c6387f30027a9bf444c00edc9e0f2fca31507ed4945aca56a3c"
+      }
+    },
+    {
+      "id": "cloud-iam-least-privilege",
+      "type": "skill",
+      "name": "Cloud IAM Least Privilege",
+      "description": "Wildcards, escalation paths, keys and access reviews",
+      "path": "skills/cloud-iam-least-privilege/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "d20dda7899c3b4d0386bf442b17b9840a3067c448f19a2bff4c9cb88e88b5657"
+      }
+    },
+    {
+      "id": "network-segmentation",
+      "type": "skill",
+      "name": "Network Segmentation",
+      "description": "Zones, flow matrix, management access, verification",
+      "path": "skills/network-segmentation/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "0ce3427fc4535f325dff5f522efb07cb3652a8df0e7d2718006bda7625f1aa05"
+      }
+    },
+    {
+      "id": "load-testing",
+      "type": "skill",
+      "name": "Load Testing",
+      "description": "Workload models, test types, bottlenecks and SLOs",
+      "path": "skills/load-testing/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "dc2217bf43bdb3f6dc9ead48af143c4fafdcc53b393ac36fdee1b422a9b7cd3c"
+      }
+    },
+    {
+      "id": "chaos-engineering",
+      "type": "skill",
+      "name": "Chaos Engineering",
+      "description": "Hypotheses, blast radius, abort conditions",
+      "path": "skills/chaos-engineering/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e3d7f9ee143848b9ad2e9b2b523fe329ed42dfa57ec8aff9082cba0d4b158bd5"
+      }
+    },
+    {
+      "id": "disaster-recovery-drill",
+      "type": "skill",
+      "name": "Disaster Recovery Drill",
+      "description": "Prove RTO/RPO with isolated restores",
+      "path": "skills/disaster-recovery-drill/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "569484888ea423c9f72e9acb3f133cbb66581bbe057b75c11d6ed48edcdfc305"
+      }
+    },
+    {
+      "id": "logging-standards",
+      "type": "skill",
+      "name": "Logging Standards",
+      "description": "Structured logs, correlation, redaction, retention",
+      "path": "skills/logging-standards/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "90b98e22ec5873948763373cfee1d33139eee149a779eb9a8e07ee427bc94e6c"
+      }
+    },
+    {
+      "id": "release-notes",
+      "type": "skill",
+      "name": "Release Notes",
+      "description": "User-focused changelogs and migration steps",
+      "path": "skills/release-notes/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "8c0c0e8b7008227ac0bd971eb43c5921b0e8d1b65c9696369b78f7f367675912"
+      }
+    },
+    {
+      "id": "vulnerability-management",
+      "type": "skill",
+      "name": "Vulnerability Management",
+      "description": "CVSS, EPSS, KEV, reachability, SLAs and exceptions",
+      "path": "skills/vulnerability-management/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "6ee3397ed61347ba37898b146c8845d98b3a1577769497d9baccfb98963153d8"
+      }
+    },
+    {
+      "id": "owasp-asvs-review",
+      "type": "skill",
+      "name": "OWASP ASVS Review",
+      "description": "Requirement-to-evidence verification by ASVS level",
+      "path": "skills/owasp-asvs-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "9c165e0381d8b16ec072792fefa5e58b7d22b1d326f70784717231850e9eec1f"
+      }
+    },
+    {
+      "id": "security-testing-scope",
+      "type": "skill",
+      "name": "Security Testing Scope",
+      "description": "Authorized pentest scope, rules of engagement",
+      "path": "skills/security-testing-scope/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "042f5449ab38ffc1505a21ef94dbfdb606467413300c6dc0c8f0a51e50f3abd4"
+      }
+    },
+    {
+      "id": "open-source-license-compliance",
+      "type": "skill",
+      "name": "Open Source License Compliance",
+      "description": "SBOM licences, copyleft obligations, notices (not legal advice)",
+      "path": "skills/open-source-license-compliance/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "cf8a803daf691bc07a4709bfa0e7c902730155929cd4063f3f8c6f42b73ae3da"
+      }
+    },
+    {
+      "id": "gdpr-dsar-handling",
+      "type": "skill",
+      "name": "GDPR DSAR Handling",
+      "description": "Data subject requests across systems (not legal advice)",
+      "path": "skills/gdpr-dsar-handling/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b7e05dca0e310166e9f7bdb863e27fbffc0f740ecd08889ac0dd845796365b70"
+      }
+    },
+    {
+      "id": "dpia",
+      "type": "skill",
+      "name": "DPIA",
+      "description": "Data protection impact assessments (not legal advice)",
+      "path": "skills/dpia/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "4ee5f0e886dc2af520027cdb2e93473135f467b8f0e0c0337c882d5befb1ada5"
+      }
+    },
+    {
+      "id": "dora-readiness",
+      "type": "skill",
+      "name": "DORA Readiness",
+      "description": "Financial-sector ICT resilience obligations (not legal advice)",
+      "path": "skills/dora-readiness/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "f12a887dfc55adbba3955bf5638e41ca33239bc89d50189f17e108d649b49aba"
+      }
+    },
+    {
+      "id": "european-accessibility-act",
+      "type": "skill",
+      "name": "European Accessibility Act",
+      "description": "EAA scope, EN 301 549/WCAG and statements (not legal advice)",
+      "path": "skills/european-accessibility-act/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b30acca2fa6ace19752ab5736966ad9b081ed03726f871c0907c151c0bc0a4bc"
+      }
+    },
+    {
+      "id": "ai-red-teaming",
+      "type": "skill",
+      "name": "AI Red Teaming",
+      "description": "Authorized LLM and agent attack testing with regressions",
+      "path": "skills/ai-red-teaming/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "1d216584ecae7568b482ae543543a9f64e9495f1fc857a5c60e56d821143c3af"
+      }
+    },
+    {
+      "id": "multi-agent-orchestration",
+      "type": "skill",
+      "name": "Multi-Agent Orchestration",
+      "description": "Roles, task contracts, isolation and budgets",
+      "path": "skills/multi-agent-orchestration/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "3f14eb086d50966cdb36184799d5b5dfe5d2a66caebcde612cd297ef0a5555b6"
+      }
+    },
+    {
+      "id": "llm-structured-extraction",
+      "type": "skill",
+      "name": "LLM Structured Extraction",
+      "description": "Schemas, validation, grounding and review queues",
+      "path": "skills/llm-structured-extraction/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "95b8551a1534437d8c97f00ad649cf6de422d0715e279e2ccecdf05aa9f0ec7a"
+      }
+    },
+    {
+      "id": "llm-observability",
+      "type": "skill",
+      "name": "LLM Observability",
+      "description": "Traces, tokens, cost, quality signals and privacy",
+      "path": "skills/llm-observability/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "9793295e92a940983475144073ef616ee4f71a41abd70df57a2e61a4278133c1"
+      }
+    },
+    {
+      "id": "embedding-model-selection",
+      "type": "skill",
+      "name": "Embedding Model Selection",
+      "description": "Multilingual evaluation, cost, hosting and migration",
+      "path": "skills/embedding-model-selection/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "0de52ce8e61214f2fd08c171d872c502766c81c4c87ccec8a4b5ab80e07f0c16"
+      }
+    },
+    {
+      "id": "ml-model-deployment",
+      "type": "skill",
+      "name": "ML Model Deployment",
+      "description": "Registry, staged rollout, drift and rollback",
+      "path": "skills/ml-model-deployment/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "f9c60fcdf037463d6e794577728682271f1fd057c45ad6402cdceb33c997f2dc"
       }
     }
   ]

@@ -22,7 +22,7 @@ class CliTests(unittest.TestCase):
         result = subprocess.run([sys.executable, str(ROOT / "scripts/validate_release.py")],
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("67 local resources", result.stdout)
+        self.assertIn("107 local resources", result.stdout)
 
     def test_project_instructions_are_actionable(self):
         template = (ROOT / "instructions/AGENTS.md").read_text(encoding="utf-8")

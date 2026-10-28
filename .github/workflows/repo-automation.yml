@@ -1,0 +1,51 @@
+name: Repository automation
+# Labels pull requests by changed paths, welcomes first-time contributors, and marks inactive issues and pull
+# requests as stale. Uses pull_request_target only for actions that never check out or run pull request code.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  issues:
+    types: [opened]
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  label:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v5
+  welcome:
+    if: github.event_name == 'issues' || (github.event_name == 'pull_request_target' && github.event.action == 'opened')
+    runs-on: ubuntu-24.04
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            Thanks for opening your first issue in XData AgentHub! A maintainer will triage it. For security problems, please use private vulnerability reporting instead of public issues.
+          pr-message: |
+            Thanks for your first pull request! Every skill is security-reviewed before distribution: the security gate and an AI review run automatically, then a maintainer reviews it and grants the seal. See CONTRIBUTING.md for the full path.
+  stale:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 14
+          exempt-issue-labels: 'security,pinned,accepted,roadmap'
+          exempt-pr-labels: 'security,pinned'
+          stale-issue-message: 'This issue has had no activity for 60 days. It will be closed in 14 days unless there is new activity.'
+          stale-pr-message: 'This pull request has had no activity for 60 days. It will be closed in 14 days unless there is new activity.'
