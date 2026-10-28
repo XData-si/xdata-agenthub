@@ -7,6 +7,7 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 ### Site, branding and skill depth
 - Searchable static catalog site generated from `registry/catalog.json` (`scripts/build_site.py`, standard library only) and a GitHub Pages workflow.
 - Logo and social preview image (`docs/assets/`).
+- Runtime evidence (2026-10-28): `agenthub-router`, `shell-script-review`, `threat-modeling` and `database-migrations` verified for tested scenarios in Claude Code 2.1.308 and OpenCode 1.19.4 with native skill-loading traces.
 - "Common rationalizations" tables in ten workflow skills (spec-driven development, debugging, refactoring, TDD, git, code review, migrations, upgrades, security review, incident response).
 
 ### Distribution

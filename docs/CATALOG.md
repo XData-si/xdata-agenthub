@@ -93,4 +93,6 @@ python3 cli/xah.py add mcp-review --agent codex --target /path/to/existing/proje
 Use `--agent claude`, `--agent codex`, `--agent opencode` or the generic default. Installation copies local Markdown only and refuses overwriting existing files.
 
 ## Quality status
+**Verified scenarios** (native skill loading captured in Claude Code 2.1.308 and OpenCode 1.19.4, see [2026-10-28 results](integration-evidence/2026-10-28-runtime-results.md)): `agenthub-router`, `shell-script-review`, `threat-modeling`, `database-migrations`. Earlier scenario evidence: `code-review` (Codex, OpenCode), `mcp-review`, `security-review`, `python-testing` (Codex; skill instructions consumed, native loading not verified) — see [2026-10-15 results](integration-evidence/2026-10-15-runtime-results.md).
+
 The catalog is a curated **alpha**, not a certification. Skill depth varies. Individual agent compatibility evidence and remaining gaps are documented in [integration results](integration-evidence/2026-10-15-runtime-results.md) and [runtime test plan](AGENT_RUNTIME_TESTS.md).

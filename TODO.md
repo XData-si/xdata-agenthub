@@ -29,7 +29,7 @@
 - [x] Claude Code plugin marketplace (`.claude-plugin/marketplace.json`) with topic bundles; `agenthub-router` meta-skill.
 - [ ] Verify `npx skills add XData-si/xdata-agenthub` and record evidence; appear on the skills.sh directory.
 - [ ] Submit the marketplace to Anthropic's plugin directory and to curated awesome lists (follow each list's rules).
-- [ ] Mark the first skills **Verified** with recorded runtime evidence (Claude Code, Codex, OpenCode).
+- [x] Mark the first skills **Verified** with recorded runtime evidence (Claude Code 2.1.308, OpenCode 1.19.4; Codex pending).
 - [x] Add "common rationalizations" sections to workflow skills (reasons agents skip steps, and the rebuttal).
 - [x] Publish a static catalog site (GitHub Pages) generated from `registry/catalog.json`.
 - [ ] Tag a release with checksums and release notes; publish a social preview image.
