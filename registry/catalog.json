@@ -495,6 +495,441 @@
         "codex",
         "opencode"
       ]
+    },
+    {
+      "id": "spec-driven-development",
+      "type": "skill",
+      "name": "Spec Driven Development",
+      "description": "Specification, plan and tasks before code",
+      "path": "skills/spec-driven-development/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "debugging-root-cause",
+      "type": "skill",
+      "name": "Debugging Root Cause",
+      "description": "Reproduce, hypothesise and prove root causes",
+      "path": "skills/debugging-root-cause/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "refactoring-safety",
+      "type": "skill",
+      "name": "Refactoring Safety",
+      "description": "Behaviour-preserving refactoring in small steps",
+      "path": "skills/refactoring-safety/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "test-driven-development",
+      "type": "skill",
+      "name": "Test-Driven Development",
+      "description": "Red-green-refactor with failing tests first",
+      "path": "skills/test-driven-development/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "git-workflow",
+      "type": "skill",
+      "name": "Git Workflow",
+      "description": "Clean branches, atomic commits and safe history",
+      "path": "skills/git-workflow/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "database-migrations",
+      "type": "skill",
+      "name": "Database Migrations",
+      "description": "Zero-downtime schema and data migrations",
+      "path": "skills/database-migrations/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "shell-script-review",
+      "type": "skill",
+      "name": "Shell Script Review",
+      "description": "Safe, portable Bash and POSIX scripts",
+      "path": "skills/shell-script-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "dependency-upgrade",
+      "type": "skill",
+      "name": "Dependency Upgrade",
+      "description": "Incremental framework and runtime upgrades",
+      "path": "skills/dependency-upgrade/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "repository-onboarding",
+      "type": "skill",
+      "name": "Repository Onboarding",
+      "description": "Evidence-based map of an unfamiliar codebase",
+      "path": "skills/repository-onboarding/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "error-handling-review",
+      "type": "skill",
+      "name": "Error Handling Review",
+      "description": "Timeouts, retries, partial failure and error reporting",
+      "path": "skills/error-handling-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "threat-modeling",
+      "type": "skill",
+      "name": "Threat Modeling",
+      "description": "Data flows, trust boundaries and STRIDE threats",
+      "path": "skills/threat-modeling/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "oauth-oidc-review",
+      "type": "skill",
+      "name": "OAuth OIDC Review",
+      "description": "OAuth 2 and OpenID Connect flows and token validation",
+      "path": "skills/oauth-oidc-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "supply-chain-provenance",
+      "type": "skill",
+      "name": "Supply Chain Provenance",
+      "description": "SBOMs, signatures and deploy-time verification",
+      "path": "skills/supply-chain-provenance/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "eu-ai-act-readiness",
+      "type": "skill",
+      "name": "EU AI Act Readiness",
+      "description": "AI system inventory, risk category and evidence gaps (not legal advice)",
+      "path": "skills/eu-ai-act-readiness/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "linux-server-hardening",
+      "type": "skill",
+      "name": "Linux Server Hardening",
+      "description": "SSH, firewall, patching and exposure baseline",
+      "path": "skills/linux-server-hardening/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "reverse-proxy-tls",
+      "type": "skill",
+      "name": "Reverse Proxy TLS",
+      "description": "Proxy, certificates, headers and upstream exposure",
+      "path": "skills/reverse-proxy-tls/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "email-deliverability",
+      "type": "skill",
+      "name": "Email Deliverability",
+      "description": "SPF, DKIM, DMARC and sender reputation",
+      "path": "skills/email-deliverability/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "slo-error-budgets",
+      "type": "skill",
+      "name": "SLO Error Budgets",
+      "description": "User-centred SLIs, objectives and burn-rate alerts",
+      "path": "skills/slo-error-budgets/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "runbook-authoring",
+      "type": "skill",
+      "name": "Runbook Authoring",
+      "description": "On-call runbooks with safe, verified actions",
+      "path": "skills/runbook-authoring/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "postmortem",
+      "type": "skill",
+      "name": "Postmortem",
+      "description": "Blameless incident reviews with tracked actions",
+      "path": "skills/postmortem/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "log-analysis",
+      "type": "skill",
+      "name": "Log Analysis",
+      "description": "Reproducible log investigation and correlation",
+      "path": "skills/log-analysis/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "prompt-design-review",
+      "type": "skill",
+      "name": "Prompt Design Review",
+      "description": "Structured, testable and injection-aware prompts",
+      "path": "skills/prompt-design-review/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "llm-output-evaluation",
+      "type": "skill",
+      "name": "LLM Output Evaluation",
+      "description": "Evaluation harness with calibrated judges and release gates",
+      "path": "skills/llm-output-evaluation/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "mcp-server-development",
+      "type": "skill",
+      "name": "MCP Server Development",
+      "description": "Scoped tools, authorization and tests for MCP servers",
+      "path": "skills/mcp-server-development/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "agent-guardrails",
+      "type": "skill",
+      "name": "Agent Guardrails",
+      "description": "Permissions, approvals, sandboxing and audit for agents",
+      "path": "skills/agent-guardrails/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "rag-ingestion-design",
+      "type": "skill",
+      "name": "RAG Ingestion Design",
+      "description": "Parsing, chunking, ACLs and incremental indexing",
+      "path": "skills/rag-ingestion-design/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "local-llm-serving",
+      "type": "skill",
+      "name": "Local LLM Serving",
+      "description": "GPU sizing, quantization and benchmarking for self-hosted models",
+      "path": "skills/local-llm-serving/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "llm-gateway-routing",
+      "type": "skill",
+      "name": "LLM Gateway Routing",
+      "description": "Model aliases, keys, budgets and fallbacks",
+      "path": "skills/llm-gateway-routing/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
+    },
+    {
+      "id": "skill-authoring",
+      "type": "skill",
+      "name": "Skill Authoring",
+      "description": "Write skills agents load and follow reliably",
+      "path": "skills/skill-authoring/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
     }
   ]
 }

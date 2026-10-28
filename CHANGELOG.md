@@ -7,6 +7,14 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 ### Changed skill metadata
 - Rewrote all 31 existing skill `description` fields to state what the skill does **and when to use it**, so agents select skills reliably; fixed title casing (API, GitHub, GitLab CI, LLM, PostgreSQL, SQL) and doubled full stops in workflow steps. No procedure changes.
 
+### Added skills (batch 2)
+- 29 new original skills (catalog: 60 skills, 63 resources): engineering workflow (`spec-driven-development`, `repository-onboarding`, `git-workflow`, `debugging-root-cause`, `test-driven-development`, `refactoring-safety`, `dependency-upgrade`, `skill-authoring`), quality (`error-handling-review`, `shell-script-review`, `database-migrations`), security (`threat-modeling`, `oauth-oidc-review`, `supply-chain-provenance`, `eu-ai-act-readiness`), operations (`linux-server-hardening`, `reverse-proxy-tls`, `email-deliverability`, `slo-error-budgets`, `log-analysis`, `runbook-authoring`, `postmortem`) and AI systems (`prompt-design-review`, `llm-output-evaluation`, `rag-ingestion-design`, `agent-guardrails`, `mcp-server-development`, `llm-gateway-routing`, `local-llm-serving`).
+- All new entries are documentation-level drafts following the skill quality standard (example fixture, negative acceptance checks, safety section); none is marked Verified.
+
+### Added after v0.3.0 RC1 preparation
+- Additional local catalogs via repeatable `--catalog PATH` and `XAH_CATALOGS`; item paths resolve relative to each catalog file, duplicate IDs across catalogs are refused.
+- `add`/`update --scope user` installs skills into user-level client directories (`~/.claude/skills`, `~/.agents/skills`, `~/.config/opencode/skills`); instructions and the generic adapter are refused at user scope. User-scope runtime discovery is not yet verified.
+
 ### v0.3.0 RC1 preparation (not tagged or published)
 - Integrated adapter destination contract for Claude Code, Codex, OpenCode and generic projects.
 - Added local catalog `browse` pagination/facets and `trust` declared-provenance classification; trust output is not independent verification.

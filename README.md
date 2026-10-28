@@ -8,7 +8,7 @@
 
 **XData AgentHub is a public alpha project.** No unsupported claims of certification or compatibility. This project currently ships a dependency-free Python CLI and local curated templates; it does **not** install arbitrary remote code.
 
-**34 curated local resources · 31 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.
+**63 curated local resources · 60 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.
 
 ## Why
 AI development instructions are scattered across repositories and incompatible conventions. AgentHub starts with a small, inspectable catalog and a local-first installer.
@@ -52,6 +52,10 @@ For safe v0.1.0-to-development migration, read the [migration guide](docs/MIGRAT
 | Claude Code | `.claude/skills/` | `CLAUDE.md` |
 | Codex | `.agents/skills/` | `AGENTS.md` |
 | OpenCode | `.opencode/skills/` | `AGENTS.md` |
+
+Skills can also be installed at user scope (`add --scope user`: `~/.claude/skills`, `~/.agents/skills`,
+`~/.config/opencode/skills`), and private skills can live in [additional local catalogs](docs/ADDITIONAL_CATALOGS.md)
+(`--catalog` / `XAH_CATALOGS`) without forking this repository.
 
 See [compatibility details](docs/AGENT_COMPATIBILITY.md) and [demo storyboard](docs/SHOWCASE.md). These are path-level adapters, not full semantic conversions.
 
