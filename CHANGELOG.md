@@ -4,6 +4,20 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Skills batch 3 and contributor pipeline
+- 40 new original skills (104 skills, 107 resources), each through the security gate, AI review and seal process:
+  languages and frameworks (Go, Rust, Java/Spring, React, Node.js, Django/FastAPI, mobile), architecture and data
+  (GraphQL, event-driven, caching, data pipelines, data quality, feature flags, i18n), operations (CI/CD design,
+  container images, Helm, Ansible, cloud cost, load testing, chaos engineering, DR drills, logging, release notes),
+  security (cloud IAM, network segmentation, vulnerability management, OWASP ASVS, security testing scope, licence
+  compliance), EU (GDPR requests, DPIA, DORA, European Accessibility Act) and AI (red teaming, multi-agent
+  orchestration, structured extraction, LLM observability, embedding selection, ML deployment).
+- Router and topic bundles cover the new skills.
+- Contribution pipeline made explicit: CONTRIBUTING.md, pull request template, README and catalog site state that every
+  skill — including community contributions — is security-reviewed before distribution.
+- Repository automation: issue template configuration (private security reporting, discussions), path-based PR labels,
+  first-contribution welcome, stale handling, Dependabot for GitHub Actions; private vulnerability reporting enabled.
+
 ### Skill review, seal of approval and EU
 - `scripts/skill_security_check.py`: deterministic security gate for skill packages (executable content, hidden Unicode and HTML comments, piped downloads, decode-and-execute, encoded blobs, shortened or plain-HTTP links, prompt-injection and exfiltration phrasing outside quoted fixtures, required Safety section). Fixed four skills without a Safety section.
 - `scripts/ai_skill_review.py`: advisory AI review through any OpenAI-compatible endpoint; skill content treated as untrusted; malformed or manipulated output never becomes a pass; PR comments are neutralized. GitHub Models was retired on 2026-07-30, so the endpoint is configurable (`AI_REVIEW_BASE_URL`, `AI_REVIEW_API_KEY`, `AI_REVIEW_MODEL`).

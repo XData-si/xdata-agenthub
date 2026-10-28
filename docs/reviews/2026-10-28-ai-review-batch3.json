@@ -1,0 +1,828 @@
+{
+  "model": "xdata-default (DeepSeek V4 Flash 0731)",
+  "date": "2026-10-28",
+  "rounds": {
+    "1": {
+      "agenthub-router": {
+        "verdict": "pass",
+        "summary": "agenthub-router is a safe, well-scoped routing meta-skill with clear procedures, approval-gated safety, and EU-aware routing, containing no injection, exfiltration, or unsafe instructions.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "EU-related routing entries correctly reference EU AI Act, NIS2, CRA, DORA, GDPR, and EAA skills and do not mandate non-EU services."
+      },
+      "ai-red-teaming": {
+        "verdict": "pass",
+        "summary": "Skill provides a well-scoped, safety-conscious red-teaming procedure with authorization requirements, non-production constraints, and regression testing; no security issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "Skill references AI Act for evidence and mandates synthetic data/non-production testing, so no GDPR or non-EU dependency concerns; maintainers should still verify current AI Act obligations."
+      },
+      "ansible-review": {
+        "verdict": "pass",
+        "summary": "The ansible-review skill is a well-structured, safe review checklist for Ansible playbooks with appropriate safety and quality controls.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill does not process personal data or mandate non-EU services; it promotes secure secret handling and safe production rollouts, so no EU-specific gaps identified."
+      },
+      "caching-strategy": {
+        "verdict": "pass",
+        "summary": "The caching-strategy skill is well-structured, secure, and safe, with clear guidance on cache design, per-user isolation, failure behaviour, and requiring approval for production cache flushing.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill promotes data minimisation, per-user isolation, and sensitive-data protection approaches aligned with GDPR, does not mandate non-EU services, and makes no EU legal claims requiring correction."
+      },
+      "chaos-engineering": {
+        "verdict": "pass",
+        "summary": "Well-structured chaos engineering skill with explicit safety controls and no security or accuracy issues.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "No EU-specific personal-data, AI, or cross-border service dependencies are involved; production experiments remain subject to ordinary approval and data-protection obligations."
+      },
+      "ci-cd-pipeline-design": {
+        "verdict": "pass",
+        "summary": "Ci-cd-pipeline-design is a clear, safe CI/CD design skill with approval gates, secrets handling and a negative-case acceptance check; no security issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill is CI-provider-agnostic and includes self-hosted/open-source alternatives, so it imposes no mandatory non-EU dependency and does not directly require handling personal data."
+      },
+      "cloud-cost-optimization": {
+        "verdict": "needs_review",
+        "summary": "The skill is well-structured but needs maintainer attention because some state-changing or spending steps (commitments, stopping environments) lack explicit approval requirements.",
+        "findings": [
+          {
+            "severity": "medium",
+            "category": "safety",
+            "evidence": "Commitments: reserved instances, savings plans or longer-term VPS contracts for steady baseline load only, after right-sizing. ... Schedules: stop development and test environments outside working hours; scale to zero where the platform supports it.",
+            "explanation": "Purchasing commitments and stopping environments change state or spend money, but the Safety section only requires approval for deleting resources and changing production capacity. Add explicit approval and rollback/exit requirements for commitments and schedule changes."
+          }
+        ],
+        "eu_ready": true,
+        "eu_notes": "No EU-specific issues; retention is described as 'where compliant' and no mandatory non-EU dependency is introduced."
+      },
+      "cloud-iam-least-privilege": {
+        "verdict": "needs_review",
+        "summary": "No security, safety, or accuracy issues; the skill is a solid least-privilege review procedure, but it lacks GDPR/data-protection awareness for the identity and access-log data it handles.",
+        "findings": [
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "Identity inventory (users, groups, roles, service accounts, CI identities, agent identities), policies, access logs or \"last used\" data",
+            "explanation": "The skill processes identity inventories and access logs, which can contain personal data in the EU, yet it only mentions the EU as a region guardrail example and gives no GDPR guidance. Add a note requiring users to verify lawful basis, processor agreements (Art. 28 GDPR), transfer/data-residency rules (Chapter V GDPR), and alternatives to non-EU cloud audit/log services."
+          }
+        ],
+        "eu_ready": false,
+        "eu_notes": "Add GDPR awareness for identity and access-log data and avoid making non-EU cloud log processing mandatory; the current mention of EU-only regions is only an example guardrail."
+      },
+      "container-image-optimization": {
+        "verdict": "pass",
+        "summary": "The container-image-optimization skill is a benign, well-structured guide with no security, safety, accuracy, or EU concerns.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "No EU-specific obligations are implicated; the skill does not rely on mandatory non-EU services."
+      },
+      "data-pipeline-review": {
+        "verdict": "pass",
+        "summary": "A clean, well-structured pipeline-review skill with clear approval gates for production-affecting actions and no prompt injection, exfiltration, or unsafe execution paths.",
+        "findings": [
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "retention and deletion requests propagate to derived tables; access by role; no production personal data in development environments",
+            "explanation": "The data-protection guidance is substantively GDPR-aligned but never names the GDPR, so EU users reviewing pipeline compliance may miss the legal hook; adding an explicit reference to GDPR Articles 5 and 17 (and noting ePrivacy where applicable) would strengthen EU compliance awareness, though this is an enhancement rather than a blocker."
+          }
+        ],
+        "eu_ready": true,
+        "eu_notes": "The skill's data-protection guidance aligns with GDPR principles (minimisation, pseudonymisation, deletion propagation, role-based access) and imposes no mandatory non-EU service dependency; naming GDPR explicitly would make EU readiness more obvious."
+      },
+      "data-quality-checks": {
+        "verdict": "needs_review",
+        "summary": "The skill is well-structured and secure, but it should require explicit approval before enabling blocking checks or alert routing because those affect production and send messages.",
+        "findings": [
+          {
+            "severity": "medium",
+            "category": "safety",
+            "evidence": "blocking checks stop downstream jobs (or quarantine data); Alert routing to the dataset owner",
+            "explanation": "The procedure describes production-impacting actions (blocking downstream jobs, sending alerts) without an explicit approval step. Add a requirement in the Safety section to obtain owner approval before enabling blocking checks or alert routing, and clarify scope boundaries."
+          }
+        ],
+        "eu_ready": true,
+        "eu_notes": "No EU-specific issues; personal data handling is addressed with restricted access and short retention, and no non-EU service dependency is introduced."
+      },
+      "disaster-recovery-drill": {
+        "verdict": "pass",
+        "summary": "Skill is well-scoped, safe, and EU-aware; no security issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "Includes GDPR-aware data deletion after drills and correctly references NIS2/DORA without mandating non-EU services."
+      },
+      "dora-readiness": {
+        "verdict": "pass",
+        "summary": "The dora-readiness skill is a well-structured, accurate, and safety-aware guide for DORA readiness assessments with no security, safety, accuracy, or EU issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill correctly anchors DORA obligations in EU law, notes the applicable date and technical standards, and advises verification with compliance and legal teams."
+      },
+      "dpia": {
+        "verdict": "pass",
+        "summary": "The dpia skill provides a sound GDPR DPIA workflow with clear safety, quality, and EU-aligned guidance; no security, safety, accuracy, or EU concerns found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill is GDPR-native, references EU supervisory authority consultation, and avoids mandatory non-EU dependencies."
+      },
+      "embedding-model-selection": {
+        "verdict": "needs_review",
+        "summary": "The skill is well-structured and free of prompt-injection or exfiltration issues, but needs maintainer review to add explicit approval gates for production switches and incurred costs, and to mention GDPR for personal data.",
+        "findings": [
+          {
+            "severity": "medium",
+            "category": "safety",
+            "evidence": "run both side by side, switch reads after evaluation, keep the old index for rollback",
+            "explanation": "Switching production reads is a production change, but the skill does not require explicit human approval before doing so. Add an approval gate and clear rollback/communication steps in the Safety section."
+          },
+          {
+            "severity": "medium",
+            "category": "safety",
+            "evidence": "cost per million tokens or GPU hours",
+            "explanation": "Benchmarking and re-embedding can incur significant API or GPU costs, but the skill does not require explicit budget approval or cost limits. Add a requirement to obtain approval before running large evaluations or migrations."
+          },
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "data processing terms (where text is sent)",
+            "explanation": "The skill touches personal data and cloud processing, but only mentions generic data-processing terms and does not explicitly reference GDPR or require DPAs for non-EU processors. Add a GDPR note when personal data is involved."
+          }
+        ],
+        "eu_ready": false,
+        "eu_notes": "The skill offers EU/self-hosted alternatives and warns about data leaving control, but should explicitly mention GDPR and data-processing agreements for non-EU services."
+      },
+      "european-accessibility-act": {
+        "verdict": "needs_review",
+        "summary": "The skill is technically and EU-law accurate, but its remediation steps direct agents to change production/public pages without explicitly requiring approval.",
+        "findings": [
+          {
+            "severity": "medium",
+            "category": "safety",
+            "evidence": "Fix in the design system first (components, colours, focus styles), then in pages; ... publish accessibility information page.",
+            "explanation": "The procedure instructs an agent to apply fixes and publish output, which can alter production or public-facing systems. It does not require explicit human approval before such changes. Add an explicit approval gate for remediation and publication steps, and keep the audit/planning phase separate from change execution."
+          }
+        ],
+        "eu_ready": true,
+        "eu_notes": "Correctly references Directive (EU) 2019/882, EN 301 549/WCAG, microenterprise exemption and national-law verification, with a not-legal-advice disclaimer and no non-EU service dependency."
+      },
+      "event-driven-architecture": {
+        "verdict": "pass",
+        "summary": "Skill provides sound, safety-conscious guidance for event-driven design with no security, safety, accuracy, or EU concerns.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill includes data-protection guidance for personal data in events and does not mandate non-EU services."
+      },
+      "feature-flags": {
+        "verdict": "pass",
+        "summary": "Feature-flags skill is safe, well-scoped guidance with approval, testing, security and cleanup steps; no security or safety issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "Generic skill with no mandatory non-EU dependency (self-hosted alternative is offered); if user segments contain personal data, operators should apply GDPR as usual."
+      },
+      "gdpr-dsar-handling": {
+        "verdict": "needs_review",
+        "summary": "Well-structured GDPR DSAR skill with correct article references and identity-verification controls, but it directs irreversible cross-system erasure and external responses without an explicit human approval step and overstates some technical/legal obligations.",
+        "findings": [
+          {
+            "severity": "high",
+            "category": "safety",
+            "evidence": "erasure: delete or anonymise in live systems, propagate to processors and derived data (search indexes, caches, analytics, ML features)",
+            "explanation": "The procedure authorizes an agent to perform irreversible deletion across many systems without an explicit human approval or checkpoint. A mistaken or fraudulent erasure request could cause widespread data loss. Add a mandatory approval step by the DPO/operator before executing destructive actions and clearly limit scope."
+          },
+          {
+            "severity": "medium",
+            "category": "safety",
+            "evidence": "Respond in clear language through a secure channel",
+            "explanation": "Sending the response or personal data export externally is an external message/transfer; the skill does not require explicit approval of the recipient and channel before dispatch. Add a confirmation step and verified destination."
+          },
+          {
+            "severity": "medium",
+            "category": "accuracy",
+            "evidence": "delete or anonymise in live systems, propagate to processors and derived data (search indexes, caches, analytics, ML features)",
+            "explanation": "Erasure obligations for ML features/models and derived data are context-dependent; deleting or retraining them may not be required or feasible and can cause collateral damage. Require a legal/technical assessment per system."
+          },
+          {
+            "severity": "low",
+            "category": "accuracy",
+            "evidence": "Classify the right: ... portability (20), objection (21)",
+            "explanation": "Article 20 portability applies only to personal data provided by the data subject, processed by automated means, and based on consent or contract; the skill does not state these conditions, so an agent may over-export. Add the Art. 20 criteria."
+          },
+          {
+            "severity": "low",
+            "category": "accuracy",
+            "evidence": "legal retention (for example accounting records)",
+            "explanation": "Retention periods such as accounting-records obligations vary by jurisdiction and document type; the example may be wrong in some countries. Tell the reader to verify the applicable retention schedule."
+          }
+        ],
+        "eu_ready": true,
+        "eu_notes": "GDPR articles and deadlines are cited accurately, DPO involvement is included, and there is no mandatory dependency on non-EU services, so the skill is EU-ready for GDPR purposes."
+      },
+      "go-development": {
+        "verdict": "pass",
+        "summary": "The go-development skill is a well-structured, safe review checklist with no security, safety, accuracy, or EU concerns.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "No EU-specific concerns; the skill is general Go development guidance and does not mandate non-EU services or touch personal data."
+      },
+      "graphql-api-review": {
+        "verdict": "pass",
+        "summary": "The GraphQL API review skill is well-structured, security-conscious, and includes appropriate safety and quality guidance.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill promotes privacy-aware practices such as not logging personal data in variables and user-specific cache keys, with no mandatory non-EU dependencies."
+      },
+      "helm-chart-review": {
+        "verdict": "needs_review",
+        "summary": "The skill is a well-structured Helm chart review checklist with good safety and quality, but it lacks EU/GDPR awareness for charts processing personal data.",
+        "findings": [
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "Review Helm charts for safe defaults and maintainability — values schema, templating pitfalls, security context, resources and probes, secrets handling, upgrade and rollback behaviour, and chart dependencies.",
+            "explanation": "The skill covers cloud/security aspects but does not mention GDPR or EU data-protection obligations. When reviewing charts that may process personal data, the agent should verify GDPR compliance, data residency, and avoid mandatory non-EU dependencies. Add a note in the Safety or checklist section."
+          }
+        ],
+        "eu_ready": false,
+        "eu_notes": "The skill lacks GDPR awareness for charts processing personal data; add a note to verify EU data-protection obligations and data residency."
+      },
+      "i18n-localization": {
+        "verdict": "pass",
+        "summary": "The i18n-localization skill is a safe, well-structured guide to internationalization with clear acceptance checks and appropriate safeguards for legal and confidential translations.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "No mandatory non-EU services are required and legal/consent texts are explicitly marked for qualified human translation and review."
+      },
+      "java-spring-review": {
+        "verdict": "pass",
+        "summary": "A defensible, well-structured Spring Boot security review skill with accurate technical guidance, a clear safety section, and no prompt injection or harmful instructions.",
+        "findings": [
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "dependency check (OWASP Dependency-Check, Snyk or similar)",
+            "explanation": "Snyk is a US SaaS, but it is only one of several listed options ('or similar') and is not a mandatory dependency, so the skill does not force use of a non-EU service. Teams using Snyk should note that project manifests may be processed outside the EU; self-hosted or EU-hosted alternatives exist."
+          },
+          {
+            "severity": "low",
+            "category": "accuracy",
+            "evidence": "virtual threads or thread pools sized for the workload",
+            "explanation": "The runtime guidance is vague without a concrete verification method; recommend adding an acceptance or load-test step so thread pool sizing is testable rather than an unsupported claim."
+          }
+        ],
+        "eu_ready": true,
+        "eu_notes": "No personal-data processing or mandatory dependence on non-EU services; Snyk is optional among alternatives, making the skill EU-compatible."
+      },
+      "llm-observability": {
+        "verdict": "pass",
+        "summary": "The skill is a well-structured observability guide with explicit privacy and approval safeguards, no harmful instructions found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "GDPR-aware: it mandates masking, retention, access control, and a data processing agreement before sending traces to any third-party observability service, with Langfuse only an optional example."
+      },
+      "llm-structured-extraction": {
+        "verdict": "pass",
+        "summary": "The skill is a safe, well-structured extraction guide with privacy controls, validation, human review, and no security issues.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill avoids mandatory non-EU dependencies and includes masking/access-control guidance consistent with GDPR, though it does not explicitly cite GDPR or the AI Act."
+      },
+      "load-testing": {
+        "verdict": "pass",
+        "summary": "Load-testing skill is safe, clear and actionable, with explicit approval requirements and a negative acceptance case.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "Uses synthetic data only and does not mandate non-EU services, so no GDPR or other EU law concerns."
+      },
+      "logging-standards": {
+        "verdict": "pass",
+        "summary": "The logging-standards skill is safe and high-quality: it mandates structured JSON logs, redaction of secrets and personal data, audit events, retention limits, and authorization for production log access, with no security, safety, accuracy, or EU concerns found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "GDPR-aware skill: it addresses storage limitation, pseudonymisation, and avoiding personal data in logs, and does not mandate non-EU services."
+      },
+      "ml-model-deployment": {
+        "verdict": "pass",
+        "summary": "The ml-model-deployment skill is a well-structured MLOps guide with clear approval gates, rollback, monitoring, and appropriate EU/GDPR references; no security, safety, quality, accuracy, or EU issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill correctly references AI Act duties and GDPR handling of personal data, directs readers to dedicated skills for verification, and does not mandate non-EU services."
+      },
+      "mobile-app-review": {
+        "verdict": "pass",
+        "summary": "The mobile-app-review skill is a well-scoped, safety-guarded mobile security assessment checklist with accurate OWASP, GDPR/ePrivacy, and platform references; no adversarial instructions were found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill correctly references GDPR/ePrivacy consent requirements and does not mandate non-EU services, so it is EU-ready."
+      },
+      "multi-agent-orchestration": {
+        "verdict": "needs_review",
+        "summary": "Security- and safety-strong design guidance for multi-agent systems with no injection, exfiltration or approval-bypass issues, but it lacks EU legal-awareness for the AI systems it helps build, which a maintainer should address.",
+        "findings": [
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "description: \"Design and review multi-agent systems — when to split work across agents ... Use when building agent teams (planner/coder/reviewer, research swarms, support triage)\"",
+            "explanation": ""
+          }
+        ],
+        "eu_ready": false,
+        "eu_notes": "Add a short EU-awareness note telling users to verify applicable obligations when deploying such systems in the EU — GDPR for personal data handled by agents, AI Act risk classification/logging/human oversight, and NIS2/CRA/DORA where relevant — and to prefer EU-hosted services where possible."
+      },
+      "network-segmentation": {
+        "verdict": "pass",
+        "summary": "Defensive network segmentation skill with clear procedure, negative acceptance checks and explicit safety guardrails; no security, safety, accuracy or EU issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "No personal data processing, non-EU service dependency or substantive EU legal claims were found; the skill is jurisdiction-neutral and safety-oriented."
+      },
+      "node-backend-review": {
+        "verdict": "needs_review",
+        "summary": "A well-structured, safety-conscious Node.js security review skill with no blocking security issues; the only gap is an explicit EU data-protection/GDPR dimension for handling personal data.",
+        "findings": [
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "\"structured logs without secrets\" ... \"Do not log request bodies that may contain credentials.\"",
+            "explanation": "The skill guides review of code that handles personal data (request bodies, credentials, sessions) and covers security obligations, but never mentions GDPR or other EU law (GDPR, NIS2, CRA, DORA) and does not ask the agent to flag data-protection issues such as data minimization, lawful basis, or international transfers. Add a short GDPR note and a checklist item to report EU data-protection concerns when the reviewed service processes personal data."
+          }
+        ],
+        "eu_ready": false,
+        "eu_notes": "Privacy-aware logging guidance exists and no non-EU service dependency is mandated, but the skill should explicitly reference GDPR and data minimization for services handling personal data."
+      },
+      "open-source-license-compliance": {
+        "verdict": "pass",
+        "summary": "Safe, well-structured open-source license compliance skill with clear procedures, negative-case acceptance checks, and a legal disclaimer; no security, safety, accuracy, or EU-specific issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "No EU-specific personal data, AI, cloud, or security obligations are implicated; the skill appropriately directs users to seek legal counsel for legal nuances."
+      },
+      "owasp-asvs-review": {
+        "verdict": "pass",
+        "summary": "The owasp-asvs-review skill is a well-structured security assessment procedure with proper safety controls, no prompt injection or unsafe actions.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill is security-assurance oriented with no EU-specific data dependencies or incorrect EU law references; it supports NIS2/CRA-style verification without mandating non-EU services."
+      },
+      "python-web-review": {
+        "verdict": "needs_review",
+        "summary": "The skill is a solid security review checklist, but it contains a dangerous inaccurate claim about Django REST Framework permissions and lacks GDPR awareness for services processing personal data.",
+        "findings": [
+          {
+            "severity": "high",
+            "category": "accuracy",
+            "evidence": "Django REST Framework default permission classes deny by default",
+            "explanation": "DRF's actual default permission class is AllowAny, meaning endpoints are open by default unless DEFAULT_PERMISSION_CLASSES is explicitly set. A reviewer relying on this checklist could skip verifying DRF settings and miss a serious authentication gap. Fix the text to state that DRF defaults to AllowAny and instruct reviewers to verify DEFAULT_PERMISSION_CLASSES explicitly denies by default."
+          },
+          {
+            "severity": "medium",
+            "category": "eu",
+            "evidence": "Review Python web applications built with Django or FastAPI for security, data access ... Use when reviewing or hardening a Django or FastAPI service.",
+            "explanation": "This skill audits web services that commonly process personal data (the fixture uses invoices and user objects), but it does not mention GDPR obligations such as lawful basis, data minimization, retention, DPIA, records of processing, or cross-border transfer checks. Add a GDPR/data-protection review step when personal data is involved."
+          }
+        ],
+        "eu_ready": false,
+        "eu_notes": "Add GDPR awareness to the review checklist: identify whether the service processes personal data, and verify lawful basis, data minimization, retention limits, DPIA/records, and safeguards for transfers outside the EU."
+      },
+      "react-component-review": {
+        "verdict": "pass",
+        "summary": "The react-component-review skill is a well-structured, safe code-review checklist with no security, safety, accuracy, or EU concerns.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill has no mandatory non-EU service dependencies and includes a privacy-conscious rule against pasting production user data into fixtures."
+      },
+      "release-notes": {
+        "verdict": "pass",
+        "summary": "Release-notes skill is a benign, well-scoped documentation task with clear approval and disclosure safeguards.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill does not mandate non-EU services and appropriately cautions against disclosing customer names and unpatched security details."
+      },
+      "rust-review": {
+        "verdict": "pass",
+        "summary": "rust-review is a well-scoped, security-aware Rust code review skill with clear checklist, example, acceptance tests, and approval safeguards; no prompt injection or harmful behavior found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "No personal data, cloud, AI system, or security-law-specific processing is involved; the skill is generic Rust code review guidance."
+      },
+      "security-testing-scope": {
+        "verdict": "pass",
+        "summary": "The security-testing-scope skill is a well-structured, safety-conscious template for authorized penetration testing with clear scope, authorization, data handling, and stop conditions, and no security, safety, accuracy, or EU issues.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "Data handling section aligns with GDPR principles (minimal access, encrypted evidence, deletion, confidentiality); no non-EU service dependency or incorrect EU law references."
+      },
+      "vulnerability-management": {
+        "verdict": "needs_review",
+        "summary": "Well-structured vulnerability management skill, but it needs an explicit human-approval gate before remediation changes and a GDPR note for owner/asset data.",
+        "findings": [
+          {
+            "severity": "medium",
+            "category": "safety",
+            "evidence": "Remediate: upgrade, patch, configuration change, or compensating control ... with a deadline for the real fix.",
+            "explanation": ""
+          },
+          {
+            "severity": "low",
+            "category": "eu",
+            "evidence": "Exceptions: risk acceptance with owner, reason, compensating controls and expiry date.",
+            "explanation": ""
+          }
+        ],
+        "eu_ready": false,
+        "eu_notes": "References NIS2 and CRA correctly, but should add a GDPR awareness note because asset inventories and owner names may contain personal data."
+      }
+    },
+    "2": {
+      "python-web-review": {
+        "verdict": "pass",
+        "summary": "The python-web-review skill provides a sound and safe Django/FastAPI security review checklist with clear procedure, acceptance checks, example fixture, and GDPR awareness; no prompt injection, exfiltration, destructive commands, or regulatory issues were found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill correctly notes GDPR requirements for services processing personal data and does not mandate any non-EU service dependency."
+      },
+      "gdpr-dsar-handling": {
+        "verdict": "pass",
+        "summary": "The skill provides a safe, approval-gated GDPR DSAR workflow with correct deadlines, identity verification, exemptions, evidence handling, and explicit safety controls.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "GDPR references are accurate, the workflow is EU-compliant, does not mandate non-EU services, and appropriately instructs involving the DPO while disclaiming legal advice."
+      },
+      "cloud-cost-optimization": {
+        "verdict": "pass",
+        "summary": "Well-scoped FinOps skill with explicit approval gates, rollback expectations, and no untrusted or exfiltration instructions.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill is platform-agnostic and repeatedly conditions log/storage handling on compliance and retention obligations, so it does not impose non-EU dependencies or misstate EU law."
+      },
+      "data-quality-checks": {
+        "verdict": "pass",
+        "summary": "This skill provides a safe, well-scoped methodology for implementing data quality checks, with approval required for production-impacting actions and appropriate personal-data safeguards.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "Personal data is addressed with restricted access, short retention, and no personal data in alerts; no non-EU service dependency is introduced."
+      },
+      "embedding-model-selection": {
+        "verdict": "pass",
+        "summary": "Well-structured skill with clear safety controls for data handling, cost approval, and production migration; no security, safety, accuracy, or EU issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "Skill covers EU/self-hosted hosting, data processing terms, and sovereignty, and does not mandate non-EU services; GDPR is not explicitly named but the relevant data-protection considerations are addressed."
+      },
+      "european-accessibility-act": {
+        "verdict": "pass",
+        "summary": "The european-accessibility-act skill is accurate, safety-conscious, and contains no security or prompt-injection risks, so it can be approved.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill correctly references Directive (EU) 2019/882, EN 301 549, WCAG, EU microenterprise thresholds, and includes a not-legal-advice caveat, while instructing readers to verify national provisions."
+      },
+      "vulnerability-management": {
+        "verdict": "pass",
+        "summary": "The vulnerability-management skill is well-scoped, prioritises by risk and exploitation evidence, requires approval for production changes, includes negative-case acceptance checks, and has no security or EU concerns.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill is EU-aware: it flags GDPR protections for asset/owner data and frames CRA/NIS2 reporting duties as obligations to verify, without mandating any non-EU service."
+      },
+      "cloud-iam-least-privilege": {
+        "verdict": "pass",
+        "summary": "Well-structured cloud IAM least-privilege skill with clear safety, approval, acceptance and GDPR-aware guidance; no blocking issues found.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "GDPR-aware: restricts access to identity/access-log personal data, recommends EU storage or valid transfer mechanisms, retention limits, and EU-only guardrails; no mandatory non-EU dependency without alternative."
+      },
+      "helm-chart-review": {
+        "verdict": "pass",
+        "summary": "The helm-chart-review skill is a well-structured, safe review checklist with proper safety and GDPR guidance and no security issues.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill includes a GDPR check for charts processing personal data and does not mandate non-EU services."
+      },
+      "multi-agent-orchestration": {
+        "verdict": "pass",
+        "summary": "The skill is a safe, well-structured design guide for multi-agent systems that includes security, safety, approval, and EU obligations.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "References to GDPR and the EU AI Act are accurate and appropriately framed as obligations to verify rather than definitive legal advice."
+      },
+      "node-backend-review": {
+        "verdict": "pass",
+        "summary": "The node-backend-review skill is a well-scoped security review checklist with clear procedures, acceptance checks, and an explicit safety section requiring authorized non-production testing.",
+        "findings": [],
+        "eu_ready": true,
+        "eu_notes": "The skill includes GDPR-aware guidance for personal data services and does not mandate any non-EU service dependency."
+      }
+    }
+  },
+  "final": {
+    "agenthub-router": {
+      "verdict": "pass",
+      "summary": "agenthub-router is a safe, well-scoped routing meta-skill with clear procedures, approval-gated safety, and EU-aware routing, containing no injection, exfiltration, or unsafe instructions.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "EU-related routing entries correctly reference EU AI Act, NIS2, CRA, DORA, GDPR, and EAA skills and do not mandate non-EU services."
+    },
+    "ai-red-teaming": {
+      "verdict": "pass",
+      "summary": "Skill provides a well-scoped, safety-conscious red-teaming procedure with authorization requirements, non-production constraints, and regression testing; no security issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "Skill references AI Act for evidence and mandates synthetic data/non-production testing, so no GDPR or non-EU dependency concerns; maintainers should still verify current AI Act obligations."
+    },
+    "ansible-review": {
+      "verdict": "pass",
+      "summary": "The ansible-review skill is a well-structured, safe review checklist for Ansible playbooks with appropriate safety and quality controls.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill does not process personal data or mandate non-EU services; it promotes secure secret handling and safe production rollouts, so no EU-specific gaps identified."
+    },
+    "caching-strategy": {
+      "verdict": "pass",
+      "summary": "The caching-strategy skill is well-structured, secure, and safe, with clear guidance on cache design, per-user isolation, failure behaviour, and requiring approval for production cache flushing.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill promotes data minimisation, per-user isolation, and sensitive-data protection approaches aligned with GDPR, does not mandate non-EU services, and makes no EU legal claims requiring correction."
+    },
+    "chaos-engineering": {
+      "verdict": "pass",
+      "summary": "Well-structured chaos engineering skill with explicit safety controls and no security or accuracy issues.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "No EU-specific personal-data, AI, or cross-border service dependencies are involved; production experiments remain subject to ordinary approval and data-protection obligations."
+    },
+    "ci-cd-pipeline-design": {
+      "verdict": "pass",
+      "summary": "Ci-cd-pipeline-design is a clear, safe CI/CD design skill with approval gates, secrets handling and a negative-case acceptance check; no security issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill is CI-provider-agnostic and includes self-hosted/open-source alternatives, so it imposes no mandatory non-EU dependency and does not directly require handling personal data."
+    },
+    "cloud-cost-optimization": {
+      "verdict": "pass",
+      "summary": "Well-scoped FinOps skill with explicit approval gates, rollback expectations, and no untrusted or exfiltration instructions.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill is platform-agnostic and repeatedly conditions log/storage handling on compliance and retention obligations, so it does not impose non-EU dependencies or misstate EU law."
+    },
+    "cloud-iam-least-privilege": {
+      "verdict": "pass",
+      "summary": "Well-structured cloud IAM least-privilege skill with clear safety, approval, acceptance and GDPR-aware guidance; no blocking issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "GDPR-aware: restricts access to identity/access-log personal data, recommends EU storage or valid transfer mechanisms, retention limits, and EU-only guardrails; no mandatory non-EU dependency without alternative."
+    },
+    "container-image-optimization": {
+      "verdict": "pass",
+      "summary": "The container-image-optimization skill is a benign, well-structured guide with no security, safety, accuracy, or EU concerns.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "No EU-specific obligations are implicated; the skill does not rely on mandatory non-EU services."
+    },
+    "data-pipeline-review": {
+      "verdict": "pass",
+      "summary": "A clean, well-structured pipeline-review skill with clear approval gates for production-affecting actions and no prompt injection, exfiltration, or unsafe execution paths.",
+      "findings": [
+        {
+          "severity": "low",
+          "category": "eu",
+          "evidence": "retention and deletion requests propagate to derived tables; access by role; no production personal data in development environments",
+          "explanation": "The data-protection guidance is substantively GDPR-aligned but never names the GDPR, so EU users reviewing pipeline compliance may miss the legal hook; adding an explicit reference to GDPR Articles 5 and 17 (and noting ePrivacy where applicable) would strengthen EU compliance awareness, though this is an enhancement rather than a blocker."
+        }
+      ],
+      "eu_ready": true,
+      "eu_notes": "The skill's data-protection guidance aligns with GDPR principles (minimisation, pseudonymisation, deletion propagation, role-based access) and imposes no mandatory non-EU service dependency; naming GDPR explicitly would make EU readiness more obvious."
+    },
+    "data-quality-checks": {
+      "verdict": "pass",
+      "summary": "This skill provides a safe, well-scoped methodology for implementing data quality checks, with approval required for production-impacting actions and appropriate personal-data safeguards.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "Personal data is addressed with restricted access, short retention, and no personal data in alerts; no non-EU service dependency is introduced."
+    },
+    "disaster-recovery-drill": {
+      "verdict": "pass",
+      "summary": "Skill is well-scoped, safe, and EU-aware; no security issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "Includes GDPR-aware data deletion after drills and correctly references NIS2/DORA without mandating non-EU services."
+    },
+    "dora-readiness": {
+      "verdict": "pass",
+      "summary": "The dora-readiness skill is a well-structured, accurate, and safety-aware guide for DORA readiness assessments with no security, safety, accuracy, or EU issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill correctly anchors DORA obligations in EU law, notes the applicable date and technical standards, and advises verification with compliance and legal teams."
+    },
+    "dpia": {
+      "verdict": "pass",
+      "summary": "The dpia skill provides a sound GDPR DPIA workflow with clear safety, quality, and EU-aligned guidance; no security, safety, accuracy, or EU concerns found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill is GDPR-native, references EU supervisory authority consultation, and avoids mandatory non-EU dependencies."
+    },
+    "embedding-model-selection": {
+      "verdict": "pass",
+      "summary": "Well-structured skill with clear safety controls for data handling, cost approval, and production migration; no security, safety, accuracy, or EU issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "Skill covers EU/self-hosted hosting, data processing terms, and sovereignty, and does not mandate non-EU services; GDPR is not explicitly named but the relevant data-protection considerations are addressed."
+    },
+    "european-accessibility-act": {
+      "verdict": "pass",
+      "summary": "The european-accessibility-act skill is accurate, safety-conscious, and contains no security or prompt-injection risks, so it can be approved.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill correctly references Directive (EU) 2019/882, EN 301 549, WCAG, EU microenterprise thresholds, and includes a not-legal-advice caveat, while instructing readers to verify national provisions."
+    },
+    "event-driven-architecture": {
+      "verdict": "pass",
+      "summary": "Skill provides sound, safety-conscious guidance for event-driven design with no security, safety, accuracy, or EU concerns.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill includes data-protection guidance for personal data in events and does not mandate non-EU services."
+    },
+    "feature-flags": {
+      "verdict": "pass",
+      "summary": "Feature-flags skill is safe, well-scoped guidance with approval, testing, security and cleanup steps; no security or safety issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "Generic skill with no mandatory non-EU dependency (self-hosted alternative is offered); if user segments contain personal data, operators should apply GDPR as usual."
+    },
+    "gdpr-dsar-handling": {
+      "verdict": "pass",
+      "summary": "The skill provides a safe, approval-gated GDPR DSAR workflow with correct deadlines, identity verification, exemptions, evidence handling, and explicit safety controls.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "GDPR references are accurate, the workflow is EU-compliant, does not mandate non-EU services, and appropriately instructs involving the DPO while disclaiming legal advice."
+    },
+    "go-development": {
+      "verdict": "pass",
+      "summary": "The go-development skill is a well-structured, safe review checklist with no security, safety, accuracy, or EU concerns.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "No EU-specific concerns; the skill is general Go development guidance and does not mandate non-EU services or touch personal data."
+    },
+    "graphql-api-review": {
+      "verdict": "pass",
+      "summary": "The GraphQL API review skill is well-structured, security-conscious, and includes appropriate safety and quality guidance.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill promotes privacy-aware practices such as not logging personal data in variables and user-specific cache keys, with no mandatory non-EU dependencies."
+    },
+    "helm-chart-review": {
+      "verdict": "pass",
+      "summary": "The helm-chart-review skill is a well-structured, safe review checklist with proper safety and GDPR guidance and no security issues.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill includes a GDPR check for charts processing personal data and does not mandate non-EU services."
+    },
+    "i18n-localization": {
+      "verdict": "pass",
+      "summary": "The i18n-localization skill is a safe, well-structured guide to internationalization with clear acceptance checks and appropriate safeguards for legal and confidential translations.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "No mandatory non-EU services are required and legal/consent texts are explicitly marked for qualified human translation and review."
+    },
+    "java-spring-review": {
+      "verdict": "pass",
+      "summary": "A defensible, well-structured Spring Boot security review skill with accurate technical guidance, a clear safety section, and no prompt injection or harmful instructions.",
+      "findings": [
+        {
+          "severity": "low",
+          "category": "eu",
+          "evidence": "dependency check (OWASP Dependency-Check, Snyk or similar)",
+          "explanation": "Snyk is a US SaaS, but it is only one of several listed options ('or similar') and is not a mandatory dependency, so the skill does not force use of a non-EU service. Teams using Snyk should note that project manifests may be processed outside the EU; self-hosted or EU-hosted alternatives exist."
+        },
+        {
+          "severity": "low",
+          "category": "accuracy",
+          "evidence": "virtual threads or thread pools sized for the workload",
+          "explanation": "The runtime guidance is vague without a concrete verification method; recommend adding an acceptance or load-test step so thread pool sizing is testable rather than an unsupported claim."
+        }
+      ],
+      "eu_ready": true,
+      "eu_notes": "No personal-data processing or mandatory dependence on non-EU services; Snyk is optional among alternatives, making the skill EU-compatible."
+    },
+    "llm-observability": {
+      "verdict": "pass",
+      "summary": "The skill is a well-structured observability guide with explicit privacy and approval safeguards, no harmful instructions found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "GDPR-aware: it mandates masking, retention, access control, and a data processing agreement before sending traces to any third-party observability service, with Langfuse only an optional example."
+    },
+    "llm-structured-extraction": {
+      "verdict": "pass",
+      "summary": "The skill is a safe, well-structured extraction guide with privacy controls, validation, human review, and no security issues.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill avoids mandatory non-EU dependencies and includes masking/access-control guidance consistent with GDPR, though it does not explicitly cite GDPR or the AI Act."
+    },
+    "load-testing": {
+      "verdict": "pass",
+      "summary": "Load-testing skill is safe, clear and actionable, with explicit approval requirements and a negative acceptance case.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "Uses synthetic data only and does not mandate non-EU services, so no GDPR or other EU law concerns."
+    },
+    "logging-standards": {
+      "verdict": "pass",
+      "summary": "The logging-standards skill is safe and high-quality: it mandates structured JSON logs, redaction of secrets and personal data, audit events, retention limits, and authorization for production log access, with no security, safety, accuracy, or EU concerns found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "GDPR-aware skill: it addresses storage limitation, pseudonymisation, and avoiding personal data in logs, and does not mandate non-EU services."
+    },
+    "ml-model-deployment": {
+      "verdict": "pass",
+      "summary": "The ml-model-deployment skill is a well-structured MLOps guide with clear approval gates, rollback, monitoring, and appropriate EU/GDPR references; no security, safety, quality, accuracy, or EU issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill correctly references AI Act duties and GDPR handling of personal data, directs readers to dedicated skills for verification, and does not mandate non-EU services."
+    },
+    "mobile-app-review": {
+      "verdict": "pass",
+      "summary": "The mobile-app-review skill is a well-scoped, safety-guarded mobile security assessment checklist with accurate OWASP, GDPR/ePrivacy, and platform references; no adversarial instructions were found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill correctly references GDPR/ePrivacy consent requirements and does not mandate non-EU services, so it is EU-ready."
+    },
+    "multi-agent-orchestration": {
+      "verdict": "pass",
+      "summary": "The skill is a safe, well-structured design guide for multi-agent systems that includes security, safety, approval, and EU obligations.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "References to GDPR and the EU AI Act are accurate and appropriately framed as obligations to verify rather than definitive legal advice."
+    },
+    "network-segmentation": {
+      "verdict": "pass",
+      "summary": "Defensive network segmentation skill with clear procedure, negative acceptance checks and explicit safety guardrails; no security, safety, accuracy or EU issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "No personal data processing, non-EU service dependency or substantive EU legal claims were found; the skill is jurisdiction-neutral and safety-oriented."
+    },
+    "node-backend-review": {
+      "verdict": "pass",
+      "summary": "The node-backend-review skill is a well-scoped security review checklist with clear procedures, acceptance checks, and an explicit safety section requiring authorized non-production testing.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill includes GDPR-aware guidance for personal data services and does not mandate any non-EU service dependency."
+    },
+    "open-source-license-compliance": {
+      "verdict": "pass",
+      "summary": "Safe, well-structured open-source license compliance skill with clear procedures, negative-case acceptance checks, and a legal disclaimer; no security, safety, accuracy, or EU-specific issues found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "No EU-specific personal data, AI, cloud, or security obligations are implicated; the skill appropriately directs users to seek legal counsel for legal nuances."
+    },
+    "owasp-asvs-review": {
+      "verdict": "pass",
+      "summary": "The owasp-asvs-review skill is a well-structured security assessment procedure with proper safety controls, no prompt injection or unsafe actions.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill is security-assurance oriented with no EU-specific data dependencies or incorrect EU law references; it supports NIS2/CRA-style verification without mandating non-EU services."
+    },
+    "python-web-review": {
+      "verdict": "pass",
+      "summary": "The python-web-review skill provides a sound and safe Django/FastAPI security review checklist with clear procedure, acceptance checks, example fixture, and GDPR awareness; no prompt injection, exfiltration, destructive commands, or regulatory issues were found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill correctly notes GDPR requirements for services processing personal data and does not mandate any non-EU service dependency."
+    },
+    "react-component-review": {
+      "verdict": "pass",
+      "summary": "The react-component-review skill is a well-structured, safe code-review checklist with no security, safety, accuracy, or EU concerns.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill has no mandatory non-EU service dependencies and includes a privacy-conscious rule against pasting production user data into fixtures."
+    },
+    "release-notes": {
+      "verdict": "pass",
+      "summary": "Release-notes skill is a benign, well-scoped documentation task with clear approval and disclosure safeguards.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill does not mandate non-EU services and appropriately cautions against disclosing customer names and unpatched security details."
+    },
+    "rust-review": {
+      "verdict": "pass",
+      "summary": "rust-review is a well-scoped, security-aware Rust code review skill with clear checklist, example, acceptance tests, and approval safeguards; no prompt injection or harmful behavior found.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "No personal data, cloud, AI system, or security-law-specific processing is involved; the skill is generic Rust code review guidance."
+    },
+    "security-testing-scope": {
+      "verdict": "pass",
+      "summary": "The security-testing-scope skill is a well-structured, safety-conscious template for authorized penetration testing with clear scope, authorization, data handling, and stop conditions, and no security, safety, accuracy, or EU issues.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "Data handling section aligns with GDPR principles (minimal access, encrypted evidence, deletion, confidentiality); no non-EU service dependency or incorrect EU law references."
+    },
+    "vulnerability-management": {
+      "verdict": "pass",
+      "summary": "The vulnerability-management skill is well-scoped, prioritises by risk and exploitation evidence, requires approval for production changes, includes negative-case acceptance checks, and has no security or EU concerns.",
+      "findings": [],
+      "eu_ready": true,
+      "eu_notes": "The skill is EU-aware: it flags GDPR protections for asset/owner data and frames CRA/NIS2 reporting duties as obligations to verify, without mandating any non-EU service."
+    }
+  }
+}

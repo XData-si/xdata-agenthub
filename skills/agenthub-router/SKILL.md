@@ -54,6 +54,37 @@ Route each task to the most specific installed skill, chain skills when a task s
 | Building or reviewing an MCP server | `mcp-server-development` / `mcp-review` |
 | Self-hosted models, GPU sizing | `local-llm-serving` |
 | Several model providers, keys, budgets | `llm-gateway-routing` → `llm-cost-analysis` |
+| Go, Rust, Java/Spring, React, Node.js, Django/FastAPI, mobile code | `go-development`, `rust-review`, `java-spring-review`, `react-component-review`, `node-backend-review`, `python-web-review`, `mobile-app-review` |
+| GraphQL API | `graphql-api-review` → `security-review` |
+| Queues, events, async processing | `event-driven-architecture` |
+| Slow reads, adding a cache | `caching-strategy` |
+| ETL/ELT, warehouse, wrong report numbers | `data-pipeline-review` → `data-quality-checks` |
+| Gradual rollout, kill switch | `feature-flags` |
+| Multiple languages in a product | `i18n-localization` |
+| New or slow CI/CD pipeline | `ci-cd-pipeline-design` → `gitlab-ci` / `github-actions` |
+| Large or vulnerable container images | `container-image-optimization` → `docker-hardening` |
+| Helm charts, Ansible playbooks | `helm-chart-review`, `ansible-review` |
+| Rising cloud or AI bill | `cloud-cost-optimization` → `llm-cost-analysis` |
+| Cloud or Kubernetes permissions | `cloud-iam-least-privilege` |
+| Firewall rules, network zones | `network-segmentation` |
+| Capacity before launch | `load-testing` → `performance-profiling` |
+| Proving resilience or recovery | `chaos-engineering`, `disaster-recovery-drill` |
+| Logging design or leaky logs | `logging-standards` |
+| Preparing a release announcement | `release-notes` → `release-management` |
+| Scanner backlog, new critical CVE | `vulnerability-management` |
+| Verifiable security requirements | `owasp-asvs-review` |
+| Commissioning a penetration test | `security-testing-scope` |
+| Licences of dependencies | `open-source-license-compliance` |
+| GDPR access or erasure request | `gdpr-dsar-handling` |
+| High-risk personal data processing | `dpia` |
+| Financial entity or its ICT provider in the EU | `dora-readiness` |
+| Consumer product or service accessibility in the EU | `european-accessibility-act` → `accessibility-review` |
+| Attacking an LLM feature before launch | `ai-red-teaming` → `agent-guardrails` |
+| Several cooperating agents | `multi-agent-orchestration` |
+| Extracting fields from documents with an LLM | `llm-structured-extraction` |
+| Monitoring LLM cost and behaviour | `llm-observability` |
+| Choosing embeddings for search or RAG | `embedding-model-selection` → `rag-evaluation` |
+| Putting an ML model into production | `ml-model-deployment` |
 | Documentation | `documentation`, `technical-writing` |
 | Architecture choice | `architecture-decision` |
 | Writing a new skill | `skill-authoring` |

@@ -1,0 +1,15 @@
+skill:
+  - changed-files:
+      - any-glob-to-any-file: ['skills/**']
+catalog:
+  - changed-files:
+      - any-glob-to-any-file: ['registry/**', '.claude-plugin/**']
+cli:
+  - changed-files:
+      - any-glob-to-any-file: ['cli/**', 'scripts/install.sh']
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ['.github/**', 'scripts/**']
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: ['docs/**', '*.md']

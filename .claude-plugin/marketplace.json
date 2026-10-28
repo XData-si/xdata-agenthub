@@ -10,7 +10,7 @@
       "name": "xdata-agenthub",
       "displayName": "XData AgentHub (all skills)",
       "source": "./",
-      "description": "All 64 curated, security-first XData AgentHub skills, including the agenthub-router meta-skill.",
+      "description": "All 104 curated, security-reviewed XData AgentHub skills, including the agenthub-router meta-skill.",
       "skills": [
         "./skills/"
       ],
@@ -33,7 +33,7 @@
       "name": "xdata-engineering",
       "displayName": "XData Engineering",
       "source": "./",
-      "description": "Spec-driven development, onboarding, debugging, TDD, refactoring, upgrades, code and API review, testing and documentation skills.",
+      "description": "Spec-driven development, debugging, TDD, refactoring, language and framework reviews (Go, Rust, Java/Spring, React, Node.js, Python web, mobile), architecture and data skills.",
       "skills": [
         "./skills/spec-driven-development",
         "./skills/repository-onboarding",
@@ -56,7 +56,22 @@
         "./skills/database-migrations",
         "./skills/frontend-review",
         "./skills/accessibility-review",
-        "./skills/performance-profiling"
+        "./skills/performance-profiling",
+        "./skills/go-development",
+        "./skills/rust-review",
+        "./skills/java-spring-review",
+        "./skills/react-component-review",
+        "./skills/node-backend-review",
+        "./skills/python-web-review",
+        "./skills/mobile-app-review",
+        "./skills/graphql-api-review",
+        "./skills/event-driven-architecture",
+        "./skills/caching-strategy",
+        "./skills/data-pipeline-review",
+        "./skills/data-quality-checks",
+        "./skills/feature-flags",
+        "./skills/i18n-localization",
+        "./skills/release-notes"
       ],
       "category": "development",
       "keywords": [
@@ -78,7 +93,7 @@
       "name": "xdata-security",
       "displayName": "XData Security",
       "source": "./",
-      "description": "Threat modeling, security review, OAuth/OIDC, supply-chain provenance, secrets, privacy and MCP review skills.",
+      "description": "Threat modeling, security reviews, OAuth/OIDC, ASVS, vulnerability management, cloud IAM, network segmentation, supply chain, secrets, privacy and licence compliance.",
       "skills": [
         "./skills/security-review",
         "./skills/threat-modeling",
@@ -89,7 +104,13 @@
         "./skills/secrets-management",
         "./skills/data-privacy",
         "./skills/mcp-review",
-        "./skills/architecture-decision"
+        "./skills/architecture-decision",
+        "./skills/cloud-iam-least-privilege",
+        "./skills/network-segmentation",
+        "./skills/vulnerability-management",
+        "./skills/owasp-asvs-review",
+        "./skills/security-testing-scope",
+        "./skills/open-source-license-compliance"
       ],
       "category": "security",
       "keywords": [
@@ -111,7 +132,7 @@
       "name": "xdata-ops",
       "displayName": "XData Ops & Reliability",
       "source": "./",
-      "description": "Linux and container hardening, reverse proxy/TLS, email deliverability, CI pipelines, SLOs, incidents, runbooks, postmortems and backups.",
+      "description": "Hardening, CI/CD, containers, Helm, Ansible, cloud cost, TLS, email, SLOs, load and chaos testing, DR drills, logging, incidents and backups.",
       "skills": [
         "./skills/linux-server-hardening",
         "./skills/docker-hardening",
@@ -129,7 +150,16 @@
         "./skills/log-analysis",
         "./skills/incident-response",
         "./skills/runbook-authoring",
-        "./skills/postmortem"
+        "./skills/postmortem",
+        "./skills/ci-cd-pipeline-design",
+        "./skills/container-image-optimization",
+        "./skills/helm-chart-review",
+        "./skills/ansible-review",
+        "./skills/cloud-cost-optimization",
+        "./skills/load-testing",
+        "./skills/chaos-engineering",
+        "./skills/disaster-recovery-drill",
+        "./skills/logging-standards"
       ],
       "category": "devops",
       "keywords": [
@@ -151,7 +181,7 @@
       "name": "xdata-ai",
       "displayName": "XData AI Systems",
       "source": "./",
-      "description": "Prompt design, LLM evaluation, RAG ingestion and evaluation, agent guardrails, MCP server development, local LLM serving and LLM gateways.",
+      "description": "Prompt design, LLM evaluation and observability, structured extraction, RAG and embeddings, agent guardrails, multi-agent orchestration, AI red teaming, MCP, local LLM serving, gateways and MLOps.",
       "skills": [
         "./skills/prompt-design-review",
         "./skills/llm-output-evaluation",
@@ -162,7 +192,13 @@
         "./skills/mcp-server-development",
         "./skills/llm-gateway-routing",
         "./skills/local-llm-serving",
-        "./skills/llm-cost-analysis"
+        "./skills/llm-cost-analysis",
+        "./skills/ai-red-teaming",
+        "./skills/multi-agent-orchestration",
+        "./skills/llm-structured-extraction",
+        "./skills/llm-observability",
+        "./skills/embedding-model-selection",
+        "./skills/ml-model-deployment"
       ],
       "category": "ai",
       "keywords": [
@@ -184,12 +220,16 @@
       "name": "xdata-eu",
       "displayName": "XData EU Sovereignty & Legislation",
       "source": "./",
-      "description": "EU data sovereignty, EU AI Act, NIS2 and Cyber Resilience Act readiness skills (not legal advice).",
+      "description": "EU data sovereignty, GDPR requests and DPIAs, EU AI Act, NIS2, DORA, Cyber Resilience Act and European Accessibility Act readiness (not legal advice).",
       "skills": [
         "./skills/eu-data-sovereignty",
         "./skills/eu-ai-act-readiness",
         "./skills/nis2-readiness",
-        "./skills/cyber-resilience-act"
+        "./skills/cyber-resilience-act",
+        "./skills/gdpr-dsar-handling",
+        "./skills/dpia",
+        "./skills/dora-readiness",
+        "./skills/european-accessibility-act"
       ],
       "category": "security",
       "keywords": [

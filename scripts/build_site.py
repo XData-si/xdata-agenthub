@@ -50,7 +50,10 @@ def build(out_dir):
                 f'<p>{description}</p>'
                 f'<code>python3 cli/xah.py add {skill_id} --agent claude --scope user</code>'
                 '</article>')
-    page = TEMPLATE.replace("{{COUNT}}", str(len(skills))).replace("{{CARDS}}", "\n".join(cards))
+    levels = [s["level"] for item in skills for s in seals.get(item["id"], [])]
+    page = (TEMPLATE.replace("{{COUNT}}", str(len(skills))).replace("{{CARDS}}", "\n".join(cards))
+            .replace("{{REVIEWED}}", str(levels.count("reviewed"))).replace("{{EU}}", str(levels.count("eu-ready")))
+            .replace("{{VERIFIED}}", str(levels.count("verified"))))
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "index.html").write_text(page, encoding="utf-8")
     (out_dir / "catalog.json").write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -66,7 +69,7 @@ TEMPLATE = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>XData AgentHub — curated agent skills</title>
-<meta name="description" content="{{COUNT}} curated, security-first agent skills for Claude Code, Codex, OpenCode and other Agent Skills clients.">
+<meta name="description" content="{{COUNT}} curated, security-reviewed agent skills for Claude Code, Codex, OpenCode and other Agent Skills clients.">
 <link rel="icon" href="logo.svg">
 <style>
 :root{--bg:#f8fafc;--fg:#0f172a;--muted:#475569;--card:#fff;--line:#e2e8f0;--accent:#2563eb}
@@ -82,17 +85,81 @@ article{background:var(--card);border:1px solid var(--line);border-radius:12px;p
 .seal{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;margin:0 4px 6px 0;border:1px solid var(--line)}
 .seal-verified{color:#15803d;border-color:#15803d}.seal-reviewed{color:var(--accent);border-color:var(--accent)}.seal-eu-ready{color:#1d4ed8;border-color:#facc15;background:rgba(250,204,21,.12)}
 article p{margin:0 0 8px;color:var(--muted);font-size:.92rem}a{color:var(--accent)}footer{color:var(--muted);text-align:center;padding:32px 16px}
+
+.hero{position:relative;overflow:hidden;color:#e2e8f0;background:radial-gradient(1200px 500px at 80% -10%,rgba(124,58,237,.45),transparent 60%),radial-gradient(900px 500px at 0% 110%,rgba(37,99,235,.40),transparent 60%),linear-gradient(160deg,#060b18 0%,#0b1120 55%,#111b3a 100%)}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(148,163,184,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.08) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at 60% 40%,#000 30%,transparent 75%);animation:drift 30s linear infinite}
+@keyframes drift{to{background-position:44px 44px,44px 44px}}
+.hero-in{position:relative;max-width:1100px;margin:0 auto;padding:56px 16px 48px;display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center}
+@media (max-width:860px){.hero-in{grid-template-columns:1fr}.hero-art{max-width:360px;margin:0 auto}}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;color:#cbd5e1}.brand img{width:36px;height:36px}
+.eyebrow{display:inline-block;margin:18px 0 10px;padding:4px 12px;border:1px solid rgba(250,204,21,.5);border-radius:999px;color:#fde68a;font-size:.8rem;background:rgba(250,204,21,.08)}
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.08;margin:0 0 14px;letter-spacing:-.02em}
+.hero h1 span{background:linear-gradient(90deg,#60a5fa,#a78bfa,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:1.12rem;color:#cbd5e1;margin:0 0 22px;max-width:40ch}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.btn{display:inline-block;padding:11px 18px;border-radius:10px;font-weight:600;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px)}.btn-primary{background:linear-gradient(90deg,#2563eb,#7c3aed);color:#fff;box-shadow:0 8px 24px rgba(79,70,229,.35)}
+.btn-ghost{color:#e2e8f0;border:1px solid rgba(148,163,184,.4);background:rgba(15,23,42,.4)}
+.stats{display:flex;flex-wrap:wrap;gap:22px}.stat b{display:block;font-size:1.7rem;color:#fff}.stat span{font-size:.82rem;color:#94a3b8}
+.hero-art svg{width:100%;height:auto;display:block}
+.orbit{transform-origin:200px 200px;animation:spin 60s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.link{stroke-dasharray:4 6;animation:flow 2.4s linear infinite}@keyframes flow{to{stroke-dashoffset:-20}}
+.pulse{animation:pulse 3s ease-in-out infinite;transform-origin:200px 200px}@keyframes pulse{50%{opacity:.35;transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.hero::before,.orbit,.link,.pulse{animation:none}}
+.pipeline{max-width:1100px;margin:-26px auto 0;padding:0 16px;position:relative}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(2,6,23,.18)}
+@media (max-width:760px){.steps{grid-template-columns:1fr 1fr}}
+.step{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted)}.step b{display:block;color:var(--fg);font-size:.92rem}
+.step i{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed)}
+.installs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:28px 0 16px}
+.installs .install{margin:0}.install h3{margin:0 0 8px;font-size:1rem}
 </style>
 </head>
 <body>
-<header><img src="logo.svg" alt=""><div><h1>XData AgentHub</h1>
-<p>{{COUNT}} curated, security-first skills for Claude Code, Codex, OpenCode and any <a href="https://agentskills.io/specification">Agent Skills</a> client. Instructions only — no bundled scripts.</p></div></header>
+<section class="hero"><div class="hero-in">
+<div>
+<div class="brand"><img src="logo.svg" alt="">XData AgentHub</div>
+<div class="eyebrow">Made in the EU · Open source · MIT</div>
+<h1>Agent skills <span>you can trust</span></h1>
+<p class="lead">{{COUNT}} curated skills for Claude Code, Codex, OpenCode and any Agent Skills client — every one security-reviewed, sealed and signed. Instructions only, no bundled scripts.</p>
+<div class="cta"><a class="btn btn-primary" href="#catalog">Browse skills</a><a class="btn btn-ghost" href="#install">Install</a><a class="btn btn-ghost" href="https://github.com/XData-si/xdata-agenthub/blob/main/CONTRIBUTING.md">Contribute a skill</a></div>
+<div class="stats"><div class="stat"><b>{{COUNT}}</b><span>skills</span></div><div class="stat"><b>{{REVIEWED}}</b><span>security-reviewed</span></div><div class="stat"><b>{{EU}}</b><span>EU Ready</span></div><div class="stat"><b>{{VERIFIED}}</b><span>runtime-verified</span></div></div>
+</div>
+<div class="hero-art" aria-hidden="true">
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#7c3aed" stop-opacity=".55"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/></radialGradient>
+<linearGradient id="core" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+<circle class="pulse" cx="200" cy="200" r="150" fill="url(#glow)"/>
+<circle cx="200" cy="200" r="132" fill="none" stroke="rgba(148,163,184,.25)" stroke-dasharray="2 8"/>
+<g class="orbit">
+<g stroke="#93c5fd" stroke-width="1.5" fill="none" opacity=".8">
+<line class="link" x1="200" y1="200" x2="200" y2="68"/><line class="link" x1="200" y1="200" x2="326" y2="159"/><line class="link" x1="200" y1="200" x2="278" y2="307"/><line class="link" x1="200" y1="200" x2="122" y2="307"/><line class="link" x1="200" y1="200" x2="74" y2="159"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#e2e8f0">
+<circle cx="200" cy="68" r="26" fill="#0f172a" stroke="#60a5fa" stroke-width="2"/><text x="200" y="72">AI</text>
+<circle cx="326" cy="159" r="26" fill="#0f172a" stroke="#a78bfa" stroke-width="2"/><text x="326" y="163">Security</text>
+<circle cx="278" cy="307" r="26" fill="#0f172a" stroke="#f0abfc" stroke-width="2"/><text x="278" y="311">DevOps</text>
+<circle cx="122" cy="307" r="26" fill="#0f172a" stroke="#facc15" stroke-width="2"/><text x="122" y="311">EU</text>
+<circle cx="74" cy="159" r="26" fill="#0f172a" stroke="#34d399" stroke-width="2"/><text x="74" y="156">Engi-</text><text x="74" y="169">neering</text>
+</g></g>
+<circle cx="200" cy="200" r="46" fill="url(#core)"/>
+<path d="M183 201l11 11 23-25" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></div>
+</div></section>
+<section class="pipeline"><div class="steps">
+<div class="step"><i>1</i><div><b>Security gate</b>no scripts, hidden text or injection</div></div>
+<div class="step"><i>2</i><div><b>AI review</b>unsafe advice, missing approvals</div></div>
+<div class="step"><i>3</i><div><b>Maintainer review</b>accuracy and quality</div></div>
+<div class="step"><i>4</i><div><b>Seal</b>bound to the skill's digest</div></div>
+<div class="step"><i>5</i><div><b>Signed release</b>Sigstore + SLSA provenance</div></div>
+</div></section>
 <main>
-<section class="install"><strong>Install</strong>
-<code>/plugin marketplace add XData-si/xdata-agenthub</code>
-<code>/plugin install xdata-agenthub@xdata-agenthub</code>
-<code>git clone https://github.com/XData-si/xdata-agenthub &amp;&amp; python3 xdata-agenthub/cli/xah.py list</code>
-<p><a href="https://github.com/XData-si/xdata-agenthub">Source, documentation and contribution guide on GitHub</a></p></section>
+<div class="installs" id="install">
+<section class="install"><h3>Claude Code</h3><code>/plugin marketplace add XData-si/xdata-agenthub</code><code>/plugin install xdata-agenthub@xdata-agenthub</code></section>
+<section class="install"><h3>Any agent (Codex, OpenCode …)</h3><code>git clone https://github.com/XData-si/xdata-agenthub</code><code>python3 xdata-agenthub/cli/xah.py add &lt;skill&gt; --agent codex --scope user</code></section>
+<section class="install"><h3>Contribute</h3><p>Your skill goes through the same security review and gets the same seal. <a href="https://github.com/XData-si/xdata-agenthub/blob/main/CONTRIBUTING.md">How to contribute</a> · <a href="https://github.com/XData-si/xdata-agenthub/blob/main/docs/SEAL.md">How seals work</a></p></section>
+</div>
+<h2 id="catalog" style="margin-top:8px">Catalog</h2>
 <input id="q" type="search" placeholder="Filter skills (e.g. oauth, migration, rag, incident)" aria-label="Filter skills">
 <div class="grid">
 {{CARDS}}
