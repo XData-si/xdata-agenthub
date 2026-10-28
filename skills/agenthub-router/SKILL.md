@@ -35,6 +35,9 @@ Route each task to the most specific installed skill, chain skills when a task s
 | Release pipeline, signing, SBOM | `supply-chain-provenance` → `release-management` |
 | Personal data, GDPR | `data-privacy` |
 | AI feature offered in the EU | `eu-ai-act-readiness` → `data-privacy` |
+| Choosing cloud, SaaS or AI providers for EU data | `eu-data-sovereignty` → `data-privacy` |
+| NIS2 sector organisation or its supplier | `nis2-readiness` → `incident-response` |
+| Software or device sold in the EU | `cyber-resilience-act` → `supply-chain-provenance` |
 | New server or VPS | `linux-server-hardening` → `docker-hardening` |
 | Publishing a service on a domain | `reverse-proxy-tls` |
 | Mail lands in spam, spoofing | `email-deliverability` |

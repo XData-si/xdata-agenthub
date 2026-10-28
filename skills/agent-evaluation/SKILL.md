@@ -31,3 +31,6 @@ Measure whether an AI agent completes authorized tasks reliably, safely and at a
 
 ## Output
 Reproducible test manifest, results table, failure taxonomy, cost/latency summary and follow-up actions.
+
+## Safety
+Run evaluations in sandboxes with scoped, revocable credentials and no access to production data. Treat agent output and tool results as untrusted. Stop runs that attempt unauthorized actions, record them as findings, and never grant extra permissions to make a test pass.

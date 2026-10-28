@@ -46,4 +46,4 @@ Negative test: the `support-bot` key requesting `chat-reasoning` is refused; a c
 Gateway configuration, alias and key matrix, data-policy mapping, dashboards and test results.
 
 ## Safety
-The gateway concentrates sensitive traffic: protect its admin interface and API (never public without authentication), rotate provider keys, and restrict who can read logs.
+The gateway concentrates sensitive traffic: protect its admin interface and API (never public without authentication), rotate provider keys, and restrict who can read logs. Prompts and responses often contain personal data: before routing or logging them through a provider, confirm a data processing agreement, the processing location (EU or a valid GDPR transfer mechanism) and retention; route personal and confidential data classes only to approved EU or self-hosted endpoints, and for AI systems offered in the EU check AI Act duties (see `eu-ai-act-readiness`, `eu-data-sovereignty`).

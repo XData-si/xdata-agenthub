@@ -39,4 +39,4 @@ Turn a product requirement or existing endpoint into a reviewable API contract. 
 Contract summary, endpoint table, OpenAPI changes when requested, compatibility notes, prioritized findings and a verification matrix. Mark checks as RUN, NOT RUN or BLOCKED.
 
 ## Safety
-Never put credentials or personal data into examples. Do not call production endpoints, mutate data or claim conformance without permission and observed evidence.
+Never put credentials or personal data into examples. Do not call production endpoints, mutate data or claim conformance without permission and observed evidence. For APIs that process personal data, apply GDPR data protection by design: collect only needed fields, define retention, support access and erasure requests, and log access without storing payloads.

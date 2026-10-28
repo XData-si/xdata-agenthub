@@ -8,9 +8,9 @@
 
 [![Status](https://img.shields.io/badge/status-alpha-orange)](#roadmap) [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Made by XData](https://img.shields.io/badge/maintained%20by-XData-111827)](https://xdata.si)
 
-**Curated, security-first agent skills for real engineering work** — 61 original skills for Claude Code, Codex, OpenCode and any client that reads the [Agent Skills](https://agentskills.io/specification) format.
+**Curated, security-first agent skills for real engineering work** — 64 original skills for Claude Code, Codex, OpenCode and any client that reads the [Agent Skills](https://agentskills.io/specification) format.
 
-[![Skills](https://img.shields.io/badge/skills-61-2563eb)](docs/CATALOG.md) [![Agent Skills spec](https://img.shields.io/badge/Agent%20Skills-spec%20checked-16a34a)](https://agentskills.io/specification) [![Tests](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml/badge.svg)](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml)
+[![Skills](https://img.shields.io/badge/skills-64-2563eb)](docs/CATALOG.md) [![Agent Skills spec](https://img.shields.io/badge/Agent%20Skills-spec%20checked-16a34a)](https://agentskills.io/specification) [![Tests](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml/badge.svg)](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml)
 
 ## Install in one command
 
@@ -34,6 +34,10 @@ Public skill registries grew to hundreds of thousands of entries in 2026 — and
 - **Production topics.** Threat modeling, OAuth/OIDC, supply-chain provenance, EU AI Act readiness, SLOs, incident response, MCP servers, agent guardrails, local LLM serving — not just prompts.
 
 Browse the [searchable catalog site](https://xdata-si.github.io/xdata-agenthub/), the [categorized catalog](docs/CATALOG.md) and the [honest comparison](docs/COMPARISON.md) with other skill hubs.
+
+**Seal of approval:** every skill change passes a deterministic security gate and an AI review in CI; maintainers grant **XData Reviewed**, **XData Verified** (runtime evidence) and **EU Ready** seals that are bound to the skill's digest and expire on any change — see [docs/SEAL.md](docs/SEAL.md).
+
+**European by design:** made in the EU, no telemetry, works with EU-hosted or self-hosted models, and ships skills for GDPR, data sovereignty, the EU AI Act, NIS2 and the Cyber Resilience Act — see [docs/EU_SOVEREIGNTY.md](docs/EU_SOVEREIGNTY.md).
 
 **Verify what you install:** every skill has a package digest in the catalog (`xah verify`), releases are signed with Sigstore and carry SLSA build provenance — see [docs/VERIFYING.md](docs/VERIFYING.md).
 

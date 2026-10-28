@@ -30,10 +30,10 @@ A small set of SLIs that measure what users experience, objectives the team agre
 ## Example fixture
 ```promql
 # 28-day availability SLI from proxy metrics
-sum(rate(http_requests_total{job="edge",code!~"5.."}[28d]))
+sum(rate(http_requests_total{job="edge",code!~"4..|5.."}[28d]))
 / sum(rate(http_requests_total{job="edge",code!~"4.."}[28d]))
 ```
-Note: this denominator excludes 4xx; document such choices explicitly.
+Note: valid events exclude client errors (4xx) in both numerator and denominator, so the ratio stays between 0 and 1; document such choices explicitly.
 
 ## Acceptance checks
 - Each SLI is a ratio with an explicit definition of good and valid events and its data source.

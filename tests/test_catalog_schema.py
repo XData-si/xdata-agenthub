@@ -16,12 +16,12 @@ class CatalogSchemaTests(unittest.TestCase):
         cls.v1 = json.loads((ROOT / "registry/catalog.json").read_text(encoding="utf-8"))
 
     def test_real_v1(self):
-        self.assertEqual(len(validate_catalog(self.v1)), 64)
+        self.assertEqual(len(validate_catalog(self.v1)), 67)
 
     def test_minimal_v2(self):
         doc = copy.deepcopy(self.v1)
         doc["schema_version"] = 2
-        self.assertEqual(len(validate_catalog(doc)), 64)
+        self.assertEqual(len(validate_catalog(doc)), 67)
 
     def test_full_v2(self):
         doc = copy.deepcopy(self.v1)
@@ -31,7 +31,7 @@ class CatalogSchemaTests(unittest.TestCase):
         item.update(version="1.0", digest={"algorithm": "sha256", "value": "a" * 64},
                     tags=["review", "security"], upstream={"url": "https://example.org"},
                     compatibility={"claude": {"status": "native-observed", "tested_version": "2.1"}})
-        self.assertEqual(len(validate_catalog(doc)), 64)
+        self.assertEqual(len(validate_catalog(doc)), 67)
 
     def test_invalid_documents(self):
         for mutate in (

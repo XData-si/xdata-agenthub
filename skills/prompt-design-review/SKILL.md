@@ -25,7 +25,7 @@ Prompts that state the task, context, constraints and output format unambiguousl
 9. **Versioning.** The prompt lives in the repository with an ID and changelog; deployed version is logged with each request.
 
 ## Regression set
-Maintain 20–50 cases: typical, edge, empty or garbage input, other language, prompt-injection attempts ("ignore previous instructions…" in user input and in retrieved documents), and requests outside scope. Compare old and new prompt versions on the same cases before release (see `llm-output-evaluation`).
+Maintain 20–50 cases: typical, edge, empty or garbage input, other language, prompt-injection attempts (for example `ignore previous instructions` in user input and in retrieved documents), and requests outside scope. Compare old and new prompt versions on the same cases before release (see `llm-output-evaluation`).
 
 ## Example fixture
 ```text

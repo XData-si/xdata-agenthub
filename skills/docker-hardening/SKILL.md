@@ -43,3 +43,6 @@ This is an illustrative baseline; adjust writable paths, UID and probes to the a
 
 ## Output
 Risk-ranked findings, evidence, recommended changes and test results.
+
+## Safety
+Test hardening changes in a disposable environment first; dropping capabilities, read-only file systems or user changes can stop services. Never bake secrets into images, and do not pull or run unverified images on production hosts. Production restarts and redeploys require approval.

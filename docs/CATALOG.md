@@ -1,6 +1,6 @@
 # Skill catalog
 
-XData AgentHub ships **61 local skills**, plus three non-skill resources. Entries are authored locally, inspectable and not automatically executed.
+XData AgentHub ships **64 local skills**, plus three non-skill resources. Entries are authored locally, inspectable and not automatically executed.
 
 ## Start here
 - `agenthub-router` — route a task to the right AgentHub skills and report their acceptance checks
@@ -40,9 +40,14 @@ XData AgentHub ships **61 local skills**, plus three non-skill resources. Entrie
 - `supply-chain-provenance` — SBOMs, signatures and deploy-time verification
 - `secrets-management` — credentials lifecycle
 - `data-privacy` — data protection and retention
-- `eu-ai-act-readiness` — AI system inventory, risk category and evidence gaps (not legal advice)
 - `mcp-review` — MCP permissions and integration risks
 - `architecture-decision` — trade-offs and architecture records
+
+## European sovereignty and legislation
+- `eu-data-sovereignty` — data residency, jurisdiction, GDPR transfers, keys and exit plans (not legal advice)
+- `eu-ai-act-readiness` — AI system inventory, risk category and evidence gaps (not legal advice)
+- `nis2-readiness` — NIS2 scope, risk-management measures and 24h/72h reporting (not legal advice)
+- `cyber-resilience-act` — CRA scope, essential requirements, SBOM and vulnerability reporting (not legal advice)
 
 ## Infrastructure and operations
 - `linux-server-hardening` — SSH, firewall, patching and exposure baseline
@@ -93,6 +98,8 @@ python3 cli/xah.py add mcp-review --agent codex --target /path/to/existing/proje
 Use `--agent claude`, `--agent codex`, `--agent opencode` or the generic default. Installation copies local Markdown only and refuses overwriting existing files.
 
 ## Quality status
+Seals (XData Reviewed, XData Verified, EU Ready) are listed in [`registry/seals.json`](../registry/seals.json) and explained in [SEAL.md](SEAL.md).
+
 **Verified scenarios** (native skill loading captured in Claude Code 2.1.308 and OpenCode 1.19.4, see [2026-10-28 results](integration-evidence/2026-10-28-runtime-results.md)): `agenthub-router`, `shell-script-review`, `threat-modeling`, `database-migrations`. Earlier scenario evidence: `code-review` (Codex, OpenCode), `mcp-review`, `security-review`, `python-testing` (Codex; skill instructions consumed, native loading not verified) — see [2026-10-15 results](integration-evidence/2026-10-15-runtime-results.md).
 
 The catalog is a curated **alpha**, not a certification. Skill depth varies. Individual agent compatibility evidence and remaining gaps are documented in [integration results](integration-evidence/2026-10-15-runtime-results.md) and [runtime test plan](AGENT_RUNTIME_TESTS.md).

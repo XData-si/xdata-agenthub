@@ -34,4 +34,4 @@ Evaluate whether untrusted content can redirect an AI agent or misuse its tools.
 - Failed controls are documented with reproducible, redacted evidence.
 
 ## Safety
-Never include real credentials in test fixtures or perform exfiltration against third-party systems.
+Never include real credentials in test fixtures or perform exfiltration against third-party systems. Logs of prompts and tool calls can contain personal data: restrict access, define retention and redact secrets and personal data (GDPR).

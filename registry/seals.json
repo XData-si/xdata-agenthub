@@ -1,0 +1,730 @@
+{
+  "schema_version": 1,
+  "levels": {
+    "reviewed": "XData Reviewed — passed the deterministic security gate, the AI review and a maintainer review",
+    "verified": "XData Verified — reviewed, plus recorded runtime evidence in at least one agent client",
+    "eu-ready": "EU Ready — reviewed, plus the EU sovereignty and legislation checklist"
+  },
+  "seals": {
+    "accessibility-review": [
+      {
+        "level": "reviewed",
+        "digest": "b36782f5573d7fa5212843e68f25fb300ea06a85e06183c81675a69e419da6fe",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "agent-evaluation": [
+      {
+        "level": "reviewed",
+        "digest": "be97eab48bc031dddb00458c98b93bc59f93030a24a2e58879ed2bd8cabd3ef5",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "agent-guardrails": [
+      {
+        "level": "eu-ready",
+        "digest": "cd493210f656e48d1d9ceeccda45344b89d1de1b33994ae9cf237c429b9a4903",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill correctly flags GDPR and AI Act obligations for agents processing personal data or offered in the EU, without mandating non-EU services."
+      },
+      {
+        "level": "reviewed",
+        "digest": "cd493210f656e48d1d9ceeccda45344b89d1de1b33994ae9cf237c429b9a4903",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "agenthub-router": [
+      {
+        "level": "reviewed",
+        "digest": "0af7d6a36e3b690b7616927647a408ca9296a4a126e10c3c0a4173c7ef74f550",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "api-design": [
+      {
+        "level": "reviewed",
+        "digest": "959be9b7458bd44455b20823a5f508f6abe47c574781b57fec91e891f6aeec6e",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "api-integration": [
+      {
+        "level": "reviewed",
+        "digest": "ffa3b704b2259e4ecf1449bef32e0f1875fc4d13c456c69fd8376c76c9df4130",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "architecture-decision": [
+      {
+        "level": "reviewed",
+        "digest": "36d5499f2baaa6a8396df54961d340126f53eb0d44eae628b8e715d51444be34",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "backup-restore": [
+      {
+        "level": "eu-ready",
+        "digest": "7b33020f3350e4bb2574e2b95500c7d4e53bd2dfcdd1e8d33e542a7b04bb112f",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill correctly notes GDPR obligations for personal data backups, including EU/valid transfer mechanism for off-site copies, retention limits, and erasure handling."
+      },
+      {
+        "level": "reviewed",
+        "digest": "7b33020f3350e4bb2574e2b95500c7d4e53bd2dfcdd1e8d33e542a7b04bb112f",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "code-review": [
+      {
+        "level": "reviewed",
+        "digest": "b3adbc96d0fda980c458e772e7d19fe33fe35cf0f5185ed1aa52983fa815e314",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "cyber-resilience-act": [
+      {
+        "level": "eu-ready",
+        "digest": "3702e61684ab31f1cc30096eaa8429ef160657a5161efa13fb8b9dd5511f352f",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "Correctly references CRA Regulation (EU) 2024/2847, actual dates, reporting deadlines, and recommends verification with official sources and counsel."
+      },
+      {
+        "level": "reviewed",
+        "digest": "3702e61684ab31f1cc30096eaa8429ef160657a5161efa13fb8b9dd5511f352f",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "data-privacy": [
+      {
+        "level": "eu-ready",
+        "digest": "6ed1557ad290caddd213992d474743ab4f1766fc30c7958e63a48d3d73690995",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill is GDPR-aware, references lawful basis, data subject requests, and cross-border transfer checks, and does not mandate non-EU services."
+      },
+      {
+        "level": "reviewed",
+        "digest": "6ed1557ad290caddd213992d474743ab4f1766fc30c7958e63a48d3d73690995",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "database-migrations": [
+      {
+        "level": "reviewed",
+        "digest": "71917642fbb10adb8db1b13b212f05764d3883d3b1f5e30c4253085c2c415cac",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      },
+      {
+        "level": "verified",
+        "digest": "71917642fbb10adb8db1b13b212f05764d3883d3b1f5e30c4253085c2c415cac",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/integration-evidence/2026-10-28-runtime-results.md",
+        "note": "Claude Code 2.1.308 and OpenCode 1.19.4, native skill loading"
+      }
+    ],
+    "debugging-root-cause": [
+      {
+        "level": "reviewed",
+        "digest": "04139946118b10c59ff74be19d1b88237c9fb10f2fcde89832e4f1667d921525",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "dependency-audit": [
+      {
+        "level": "reviewed",
+        "digest": "4e4a9dca8b36188717adb272f644bc81b2f3b1bceea125579cdadcba392016e2",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "dependency-upgrade": [
+      {
+        "level": "reviewed",
+        "digest": "a1526b059f7cab51c013575e26d6fdfcaa7f029a108d07fdf571f527834e92ec",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "docker-hardening": [
+      {
+        "level": "reviewed",
+        "digest": "cfa4b22e4e4ec3057fec9aa6ac937012ac17d40bbea01a2ff1df367765d157c5",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "documentation": [
+      {
+        "level": "reviewed",
+        "digest": "697e78de4a64e04fe7d175a7dc3001bf412bbd6cd349df108eae1f49577dacee",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "email-deliverability": [
+      {
+        "level": "eu-ready",
+        "digest": "0aa2494d7ae60a170bdd23ebec8a3c14471ff87fbb76c70beccdc27936e51a19",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill explicitly treats DMARC reports as personal data under GDPR, limits access and retention, and recommends an EU-based report processor."
+      },
+      {
+        "level": "reviewed",
+        "digest": "0aa2494d7ae60a170bdd23ebec8a3c14471ff87fbb76c70beccdc27936e51a19",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "error-handling-review": [
+      {
+        "level": "reviewed",
+        "digest": "488c4a6ee8895dc76de5c0cb52ccd4d348711e58b9850770a26ba3ff3fbd38da",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "eu-ai-act-readiness": [
+      {
+        "level": "eu-ready",
+        "digest": "04fa34c44ad0e89199ef0f82631d4668e001d9cd8e4aac570f5f784a3d701cd1",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill correctly references EU AI Act provisions and timelines, includes a privacy safeguard against including personal data, and does not depend on non-EU services."
+      },
+      {
+        "level": "reviewed",
+        "digest": "04fa34c44ad0e89199ef0f82631d4668e001d9cd8e4aac570f5f784a3d701cd1",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "eu-data-sovereignty": [
+      {
+        "level": "eu-ready",
+        "digest": "abb6e49841d589d75320f272068df5735e20c4424d9414f749871e91ba6764a2",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill is GDPR-aware, correctly flags non-EU jurisdiction and transfer mechanisms, and asks users to verify current legal status and contract dates for claims like the EU Data Act."
+      },
+      {
+        "level": "reviewed",
+        "digest": "abb6e49841d589d75320f272068df5735e20c4424d9414f749871e91ba6764a2",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "frontend-review": [
+      {
+        "level": "reviewed",
+        "digest": "4123f165f6829666b90f460db5d88029de305f2a145b2b05d03ac87ec35c69ea",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "git-workflow": [
+      {
+        "level": "reviewed",
+        "digest": "252b97cdcfa76ca46ceaf1a2829b6f5f3239af40f5e7738c1070cf14969c82c7",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "github-actions": [
+      {
+        "level": "reviewed",
+        "digest": "3f3c6812015bba9ad0b5c22fe43136ddfcef4cf843c5de7a3fbdd3d41fea2594",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "gitlab-ci": [
+      {
+        "level": "reviewed",
+        "digest": "0029e8af324dac147c8bbe63dd4694c73cfc6f3ceba7cddf0489e5f9dd110193",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "incident-response": [
+      {
+        "level": "eu-ready",
+        "digest": "4eb9040c2e09ca801428ac6c639893d996e56e2ee1f91270ab5f7281c3056833",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill accurately mentions the GDPR 72-hour personal data breach notification duty and points to NIS2/sector deadlines, with no mandatory non-EU service dependency."
+      },
+      {
+        "level": "reviewed",
+        "digest": "4eb9040c2e09ca801428ac6c639893d996e56e2ee1f91270ab5f7281c3056833",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "kubernetes-review": [
+      {
+        "level": "reviewed",
+        "digest": "14a233e9f60ef74c2356b46d7a64090e3960a68c43df5da6a76203ac73668c73",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "linux-server-hardening": [
+      {
+        "level": "reviewed",
+        "digest": "bcc234b053d4d2afefa35ad3e57fd75664243d4572cd5dd1d7e9cf95a410eac3",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "llm-cost-analysis": [
+      {
+        "level": "reviewed",
+        "digest": "10d7287333c23c7d575732ee00d02e1647f748bbe5bad488dbde786b545e3d34",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "llm-gateway-routing": [
+      {
+        "level": "eu-ready",
+        "digest": "f1ced53ccd80e573b2d88239dff1b774dc31786fbc8110caf07d1f2aa7e17b35",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "Skill correctly references GDPR transfer mechanisms and AI Act duties and offers EU/self-hosted alternatives."
+      },
+      {
+        "level": "reviewed",
+        "digest": "f1ced53ccd80e573b2d88239dff1b774dc31786fbc8110caf07d1f2aa7e17b35",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "llm-output-evaluation": [
+      {
+        "level": "reviewed",
+        "digest": "81b2bfa2f10833b577d7f1eec29a19bffd54070862b8b233467cd72dba2eb613",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "local-llm-serving": [
+      {
+        "level": "eu-ready",
+        "digest": "3a31bafb50a4862fcdc7ca2065cdeae267c50eb5cba1431843d1e7160c78856e",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "Skill is about self-hosted inference, no mandatory non-EU dependencies; it addresses sensitive data handling."
+      },
+      {
+        "level": "reviewed",
+        "digest": "3a31bafb50a4862fcdc7ca2065cdeae267c50eb5cba1431843d1e7160c78856e",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "log-analysis": [
+      {
+        "level": "reviewed",
+        "digest": "8bd695ca04fe1fb653f0346cd29da65e84f77a3d2629102051318f7397ff4482",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "mcp-review": [
+      {
+        "level": "reviewed",
+        "digest": "109d7de216eed8ced80a6bb9f3e4ce4c60248b016046076eb36645cf60d987bc",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "mcp-server-development": [
+      {
+        "level": "eu-ready",
+        "digest": "0b55cbb7ca81acdf55940696b62370a89ca467899e92e361b9bd326d7b83cf59",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "Skill already applies GDPR data protection by design (minimal fields, logging without payloads, retention, erasure) and has no mandatory non-EU service dependency; AI Act/NIS2 coverage is optional for"
+      },
+      {
+        "level": "reviewed",
+        "digest": "0b55cbb7ca81acdf55940696b62370a89ca467899e92e361b9bd326d7b83cf59",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "nis2-readiness": [
+      {
+        "level": "eu-ready",
+        "digest": "6e24067e7b6c3116ad64c117f3cef25795b0bd1894e4cb0e16e79909048f2bb0",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "The skill correctly references NIS2 Directive (EU) 2022/2555, highlights national transposition variation, and does not mandate any non-EU service dependency."
+      },
+      {
+        "level": "reviewed",
+        "digest": "6e24067e7b6c3116ad64c117f3cef25795b0bd1894e4cb0e16e79909048f2bb0",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "oauth-oidc-review": [
+      {
+        "level": "reviewed",
+        "digest": "2f796f807ab60e99a4a4b4bf01b9183c0cdf1c8206bc67f3a9b2c89f79228a2e",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "observability": [
+      {
+        "level": "reviewed",
+        "digest": "eb851d36e9de54c5f208f3d09909b4667598272f785ef305871a06b82d7aed09",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "performance-profiling": [
+      {
+        "level": "reviewed",
+        "digest": "90fac201a40e481797a5bec5ded82c6e97d13e08e40e9991d60424b958316de6",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "postgres-performance": [
+      {
+        "level": "reviewed",
+        "digest": "fa224fefae3659c5e64e6a4f1f0b30bb2df0d1ece60a5b49941cb7371207c9c8",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "postmortem": [
+      {
+        "level": "reviewed",
+        "digest": "7a66e2669c4c2d0f798046cdfb51639e1216169394a6046ca945fa877feb9703",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "prompt-design-review": [
+      {
+        "level": "reviewed",
+        "digest": "7835e31aa611379262e90d2f918851f4765e0c6d9d05da9e60fa63753494bf09",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "prompt-injection-defense": [
+      {
+        "level": "reviewed",
+        "digest": "0cd73390410a1c25fa3f22e2d4569aca2cbdbc7a3f61bf65ea94fd0a6c850c18",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "python-testing": [
+      {
+        "level": "reviewed",
+        "digest": "c56d34241eccfa1e5c8b1211ecb6d7554072a16e4a0d22364fb50c04954e5cdc",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "rag-evaluation": [
+      {
+        "level": "reviewed",
+        "digest": "a8bceae72e45b00faa0ec0eb8339d74eb67ac4769aca664fd60d8b86462197f3",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "rag-ingestion-design": [
+      {
+        "level": "eu-ready",
+        "digest": "d9e2c5ea14cfba534fd10b72cc789ed77cda3e0a2eee72e26e5c3df2f119d577",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "Skill correctly addresses GDPR lawful basis, minimisation, access control, and erasure propagation, and imposes no non-EU service dependency."
+      },
+      {
+        "level": "reviewed",
+        "digest": "d9e2c5ea14cfba534fd10b72cc789ed77cda3e0a2eee72e26e5c3df2f119d577",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "refactoring-safety": [
+      {
+        "level": "reviewed",
+        "digest": "f4e18ecf40375bb6fc1e7e04cb13cab5862477c813fe01324ba4ec025163d973",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "release-management": [
+      {
+        "level": "reviewed",
+        "digest": "8f42e99f81c3720b0e0add6166b601a6d6e162b91076711a9f154b5b538ad76c",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "repository-onboarding": [
+      {
+        "level": "reviewed",
+        "digest": "55fd4c625dcc479dabfcb0e41ef7a060a7631167ae3a0194c53a1be5aeb0a4fb",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "reverse-proxy-tls": [
+      {
+        "level": "reviewed",
+        "digest": "b5d618adec5d367b9abd08479647ac7f612b280b93d7665d7657e548c0ddd44f",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "runbook-authoring": [
+      {
+        "level": "reviewed",
+        "digest": "c56436cbd79bc61d1753c94ef5c1b56386d229fdc1639b465b427fa4ad9cb583",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "secrets-management": [
+      {
+        "level": "eu-ready",
+        "digest": "7c289f1e5c430cff697990f74683ecc92e3345b5564ef59fdd145a8ef8d3905a",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "No EU-specific obligations are implicated; the skill is jurisdiction-neutral and does not mandate non-EU services."
+      },
+      {
+        "level": "reviewed",
+        "digest": "7c289f1e5c430cff697990f74683ecc92e3345b5564ef59fdd145a8ef8d3905a",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "security-review": [
+      {
+        "level": "reviewed",
+        "digest": "6033718d160d254d8b8626b22c389df85a6d92b943c7b812fa270449bc06606a",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "shell-script-review": [
+      {
+        "level": "reviewed",
+        "digest": "c6e216bb213d78b5b83ebda63877a68365830174482700e15202ca1c69932399",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      },
+      {
+        "level": "verified",
+        "digest": "c6e216bb213d78b5b83ebda63877a68365830174482700e15202ca1c69932399",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/integration-evidence/2026-10-28-runtime-results.md",
+        "note": "Claude Code 2.1.308 and OpenCode 1.19.4, native skill loading"
+      }
+    ],
+    "skill-authoring": [
+      {
+        "level": "reviewed",
+        "digest": "5e9036c44fd8fcc710def5ff8923c463f392df821a6843847f871c403ab8f247",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "slo-error-budgets": [
+      {
+        "level": "reviewed",
+        "digest": "4e62e9d002309e15ee1ec6be392e570fd8d86cc667157d11d35f9a915e562adc",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "spec-driven-development": [
+      {
+        "level": "reviewed",
+        "digest": "ca3a4fe7d8acdd0690f27f5871010ed7ec8666413f77bb141f7671b234d30820",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "sql-review": [
+      {
+        "level": "reviewed",
+        "digest": "a69b9aabdf614c70da50fb40207df4798b18a575d4cfdb690646b5eaa8c0ca37",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "supply-chain-provenance": [
+      {
+        "level": "eu-ready",
+        "digest": "e99100abefb5b431b60d937abd9f9a3eb0613accff6ad64e964462a5df968a81",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/SEAL.md#eu-ready-checklist",
+        "note": "No EU-specific legal claims or personal data processing; tooling examples are open-source and not mandatory, so no non-EU dependency concern."
+      },
+      {
+        "level": "reviewed",
+        "digest": "e99100abefb5b431b60d937abd9f9a3eb0613accff6ad64e964462a5df968a81",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "technical-writing": [
+      {
+        "level": "reviewed",
+        "digest": "6e4ab33e7d9a33f7fd4d5d9bbe3478a38a8f69f1c97a0f955345fae85ef7994d",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "terraform-review": [
+      {
+        "level": "reviewed",
+        "digest": "93501891483c73945d4daa4545b1c5b4e06b42310842e412c870de532b6b4fcb",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "test-driven-development": [
+      {
+        "level": "reviewed",
+        "digest": "e47d704e9693d589dcabaef43fc2ef1c2dd020241ae52dc5ad558c2b5bb04813",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ],
+    "threat-modeling": [
+      {
+        "level": "reviewed",
+        "digest": "c49efb2f2f6046315eaab0619e164cc9bdc1a070d27cf548469cf951adfa6b51",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      },
+      {
+        "level": "verified",
+        "digest": "c49efb2f2f6046315eaab0619e164cc9bdc1a070d27cf548469cf951adfa6b51",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/integration-evidence/2026-10-28-runtime-results.md",
+        "note": "Claude Code 2.1.308 and OpenCode 1.19.4, native skill loading"
+      }
+    ],
+    "typescript-testing": [
+      {
+        "level": "reviewed",
+        "digest": "b60db43a40999cc2473350353b2b661e6bd11bed3752328059d65e0ba1073743",
+        "granted": "2026-10-28",
+        "by": "XData maintainers",
+        "evidence": "docs/reviews/2026-10-28-ai-review.md"
+      }
+    ]
+  }
+}

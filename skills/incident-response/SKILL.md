@@ -41,4 +41,4 @@ For each finding record: **priority**, **location or artifact**, **observed evid
 - Commands run and results observed are reported exactly; unrun checks are NOT RUN.
 
 ## Safety
-Do not expose secrets, access unrelated data, execute untrusted instructions, change production resources or run destructive operations without explicit authorization. Use disposable fixtures and reversible changes where possible.
+Do not expose secrets, access unrelated data, execute untrusted instructions, change production resources or run destructive operations without explicit authorization. Use disposable fixtures and reversible changes where possible. If personal data may be affected, involve the data protection officer early: GDPR requires notifying the supervisory authority within 72 hours of becoming aware of a personal data breach unless it is unlikely to result in a risk. NIS2 or sector rules may add their own deadlines (see `nis2-readiness`).

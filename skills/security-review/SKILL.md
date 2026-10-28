@@ -45,3 +45,6 @@ Status: Needs verification
 
 ## Output
 Threat model summary, prioritized findings, patch plan, verification evidence and residual risks.
+
+## Safety
+Review only systems and code you are authorized to assess. Do not run exploits, scanners or proof-of-concept payloads against production or third-party systems without written scope. Redact secrets and personal data from findings; report suspected live credential exposure immediately so it can be rotated.

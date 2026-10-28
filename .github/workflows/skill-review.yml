@@ -1,0 +1,70 @@
+name: Skill review
+# 1. security-gate (required): deterministic checks on every skill + digest and seal consistency. No secrets, no network.
+# 2. ai-review (advisory): an LLM reviews only the changed skills through an OpenAI-compatible endpoint configured in
+#    repository secrets. Pull requests from forks receive no secrets, so the AI review is skipped for them and a
+#    maintainer re-runs it on a branch. Skill content is treated as untrusted data; the AI cannot approve anything.
+on:
+  pull_request:
+    paths: ['skills/**', 'registry/**', 'scripts/skill_security_check.py', 'scripts/ai_skill_review.py', '.github/workflows/skill-review.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  security-gate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Deterministic skill security gate
+        run: python scripts/skill_security_check.py
+      - name: Package digests and seals are current
+        run: |
+          python scripts/update_digests.py --check
+          python scripts/seal.py check
+  ai-review:
+    needs: security-gate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      AI_REVIEW_BASE_URL: ${{ secrets.AI_REVIEW_BASE_URL }}
+      AI_REVIEW_API_KEY: ${{ secrets.AI_REVIEW_API_KEY }}
+      AI_REVIEW_MODEL: ${{ vars.AI_REVIEW_MODEL || 'xdata-default' }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: AI review of changed skills (advisory)
+        id: review
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          set +e
+          python scripts/ai_skill_review.py --changed "origin/$BASE_REF" --report review.md
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          [ -f review.md ] && cat review.md >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+      - name: Comment on the pull request
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && hashFiles('review.md') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          existing=$(gh api "repos/${{ github.repository }}/issues/$PR/comments" --jq '.[] | select(.body | startswith("<!-- agenthub-ai-review -->")) | .id' | head -n1)
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$existing" -F body=@review.md >/dev/null
+          else
+            gh pr comment "$PR" --body-file review.md
+          fi
+      - name: Fail on a blocking verdict
+        if: steps.review.outputs.status == '1'
+        run: |
+          echo "::error::AI review returned a blocking verdict; a maintainer must inspect the findings."
+          exit 1

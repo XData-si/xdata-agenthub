@@ -19,7 +19,7 @@ Determine whether a retrieval-augmented assistant answers real user questions ac
 1. Freeze the corpus, index version, prompts and model versions; record timestamps.
 2. Create a JSONL evaluation set with fields `id`, `question`, `expected_doc_ids`, `answerable`, `access_role`, `reference_answer`. Remove sensitive data.
 3. Run retrieval independently. Record top-k document IDs, scores, latency and access-filter results.
-4. Calculate **recall@k**: fraction of answerable queries where at least one expected evidence document appears in top-k. Calculate **MRR** from the first relevant document rank when relevance labels exist. Report denominator and exclusions.
+4. Calculate **hit rate@k** (success@k): fraction of answerable queries where at least one expected evidence document appears in top-k; where queries have several relevant documents, also report **recall@k** — the share of each query's expected documents found in top-k, averaged over queries. Calculate **MRR** from the first relevant document rank when relevance labels exist. Report denominator and exclusions.
 5. Run generation on frozen retrieval results. Review factual correctness, citation support, abstention behavior and unauthorized disclosure. Human-check ambiguous cases.
 6. Tag failures: ingestion, chunking, query understanding, filtering, ranking, generation, unsupported citation, or missing source.
 7. Compare candidate configurations on identical cases. Record per-query changes, token cost and p50/p95 latency; never substitute synthetic numbers for measured values.
