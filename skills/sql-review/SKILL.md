@@ -1,10 +1,10 @@
 ---
 name: sql-review
-description: Review SQL correctness, security and performance with reproducible evidence and actionable recommendations.
+description: Review SQL for correctness, security and performance — injection, transactions, NULL handling, indexes and query plans. Use when writing or reviewing queries, views or stored procedures.
 license: MIT
 ---
 
-# Sql Review
+# SQL Review
 
 ## Purpose
 Review SQL correctness, security and performance. Follow project conventions and explicitly state assumptions.

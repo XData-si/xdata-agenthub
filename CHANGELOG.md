@@ -4,6 +4,9 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Changed skill metadata
+- Rewrote all 31 existing skill `description` fields to state what the skill does **and when to use it**, so agents select skills reliably; fixed title casing (API, GitHub, GitLab CI, LLM, PostgreSQL, SQL) and doubled full stops in workflow steps. No procedure changes.
+
 ### Added skills (batch 2)
 - 29 new original skills (catalog: 60 skills, 63 resources): engineering workflow (`spec-driven-development`, `repository-onboarding`, `git-workflow`, `debugging-root-cause`, `test-driven-development`, `refactoring-safety`, `dependency-upgrade`, `skill-authoring`), quality (`error-handling-review`, `shell-script-review`, `database-migrations`), security (`threat-modeling`, `oauth-oidc-review`, `supply-chain-provenance`, `eu-ai-act-readiness`), operations (`linux-server-hardening`, `reverse-proxy-tls`, `email-deliverability`, `slo-error-budgets`, `log-analysis`, `runbook-authoring`, `postmortem`) and AI systems (`prompt-design-review`, `llm-output-evaluation`, `rag-ingestion-design`, `agent-guardrails`, `mcp-server-development`, `llm-gateway-routing`, `local-llm-serving`).
 - All new entries are documentation-level drafts following the skill quality standard (example fixture, negative acceptance checks, safety section); none is marked Verified.

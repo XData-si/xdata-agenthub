@@ -1,6 +1,6 @@
 ---
 name: secrets-management
-description: Review secrets lifecycle and access controls with evidence-based findings and actionable verification.
+description: Review the lifecycle of secrets and credentials — storage, injection, scoping, rotation, revocation and leak detection. Use when adding credentials to an application or CI, after a suspected leak, or when auditing access.
 license: MIT
 ---
 
@@ -18,7 +18,7 @@ Read the user request, repository instructions, relevant configuration and imple
 3. Inspect injection via environment, mounted files and secret managers.
 4. Ensure no exposure in logs, builds, support bundles or repository history.
 5. Validate revocation and break-glass access.
-6. Plan zero-downtime rotation and audit..
+6. Plan zero-downtime rotation and audit.
 
 ## Illustrative review case
 A token removed from the latest commit may still exist in Git history; revoke it before cleanup.

@@ -1,6 +1,6 @@
 ---
 name: release-management
-description: Plan reproducible safe releases with reproducible evidence and actionable recommendations.
+description: Plan safe, reproducible releases — versioning, changelog, artefacts, staged rollout, verification and rollback. Use when preparing a release, tagging a version or defining a release process.
 license: MIT
 ---
 

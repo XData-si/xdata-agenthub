@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Review changes for correctness, security, maintainability and test coverage.
+description: Review code changes for correctness, security, maintainability and test coverage with evidence-based findings. Use when reviewing a pull or merge request, a diff or a patch before merge.
 ---
 # Code Review
 

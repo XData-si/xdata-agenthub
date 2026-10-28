@@ -1,10 +1,10 @@
 ---
 name: api-integration
-description: Design reliable third-party API integrations with reproducible evidence and actionable recommendations.
+description: Design and review reliable third-party API integrations — authentication, timeouts, retries, rate limits, idempotency and failure handling. Use when connecting to an external service or debugging a flaky integration.
 license: MIT
 ---
 
-# Api Integration
+# API Integration
 
 ## Purpose
 Design reliable third-party API integrations. Follow project conventions and explicitly state assumptions.

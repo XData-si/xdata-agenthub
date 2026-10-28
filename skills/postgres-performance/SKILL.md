@@ -1,10 +1,10 @@
 ---
 name: postgres-performance
-description: Diagnose PostgreSQL latency using evidence with evidence-based findings and actionable verification.
+description: Diagnose PostgreSQL latency with evidence — EXPLAIN (ANALYZE, BUFFERS) on a safe replica, estimate vs actual rows, index selectivity, autovacuum, bloat and lock waits. Use when queries are slow, the database is overloaded, or before adding indexes.
 license: MIT
 ---
 
-# Postgres Performance
+# PostgreSQL Performance
 
 ## Goal
 Diagnose PostgreSQL latency using evidence. Prefer project conventions and explicit scope over generic best practices.
@@ -17,7 +17,7 @@ Read the user request, repository instructions, relevant configuration and imple
 2. Inspect EXPLAIN (ANALYZE, BUFFERS) only on an authorized safe replica or staging.
 3. Compare estimated vs actual rows, join strategies, scans and cache behavior.
 4. Review index selectivity, write amplification, autovacuum, bloat and lock waits.
-5. Propose one change at a time with baseline and rollback..
+5. Propose one change at a time with baseline and rollback.
 
 ## Illustrative review case
 A slow query with sequential scan is not automatically an index problem; compare cardinality and actual timings.

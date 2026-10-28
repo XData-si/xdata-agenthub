@@ -1,10 +1,10 @@
 ---
 name: github-actions
-description: Review secure GitHub Actions workflows with evidence-based findings and actionable verification.
+description: Review GitHub Actions workflows for security and reproducibility — token permissions, pinned actions, untrusted pull-request triggers and secret exposure. Use when adding or changing workflows in .github/workflows.
 license: MIT
 ---
 
-# Github Actions
+# GitHub Actions
 
 ## Goal
 Review secure GitHub Actions workflows. Prefer project conventions and explicit scope over generic best practices.
@@ -19,7 +19,7 @@ Read the user request, repository instructions, relevant configuration and imple
 4. Pin third-party actions to immutable commits where feasible.
 5. Control artifact/cache inputs and release provenance.
 6. Gate deployments with environments.
-7. Avoid exposing secrets to untrusted pull requests..
+7. Avoid exposing secrets to untrusted pull requests.
 
 ## Illustrative review case
 A pull_request_target workflow that checks out attacker-controlled code and executes it with write token is a high-priority review finding.

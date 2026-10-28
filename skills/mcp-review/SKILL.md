@@ -1,6 +1,6 @@
 ---
 name: mcp-review
-description: Assess MCP server tools, trust boundaries, permissions, and failure modes before agent integration.
+description: Assess Model Context Protocol (MCP) servers before agent integration — tool side effects, trust boundaries, permissions and failure modes. Use when connecting an agent to an MCP server or reviewing one.
 license: MIT
 ---
 

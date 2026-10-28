@@ -1,6 +1,6 @@
 ---
 name: architecture-decision
-description: Document architectural decisions with trade-offs with reproducible evidence and actionable recommendations.
+description: Record architectural decisions as ADRs with context, options, trade-offs and consequences. Use when choosing between technologies, patterns or designs that are expensive to reverse.
 license: MIT
 ---
 

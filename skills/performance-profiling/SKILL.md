@@ -1,6 +1,6 @@
 ---
 name: performance-profiling
-description: Diagnose performance with controlled measurements with reproducible evidence and actionable recommendations.
+description: Diagnose performance problems with controlled, reproducible measurements and profilers before optimising. Use when something is slow, CPU or memory usage is high, or before and after optimisation work.
 license: MIT
 ---
 

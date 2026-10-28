@@ -1,6 +1,6 @@
 ---
 name: technical-writing
-description: Write executable and maintainable documentation with reproducible evidence and actionable recommendations.
+description: Write executable, maintainable technical documentation for a defined audience — prerequisites, minimal working examples, expected output, troubleshooting and verified commands. Use when writing a guide, tutorial or setup instructions for others to follow.
 license: MIT
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: kubernetes-review
-description: Review Kubernetes workload and cluster manifests for security, resilience and operability.
+description: Review Kubernetes workload and cluster manifests for security, resilience and operability — resources, probes, security context, network policies and RBAC. Use when writing or reviewing manifests, Helm charts or Kustomize overlays.
 license: MIT
 ---
 

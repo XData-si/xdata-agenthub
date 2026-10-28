@@ -1,6 +1,6 @@
 ---
 name: documentation
-description: Update clear and testable technical documentation based on verified implementation.
+description: Update technical documentation so it matches verified implementation — READMEs, setup steps, configuration and changelogs. Use after changing behaviour, interfaces or setup, or when documentation is reported as outdated.
 ---
 # Documentation
 

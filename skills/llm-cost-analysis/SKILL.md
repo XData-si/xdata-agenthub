@@ -1,10 +1,10 @@
 ---
 name: llm-cost-analysis
-description: Model LLM cost and latency with transparent assumptions with evidence-based findings and actionable verification.
+description: Model LLM cost and latency with transparent assumptions — token volumes, pricing, caching, model choice and quality trade-offs. Use when budgeting an LLM feature, choosing a model, or investigating rising spend.
 license: MIT
 ---
 
-# Llm Cost Analysis
+# LLM Cost Analysis
 
 ## Goal
 Model LLM cost and latency with transparent assumptions. Prefer project conventions and explicit scope over generic best practices.
@@ -17,7 +17,7 @@ Read the user request, repository instructions, relevant configuration and imple
 2. Distinguish list prices from contracted rates and regional billing.
 3. Calculate per-request and monthly scenarios using P50/P95 usage.
 4. Account for rate limits, fallback routing and context growth.
-5. Compare quality/latency tradeoffs before optimizing solely for price..
+5. Compare quality/latency tradeoffs before optimizing solely for price.
 
 ## Illustrative review case
 A request with 2000 input and 500 output tokens must price each token category separately; mark unknown provider rates as missing.

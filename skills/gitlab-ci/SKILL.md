@@ -1,10 +1,10 @@
 ---
 name: gitlab-ci
-description: Review secure and reproducible GitLab CI pipelines with evidence-based findings and actionable verification.
+description: Review GitLab CI/CD pipelines for security and reproducibility — job permissions, protected variables, untrusted merge-request pipelines, pinned images and deploy approvals. Use when adding or changing .gitlab-ci.yml.
 license: MIT
 ---
 
-# Gitlab Ci
+# GitLab CI
 
 ## Goal
 Review secure and reproducible GitLab CI pipelines. Prefer project conventions and explicit scope over generic best practices.
@@ -19,7 +19,7 @@ Read the user request, repository instructions, relevant configuration and imple
 4. Pin container images and dependency versions.
 5. Separate build from deployment approvals.
 6. Inspect retry, timeout and rollback behavior.
-7. Check that secrets are not printed..
+7. Check that secrets are not printed.
 
 ## Illustrative review case
 A fork merge request must not receive protected deployment credentials through an untrusted job.
