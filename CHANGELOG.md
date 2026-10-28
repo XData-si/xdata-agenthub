@@ -4,6 +4,10 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Added after v0.3.0 RC1 preparation
+- Additional local catalogs via repeatable `--catalog PATH` and `XAH_CATALOGS`; item paths resolve relative to each catalog file, duplicate IDs across catalogs are refused.
+- `add`/`update --scope user` installs skills into user-level client directories (`~/.claude/skills`, `~/.agents/skills`, `~/.config/opencode/skills`); instructions and the generic adapter are refused at user scope. User-scope runtime discovery is not yet verified.
+
 ### v0.3.0 RC1 preparation (not tagged or published)
 - Integrated adapter destination contract for Claude Code, Codex, OpenCode and generic projects.
 - Added local catalog `browse` pagination/facets and `trust` declared-provenance classification; trust output is not independent verification.
