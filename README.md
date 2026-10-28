@@ -1,4 +1,5 @@
 <p align="center"><a href="https://xdata-si.github.io/xdata-agenthub/"><img src="docs/assets/hero-banner.svg" alt="XData AgentHub — agent skills you can trust: security gate, AI review, maintainer review, seal, signed release"></a></p>
+<h3 align="center">Give your AI coding agent 104 security-reviewed skills in minutes.</h3>
 <p align="center"><a href="https://xdata-si.github.io/xdata-agenthub/"><b>Browse the catalog</b></a> · <a href="#install-in-one-command">Install</a> · <a href="CONTRIBUTING.md">Contribute a skill</a> · <a href="docs/SEAL.md">Seal of approval</a></p>
 
 # XData AgentHub
@@ -24,6 +25,24 @@
 
 Start with `agenthub-router`: it picks the right skill (or a short sequence) for the task and reports each skill's acceptance checks.
 
+## See it work
+
+The same short script, reviewed by Claude Code with the `shell-script-review` skill loaded natively (from our recorded
+[runtime evidence](docs/integration-evidence/2026-10-28-runtime-results.md)):
+
+```sh
+#!/bin/sh
+rm -rf $BUILD_DIR/*
+for f in `ls *.log`; do
+  eval "gzip $f"
+done
+```
+
+The agent followed the skill's procedure and reported, with line numbers: an unguarded, unquoted recursive delete that wipes the
+file system root when the variable is empty (critical); command injection through `eval` on file names (critical); parsing
+`ls` output (high); no error handling (high) — and stated that ShellCheck was **not run** instead of pretending it was.
+That is the point of a skill: a consistent procedure, explicit evidence and honest limits, every time.
+
 ## Why AgentHub
 
 Public skill registries grew to hundreds of thousands of entries in 2026 — and became an attack surface: poisoned `SKILL.md` files on open marketplaces were used to trick agents and users into installing malware. AgentHub takes the opposite approach:
@@ -46,6 +65,8 @@ flowchart LR
 No skill is distributed without passing the deterministic security gate, an AI security review and a maintainer review. Want to add yours? See [CONTRIBUTING.md](CONTRIBUTING.md) — your skill gets the same review and the same seal.
 
 **Seal of approval:** every skill change passes a deterministic security gate and an AI review in CI; maintainers grant **XData Reviewed**, **XData Verified** (runtime evidence) and **EU Ready** seals that are bound to the skill's digest and expire on any change — see [docs/SEAL.md](docs/SEAL.md).
+
+**Coming next — Verified MCP:** the same review, evidence and seals for MCP servers, plus tested skill + MCP bundles. See [docs/VERIFIED_MCP.md](docs/VERIFIED_MCP.md) and the [roadmap](ROADMAP.md).
 
 **European by design:** made in the EU, no telemetry, works with EU-hosted or self-hosted models, and ships skills for GDPR, data sovereignty, the EU AI Act, NIS2 and the Cyber Resilience Act — see [docs/EU_SOVEREIGNTY.md](docs/EU_SOVEREIGNTY.md).
 
