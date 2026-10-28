@@ -35,6 +35,8 @@ Public skill registries grew to hundreds of thousands of entries in 2026 — and
 
 Browse the [searchable catalog site](https://xdata-si.github.io/xdata-agenthub/), the [categorized catalog](docs/CATALOG.md) and the [honest comparison](docs/COMPARISON.md) with other skill hubs.
 
+**Verify what you install:** every skill has a package digest in the catalog (`xah verify`), releases are signed with Sigstore and carry SLSA build provenance — see [docs/VERIFYING.md](docs/VERIFYING.md).
+
 **Status: public alpha.** No certification or compatibility claims beyond the [recorded evidence](docs/integration-evidence/2026-10-15-runtime-results.md); skills are documentation-level drafts until marked Verified.
 
 ## Quick start

@@ -1,5 +1,6 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "catalog_id": "xdata-agenthub",
   "items": [
     {
       "id": "code-review",
@@ -11,7 +12,11 @@
       "source": "XData original",
       "targets": [
         "generic"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b3adbc96d0fda980c458e772e7d19fe33fe35cf0f5185ed1aa52983fa815e314"
+      }
     },
     {
       "id": "documentation",
@@ -23,7 +28,11 @@
       "source": "XData original",
       "targets": [
         "generic"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "6d88480b42c0e6bb927118910593c132dc71142a0b774e4f6157761b8e070e90"
+      }
     },
     {
       "id": "project-agents",
@@ -35,7 +44,11 @@
       "source": "XData original",
       "targets": [
         "agents-md"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "1b8d1e45afd105af39b1af15355d84576fa2f5c510934b2c0939614cf384d04e"
+      }
     },
     {
       "id": "devops-review",
@@ -47,7 +60,11 @@
       "source": "XData original",
       "targets": [
         "generic"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "bcc4b506b681eb7af78eb7f297575833b1761f56fd07d6de6e2318dcc94b6f08"
+      }
     },
     {
       "id": "research-agent",
@@ -59,7 +76,11 @@
       "source": "XData original",
       "targets": [
         "generic"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b1959535b1f904982d8f3d46262512373a1d33dba08cc2cb9b0913bb04e39292"
+      }
     },
     {
       "id": "api-design",
@@ -74,7 +95,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e2cdf42595d0359b8dc7ec2c61167bf01adee54aea3196797660f514369da881"
+      }
     },
     {
       "id": "python-testing",
@@ -89,7 +114,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c56d34241eccfa1e5c8b1211ecb6d7554072a16e4a0d22364fb50c04954e5cdc"
+      }
     },
     {
       "id": "typescript-testing",
@@ -104,7 +133,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b60db43a40999cc2473350353b2b661e6bd11bed3752328059d65e0ba1073743"
+      }
     },
     {
       "id": "security-review",
@@ -119,7 +152,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "47f0f43e33e957d4275a524872576dbe24ee58d0edf0a939d08e85b2e4af1705"
+      }
     },
     {
       "id": "docker-hardening",
@@ -134,7 +171,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "0793345da33236edc40d49514f875433e47790f4529ff3d499ff9e96f6d8956b"
+      }
     },
     {
       "id": "kubernetes-review",
@@ -149,7 +190,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "14a233e9f60ef74c2356b46d7a64090e3960a68c43df5da6a76203ac73668c73"
+      }
     },
     {
       "id": "terraform-review",
@@ -164,7 +209,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "93501891483c73945d4daa4545b1c5b4e06b42310842e412c870de532b6b4fcb"
+      }
     },
     {
       "id": "postgres-performance",
@@ -179,7 +228,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "fa224fefae3659c5e64e6a4f1f0b30bb2df0d1ece60a5b49941cb7371207c9c8"
+      }
     },
     {
       "id": "rag-evaluation",
@@ -194,7 +247,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "4259683b3d4e96f5366d70ce553be8ec253e30216d0989990c8d138cd1751b43"
+      }
     },
     {
       "id": "prompt-injection-defense",
@@ -209,7 +266,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "d11e996796891e2e03a6836c27223d6636e4d7b355960098bb8de489476d0d9f"
+      }
     },
     {
       "id": "llm-cost-analysis",
@@ -224,7 +285,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "10d7287333c23c7d575732ee00d02e1647f748bbe5bad488dbde786b545e3d34"
+      }
     },
     {
       "id": "incident-response",
@@ -239,7 +304,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "5936c5d3cb760b95164374e4cab532001089ba3d158640e0f0de2bee83ca91a2"
+      }
     },
     {
       "id": "observability",
@@ -254,7 +323,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "eb851d36e9de54c5f208f3d09909b4667598272f785ef305871a06b82d7aed09"
+      }
     },
     {
       "id": "gitlab-ci",
@@ -269,7 +342,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "0029e8af324dac147c8bbe63dd4694c73cfc6f3ceba7cddf0489e5f9dd110193"
+      }
     },
     {
       "id": "github-actions",
@@ -284,7 +361,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "3f3c6812015bba9ad0b5c22fe43136ddfcef4cf843c5de7a3fbdd3d41fea2594"
+      }
     },
     {
       "id": "release-management",
@@ -299,7 +380,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "8f42e99f81c3720b0e0add6166b601a6d6e162b91076711a9f154b5b538ad76c"
+      }
     },
     {
       "id": "architecture-decision",
@@ -314,7 +399,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "36d5499f2baaa6a8396df54961d340126f53eb0d44eae628b8e715d51444be34"
+      }
     },
     {
       "id": "accessibility-review",
@@ -329,7 +418,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b36782f5573d7fa5212843e68f25fb300ea06a85e06183c81675a69e419da6fe"
+      }
     },
     {
       "id": "performance-profiling",
@@ -344,7 +437,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "90fac201a40e481797a5bec5ded82c6e97d13e08e40e9991d60424b958316de6"
+      }
     },
     {
       "id": "dependency-audit",
@@ -359,7 +456,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "4e4a9dca8b36188717adb272f644bc81b2f3b1bceea125579cdadcba392016e2"
+      }
     },
     {
       "id": "api-integration",
@@ -374,7 +475,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "ffa3b704b2259e4ecf1449bef32e0f1875fc4d13c456c69fd8376c76c9df4130"
+      }
     },
     {
       "id": "backup-restore",
@@ -389,7 +494,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "a6f142ccc5b1d8bc1e8a5f16c1abef4fc289927ffbac08b44679ed1c4a06a92d"
+      }
     },
     {
       "id": "secrets-management",
@@ -404,7 +513,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "7c289f1e5c430cff697990f74683ecc92e3345b5564ef59fdd145a8ef8d3905a"
+      }
     },
     {
       "id": "agent-evaluation",
@@ -419,7 +532,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "9595a835b7d59f9b6075b6eaf59f51785974425bfd9e78020690210f77ceb116"
+      }
     },
     {
       "id": "data-privacy",
@@ -434,7 +551,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "6ed1557ad290caddd213992d474743ab4f1766fc30c7958e63a48d3d73690995"
+      }
     },
     {
       "id": "mcp-review",
@@ -449,7 +570,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "109d7de216eed8ced80a6bb9f3e4ce4c60248b016046076eb36645cf60d987bc"
+      }
     },
     {
       "id": "technical-writing",
@@ -464,7 +589,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "6e4ab33e7d9a33f7fd4d5d9bbe3478a38a8f69f1c97a0f955345fae85ef7994d"
+      }
     },
     {
       "id": "sql-review",
@@ -479,7 +608,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "a69b9aabdf614c70da50fb40207df4798b18a575d4cfdb690646b5eaa8c0ca37"
+      }
     },
     {
       "id": "frontend-review",
@@ -494,7 +627,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "4123f165f6829666b90f460db5d88029de305f2a145b2b05d03ac87ec35c69ea"
+      }
     },
     {
       "id": "spec-driven-development",
@@ -509,7 +646,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "ca3a4fe7d8acdd0690f27f5871010ed7ec8666413f77bb141f7671b234d30820"
+      }
     },
     {
       "id": "debugging-root-cause",
@@ -524,7 +665,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "04139946118b10c59ff74be19d1b88237c9fb10f2fcde89832e4f1667d921525"
+      }
     },
     {
       "id": "refactoring-safety",
@@ -539,7 +684,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "f4e18ecf40375bb6fc1e7e04cb13cab5862477c813fe01324ba4ec025163d973"
+      }
     },
     {
       "id": "test-driven-development",
@@ -554,7 +703,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e47d704e9693d589dcabaef43fc2ef1c2dd020241ae52dc5ad558c2b5bb04813"
+      }
     },
     {
       "id": "git-workflow",
@@ -569,7 +722,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "252b97cdcfa76ca46ceaf1a2829b6f5f3239af40f5e7738c1070cf14969c82c7"
+      }
     },
     {
       "id": "database-migrations",
@@ -584,7 +741,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "71917642fbb10adb8db1b13b212f05764d3883d3b1f5e30c4253085c2c415cac"
+      }
     },
     {
       "id": "shell-script-review",
@@ -599,7 +760,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c6e216bb213d78b5b83ebda63877a68365830174482700e15202ca1c69932399"
+      }
     },
     {
       "id": "dependency-upgrade",
@@ -614,7 +779,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "243074f2f04ce4dfb0706021d1a647ca76484c5ea3a7c8de4d6cb8c7f623581c"
+      }
     },
     {
       "id": "repository-onboarding",
@@ -629,7 +798,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "480d8124454f2f7a718a5cf29d225751d9a031f9b309b34bb6221f55ad2f7e4e"
+      }
     },
     {
       "id": "error-handling-review",
@@ -644,7 +817,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "488c4a6ee8895dc76de5c0cb52ccd4d348711e58b9850770a26ba3ff3fbd38da"
+      }
     },
     {
       "id": "threat-modeling",
@@ -659,7 +836,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c49efb2f2f6046315eaab0619e164cc9bdc1a070d27cf548469cf951adfa6b51"
+      }
     },
     {
       "id": "oauth-oidc-review",
@@ -674,7 +855,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "26245ab444f43ad6bbbda1b65e77d44b4ee9a693623da51a5a40ad66b095916f"
+      }
     },
     {
       "id": "supply-chain-provenance",
@@ -689,7 +874,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e99100abefb5b431b60d937abd9f9a3eb0613accff6ad64e964462a5df968a81"
+      }
     },
     {
       "id": "eu-ai-act-readiness",
@@ -704,7 +893,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "04fa34c44ad0e89199ef0f82631d4668e001d9cd8e4aac570f5f784a3d701cd1"
+      }
     },
     {
       "id": "linux-server-hardening",
@@ -719,7 +912,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b441bfb8d6f8d8ec44411ae17122240c439f6e2c174862864828278e38b85d9e"
+      }
     },
     {
       "id": "reverse-proxy-tls",
@@ -734,7 +931,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b5d618adec5d367b9abd08479647ac7f612b280b93d7665d7657e548c0ddd44f"
+      }
     },
     {
       "id": "email-deliverability",
@@ -749,7 +950,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "51b959a9710008e4693735a95b26333097142288d6709453eda2b00dfbc5204d"
+      }
     },
     {
       "id": "slo-error-budgets",
@@ -764,7 +969,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "7a569bded3021ff6b8879101698a0366f28ac884ca29e67ca08486e84b7f46be"
+      }
     },
     {
       "id": "runbook-authoring",
@@ -779,7 +988,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "c56436cbd79bc61d1753c94ef5c1b56386d229fdc1639b465b427fa4ad9cb583"
+      }
     },
     {
       "id": "postmortem",
@@ -794,7 +1007,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "7a66e2669c4c2d0f798046cdfb51639e1216169394a6046ca945fa877feb9703"
+      }
     },
     {
       "id": "log-analysis",
@@ -809,7 +1026,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "8bd695ca04fe1fb653f0346cd29da65e84f77a3d2629102051318f7397ff4482"
+      }
     },
     {
       "id": "prompt-design-review",
@@ -824,7 +1045,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "46eca3521d99e5219b8d29fcc39b62a74b030337a0c84f50853fed14ae67c9ba"
+      }
     },
     {
       "id": "llm-output-evaluation",
@@ -839,7 +1064,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "81b2bfa2f10833b577d7f1eec29a19bffd54070862b8b233467cd72dba2eb613"
+      }
     },
     {
       "id": "mcp-server-development",
@@ -854,7 +1083,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "62561518acc7d88f12fcef81b4d97baab20b628d16584431a99810ad9673f014"
+      }
     },
     {
       "id": "agent-guardrails",
@@ -869,7 +1102,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e2894bb460e2b539550910f6fef2641ba8ea596279023faee2679f738959307d"
+      }
     },
     {
       "id": "rag-ingestion-design",
@@ -884,7 +1121,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "e3b62f0f95ee43e3cda136ec754824c9387f465fdf65e7c7983a75260b582f51"
+      }
     },
     {
       "id": "local-llm-serving",
@@ -899,7 +1140,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "3a31bafb50a4862fcdc7ca2065cdeae267c50eb5cba1431843d1e7160c78856e"
+      }
     },
     {
       "id": "llm-gateway-routing",
@@ -914,7 +1159,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "a08f2dbb6a66f5c54ed0b231a52a247792f5615e7073af63990a52f21262a4fe"
+      }
     },
     {
       "id": "skill-authoring",
@@ -929,7 +1178,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "5e9036c44fd8fcc710def5ff8923c463f392df821a6843847f871c403ab8f247"
+      }
     },
     {
       "id": "agenthub-router",
@@ -944,7 +1197,11 @@
         "claude",
         "codex",
         "opencode"
-      ]
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "b85ba2a7cd9d6e29ac892d2e0d5f86799a073ddb5bd8ebbad78cb989b771b949"
+      }
     }
   ]
 }

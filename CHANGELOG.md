@@ -4,6 +4,12 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Verification and signing
+- Catalog schema v2 with a SHA-256 **package digest** for every item (`cli/package_digest.py`); `scripts/update_digests.py --check` and the release gate fail on stale digests; `xah doctor` and `xah inspect` compare package digests.
+- New `xah verify` for catalog sources, project installs (`--target`) and user-scope installs (`--scope user`): states verified / outdated / modified / unknown; added files in an installed skill count as modifications; exit status 2 unless everything is verified.
+- `release.yml`: on version tags, re-run gates, build archives and catalog, `SHA256SUMS` signed with Sigstore keyless signing (verified in the workflow), SLSA build provenance attestation, draft GitHub release. `docs/VERIFYING.md` explains user-side verification.
+- `.gitattributes` pins LF line endings so digests are identical on every platform.
+
 ### Site, branding and skill depth
 - Searchable static catalog site generated from `registry/catalog.json` (`scripts/build_site.py`, standard library only) and a GitHub Pages workflow.
 - Logo and social preview image (`docs/assets/`).

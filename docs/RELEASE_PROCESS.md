@@ -12,6 +12,9 @@ The project is a public alpha. A tagged release should only be published after i
 7. Create an annotated semantic-version tag, publish release notes and source archives; generate checksums for distributed artifacts.
 8. Verify fresh installation from the release tag and update documentation links.
 
+## Signed release (automated)
+Push an annotated tag `vX.Y.Z` on the release commit. [`release.yml`](../.github/workflows/release.yml) re-runs the gates (tests, release metadata, digest check, `xah doctor`, `xah verify`), builds the archives and `catalog-<version>.json`, writes `SHA256SUMS`, signs it with Sigstore keyless signing, verifies the signature, attests SLSA build provenance and opens a **draft** release. A maintainer reviews the draft and publishes it. Verification for users: [VERIFYING.md](VERIFYING.md).
+
 ## Versioning
 Use `v0.x.y` while API and catalog formats may change. Document breaking CLI changes and migration steps. Do not call a release stable merely because the unit tests pass.
 

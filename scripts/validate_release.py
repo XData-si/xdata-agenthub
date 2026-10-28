@@ -9,14 +9,14 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "registry/catalog.json"
 ALLOWED_TYPES = {"skill", "instruction", "workflow", "agent"}
 ID = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
-FIELDS = {"id", "name", "description", "type", "path", "source", "license", "targets"}
+FIELDS = {"id", "name", "description", "type", "path", "source", "license", "targets", "digest"}
 
 def validate():
     failures = []
     data = json.loads(CATALOG.read_text(encoding="utf-8"))
     entries = data["items"]
-    if data.get("schema_version") != 1:
-        failures.append("Unsupported catalog schema")
+    if data.get("schema_version") != 2:
+        failures.append("Unsupported catalog schema (expected 2 with package digests)")
     if not (ROOT / "LICENSE").is_file():
         failures.append("Missing root LICENSE")
     seen = set()
@@ -59,6 +59,18 @@ def validate():
             for child in file.parent.rglob("*"):
                 if child.is_symlink() or (not child.is_file() and not child.is_dir()):
                     failures.append(f"{label}: unsupported or symlinked package entry: {child}")
+    sys.path.insert(0, str(ROOT / "cli"))
+    import xah
+    from package_digest import package_digest
+    for item in entries:
+        declared = item.get("digest") or {}
+        try:
+            actual = package_digest(xah.skill_files(item))
+        except (ValueError, OSError) as exc:
+            failures.append(f"{item.get('id')}: cannot compute package digest ({exc})")
+            continue
+        if declared.get("algorithm") != "sha256" or declared.get("value") != actual:
+            failures.append(f"{item.get('id')}: package digest missing or stale (run scripts/update_digests.py)")
     candidates = ROOT / "registry/external-candidates.json"
     if candidates.is_file():
         raw = candidates.read_text(encoding="utf-8")
