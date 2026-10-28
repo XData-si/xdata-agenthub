@@ -37,6 +37,13 @@ Step 2: fix 14 deprecation warnings on 4.x
 Step 3: framework 4 -> 5 (codemod), step 4: 5 -> 6, step 5: runtime 20 -> 22
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| Let's jump straight to the latest major. | Skipping majors skips the deprecation warnings that tell you what will break. Step through versions. |
+| The changelog is long, the tests will tell us. | Tests do not cover changed defaults (timezones, security, serialization). Read the breaking-change list. |
+| Pin the transitive dependency forever. | Pins without an owner and expiry become the next vulnerability. Record why and when to remove them. |
+
 ## Acceptance checks
 - Every breaking change from the upstream notes is listed with its status: handled, not applicable, deferred.
 - No new deprecation warnings are introduced; existing ones are reduced or documented.

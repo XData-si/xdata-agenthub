@@ -36,6 +36,13 @@ def price_staff(p): return round(p * 0.8, 2)
 # Characterization test first: price_member(10.005) == 9.0 (current rounding), price_staff(0) == 0.
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| It's only a rename, tests are unnecessary. | Renames break dynamic references, serialization and external consumers. Search and run the tests. |
+| I'll fix this small bug while I'm here. | Mixing behaviour changes into refactoring makes both unreviewable and unrevertible. Separate commits. |
+| Coverage is low, but the change is mechanical. | Low coverage is exactly when characterization tests are needed before moving code. |
+
 ## Acceptance checks
 - Characterization tests exist for the touched behaviour and pass before and after.
 - No behaviour change is mixed into refactoring commits.

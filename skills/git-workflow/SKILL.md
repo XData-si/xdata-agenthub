@@ -39,6 +39,14 @@ Totals were rounded once at the end, which differed from the printed lines
 by up to 1 cent. Refs #123
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| Force-pushing is fine, nobody uses this branch. | Reviewers, CI and other agents may have fetched it. Use new commits or a new branch unless the branch is provably yours alone. |
+| I'll clean up the history later. | Later rarely comes, and history rewrites after review lose discussion context. Commit cleanly now. |
+| Skipping the hook just this once. | Hooks encode checks the project decided on. Bypassing them needs explicit authorization. |
+| The secret was only in one commit, I'll remove it. | Assume it is leaked the moment it was pushed. Rotate first; rewriting history does not revoke it. |
+
 ## Acceptance checks
 - `git diff --staged` reviewed; no secrets, debug output or unrelated files.
 - Each commit message explains the reason for the change.

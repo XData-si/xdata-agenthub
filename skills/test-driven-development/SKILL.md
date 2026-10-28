@@ -43,6 +43,14 @@ def test_split_bill_rejects_zero_people():
         split_bill(total_cents=1000, people=0)
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| I'll add tests after it works. | Tests written afterwards tend to assert what the code does, not what it should do, and are never seen failing. |
+| This is too simple to test. | Simple code is cheap to test; the test documents the contract and catches the next change. |
+| I saw the test pass, so it works. | A test that was never observed failing may not test anything. Show red before green. |
+| Mocking everything keeps tests fast. | Over-mocked tests pass while the integration is broken. Mock only boundaries you do not own. |
+
 ## Acceptance checks
 - Each new test was observed failing before the implementation (or the report states it was written after and why).
 - Tests use the public interface and do not assert private implementation details.

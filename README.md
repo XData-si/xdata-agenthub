@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/logo.svg" width="96" alt="XData AgentHub logo"></p>
+
 # XData AgentHub
 
 **One place. Every agent capability.**
@@ -31,7 +33,7 @@ Public skill registries grew to hundreds of thousands of entries in 2026 — and
 - **Vendor-neutral and offline-first.** Plain Markdown in the open Agent Skills format; the `xah` CLI is dependency-free Python that never executes downloaded code.
 - **Production topics.** Threat modeling, OAuth/OIDC, supply-chain provenance, EU AI Act readiness, SLOs, incident response, MCP servers, agent guardrails, local LLM serving — not just prompts.
 
-See the [honest comparison](docs/COMPARISON.md) with other skill hubs, and the [categorized catalog](docs/CATALOG.md).
+Browse the [searchable catalog site](https://xdata-si.github.io/xdata-agenthub/), the [categorized catalog](docs/CATALOG.md) and the [honest comparison](docs/COMPARISON.md) with other skill hubs.
 
 **Status: public alpha.** No certification or compatibility claims beyond the [recorded evidence](docs/integration-evidence/2026-10-15-runtime-results.md); skills are documentation-level drafts until marked Verified.
 

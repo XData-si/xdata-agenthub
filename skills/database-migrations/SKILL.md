@@ -41,6 +41,13 @@ UPDATE users SET display_name = fullname
 ALTER TABLE users DROP COLUMN fullname;                    -- release 3 (contract)
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| The table is small, locking is fine. | Tables grow, and even a small table blocks every query queued behind a long transaction. Set lock_timeout and measure. |
+| We'll roll back if it breaks. | Many schema changes (drops, lossy type changes) cannot be rolled back without a backup. Plan the down-path first. |
+| We can rename the column in one release. | Running instances of the old version will fail. Use expand–contract across releases. |
+
 ## Acceptance checks
 - No step breaks the currently deployed application version.
 - Long-locking statements are replaced by online variants or scheduled with explicit approval.

@@ -27,6 +27,13 @@ For an API outage, check error rate, dependency failures and deploy timeline bef
 ## Findings format
 For each finding record: **priority**, **location or artifact**, **observed evidence**, **risk or impact**, **recommendation**, **verification command or scenario**, and **status** (CONFIRMED / HYPOTHESIS / NOT TESTED). Separate missing information from defects.
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| Restart first, investigate later. | Restarting can destroy the evidence you need. Capture logs and state first unless impact demands immediate action, then capture what you can. |
+| We know the cause, no need for a timeline. | Timelines expose detection and response gaps that the obvious cause does not. |
+| Let's fix it properly while it's down. | During an incident, prefer the least disruptive reversible mitigation. Permanent fixes go through normal review. |
+
 ## Completion criteria
 - Every recommendation is tied to an actual artifact, explicit assumption or testable scenario.
 - Important negative and boundary cases are considered.

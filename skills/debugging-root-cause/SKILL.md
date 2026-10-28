@@ -38,6 +38,14 @@ Hypotheses: (1) timezone differs (CI=UTC) (2) locale decimal separator (3) test 
 Discriminator: run locally with TZ=UTC → fails → hypothesis 1 confirmed; date boundary at 23:30 local time.
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| I know what it is, let me just fix it. | Fixing without a reproduction means you cannot prove the fix. Write the failing reproduction first; it takes minutes. |
+| Adding a retry or sleep makes it pass. | That hides a race or dependency failure and makes it rarer, not gone. Find the mechanism. |
+| It only fails on CI, so CI is broken. | CI differs in a specific, discoverable way (timezone, parallelism, versions). Diff the environments. |
+| Three attempts failed, one more tweak will do it. | Repeated failed patches mean the mental model is wrong. Return to the evidence and question assumptions. |
+
 ## Acceptance checks
 - A reproduction exists and its before/after result is reported exactly.
 - The root cause statement explains the mechanism, not only the location.

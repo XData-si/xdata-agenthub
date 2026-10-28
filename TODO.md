@@ -2,7 +2,7 @@
 
 ## P0 — must do
 - [x] Move this scaffold into a dedicated **public** GitHub repository; confirm ownership and visibility.
-- [ ] Review name and branding with XData; create original logo and social preview (1280×640).
+- [ ] Review name and branding with XData; original logo and social preview (1280×640) drafted in `docs/assets/` — upload the preview in repository settings.
 - [ ] Run smoke tests on Linux, macOS and Windows (WSL); test Python 3.10–3.13.
 - [ ] Perform security review of installer, path handling and untrusted Markdown content.
 - [ ] Choose licensing and obtain clearance for every third-party item before importing it.
@@ -29,9 +29,9 @@
 - [x] Claude Code plugin marketplace (`.claude-plugin/marketplace.json`) with topic bundles; `agenthub-router` meta-skill.
 - [ ] Verify `npx skills add XData-si/xdata-agenthub` and record evidence; appear on the skills.sh directory.
 - [ ] Submit the marketplace to Anthropic's plugin directory and to curated awesome lists (follow each list's rules).
-- [ ] Mark the first skills **Verified** with recorded runtime evidence (Claude Code, Codex, OpenCode).
-- [ ] Add "common rationalizations" sections to workflow skills (reasons agents skip steps, and the rebuttal).
-- [ ] Publish a static catalog site (GitHub Pages) generated from `registry/catalog.json`.
+- [x] Mark the first skills **Verified** with recorded runtime evidence (Claude Code 2.1.308, OpenCode 1.19.4; Codex pending).
+- [x] Add "common rationalizations" sections to workflow skills (reasons agents skip steps, and the rebuttal).
+- [x] Publish a static catalog site (GitHub Pages) generated from `registry/catalog.json`.
 - [ ] Tag a release with checksums and release notes; publish a social preview image.
 - [ ] Publish demo video/GIF, benchmark reproducibility notes and honest comparison matrix.
 - [ ] Prepare Show HN, Dev.to, Reddit and LinkedIn launch posts; follow community rules.
