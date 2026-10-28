@@ -8,7 +8,7 @@
 
 **XData AgentHub is a public alpha project.** No unsupported claims of certification or compatibility. This project currently ships a dependency-free Python CLI and local curated templates; it does **not** install arbitrary remote code.
 
-**34 curated local resources · 31 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.
+**63 curated local resources · 60 skills · 3 additional templates** — all inspectable, offline-first and MIT-licensed.
 
 ## Why
 AI development instructions are scattered across repositories and incompatible conventions. AgentHub starts with a small, inspectable catalog and a local-first installer.
