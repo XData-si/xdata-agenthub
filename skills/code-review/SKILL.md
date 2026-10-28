@@ -17,5 +17,12 @@ Before merging non-trivial code changes.
 ## Output
 Summary, blocking findings, non-blocking suggestions, test gaps and residual risks.
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| CI is green, so the change is correct. | CI checks what tests cover. Review for missing tests, wrong behaviour and security assumptions. |
+| It's a small diff, a quick look is enough. | Small diffs in authentication, permissions or migrations carry the largest blast radius. |
+| The author is senior, I'll trust it. | Review is about the change, not the person. Evidence-based findings protect everyone. |
+
 ## Guardrails
 Do not execute untrusted code, do not invent test results, do not silently change source files.

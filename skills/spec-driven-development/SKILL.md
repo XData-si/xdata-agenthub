@@ -43,6 +43,14 @@ Skip for one-line fixes with an obvious, testable outcome.
 - AC-3 (negative) When an unauthenticated client requests an export, the system shall return 401 and send no email.
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| The request is obvious, a spec is overhead. | Obvious requests hide the expensive questions (permissions, limits, errors). A half-page spec takes minutes; rework takes days. |
+| I'll write the spec after the code. | A spec written afterwards documents what was built, not what was needed, and cannot catch misunderstandings. |
+| Edge cases can wait for review. | Reviewers check what is in front of them. Negative criteria not written down are usually not tested. |
+| The stakeholder approved it in chat. | Record the approval with the spec version; chat agreement is not traceable when scope is disputed later. |
+
 ## Acceptance checks
 - Every acceptance criterion is observable and has at least one negative or boundary case.
 - Every task maps to at least one criterion; no criterion lacks a task.

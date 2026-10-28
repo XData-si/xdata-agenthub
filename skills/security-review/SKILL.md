@@ -30,6 +30,13 @@ Verification: Unauthorized request returns 403; authorized request succeeds
 Status: Needs verification
 ```
 
+## Common rationalizations
+| Rationalization | Reality |
+|---|---|
+| This is internal, so it doesn't need authentication. | Internal networks get breached and misconfigured. Require authentication and authorization. |
+| The input comes from our own frontend. | Attackers call the API directly. Validate on the server. |
+| It's only a hypothetical finding. | Then label it a hypothesis with the test that would confirm it; do not silently drop it. |
+
 ## Acceptance checks
 - No real customer data is accessed during testing.
 - Critical findings include concrete mitigation and verification criteria.

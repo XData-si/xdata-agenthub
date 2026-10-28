@@ -16,3 +16,4 @@ build/
 # Local test artifacts
 .coverage
 htmlcov/
+site/
