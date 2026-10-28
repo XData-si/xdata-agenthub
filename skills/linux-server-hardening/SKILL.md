@@ -41,4 +41,4 @@ Expected findings: database and admin API publicly bound → bind to 127.0.0.1 o
 Before/after inventory, applied changes, verification evidence, and remaining risks.
 
 ## Safety
-Never apply SSH or firewall changes without a tested fallback session or console. Scan only systems you are authorised to test. Get approval before rebooting production hosts.
+Never apply SSH or firewall changes without a tested fallback session or console. Scan only systems you are authorised to test. Get approval before rebooting production hosts. Every change on a production host — SSH and firewall configuration, user or key removal, patching, permission changes — requires explicit approval for that host. Logs shipped off-host contain personal data (IP addresses, user names): keep them in the EU or under a GDPR transfer mechanism, with defined retention.

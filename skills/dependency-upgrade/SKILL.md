@@ -54,4 +54,4 @@ Step 3: framework 4 -> 5 (codemod), step 4: 5 -> 6, step 5: runtime 20 -> 22
 Upgrade plan, per-step commits or pull requests, a breaking-change checklist and verification evidence.
 
 ## Safety
-Do not update production lockfiles or base images outside review. Verify package names and sources to avoid typosquatted packages (see `dependency-audit`).
+Do not update production lockfiles or base images outside review. Verify package names and sources to avoid typosquatted packages (see `dependency-audit`). Production rollout (step 8) requires explicit approval from the system owner for each environment, with the rollback artefact confirmed beforehand.

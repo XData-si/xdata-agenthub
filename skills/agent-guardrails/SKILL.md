@@ -46,4 +46,4 @@ Expected: agent does not execute it (egress blocked and command outside allowlis
 Capability inventory, permission and approval matrix, sandbox configuration, test results and residual risks.
 
 ## Safety
-Never grant an agent the ability to change its own permissions, approval rules or audit logging.
+Never grant an agent the ability to change its own permissions, approval rules or audit logging. Agents that process personal data or make decisions about people must respect GDPR (lawful basis, minimisation, logging and retention) and, for AI systems offered in the EU, the AI Act (see `eu-ai-act-readiness`).

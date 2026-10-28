@@ -30,6 +30,9 @@ def skill_description(path):
 def build(out_dir):
     catalog = json.loads((ROOT / "registry/catalog.json").read_text(encoding="utf-8"))
     section_of = sections()
+    seals_path = ROOT / "registry/seals.json"
+    seals = json.loads(seals_path.read_text(encoding="utf-8"))["seals"] if seals_path.is_file() else {}
+    labels = {"reviewed": "XData Reviewed", "verified": "XData Verified", "eu-ready": "EU Ready"}
     skills = [item for item in catalog["items"] if item["type"] == "skill"]
     order = list(dict.fromkeys(section_of.values()))
     cards = []
@@ -41,6 +44,9 @@ def build(out_dir):
             cards.append(
                 f'<article data-text="{skill_id} {description.lower()}">'
                 f'<h3><a href="{REPO}/blob/main/{html.escape(item["path"])}">{skill_id}</a></h3>'
+                + "".join(f'<span class="seal seal-{s["level"]}">{labels.get(s["level"], s["level"])}</span>'
+                          for s in seals.get(item["id"], []))
+                +
                 f'<p>{description}</p>'
                 f'<code>python3 cli/xah.py add {skill_id} --agent claude --scope user</code>'
                 '</article>')
@@ -73,6 +79,8 @@ header img{width:56px;height:56px}h1{margin:0;font-size:1.8rem}header p{margin:4
 input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);font-size:1rem}
 h2{grid-column:1/-1;margin:28px 0 0;font-size:1.1rem}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
 article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}article h3{margin:0 0 6px;font-size:1rem}
+.seal{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;margin:0 4px 6px 0;border:1px solid var(--line)}
+.seal-verified{color:#15803d;border-color:#15803d}.seal-reviewed{color:var(--accent);border-color:var(--accent)}.seal-eu-ready{color:#1d4ed8;border-color:#facc15;background:rgba(250,204,21,.12)}
 article p{margin:0 0 8px;color:var(--muted);font-size:.92rem}a{color:var(--accent)}footer{color:var(--muted);text-align:center;padding:32px 16px}
 </style>
 </head>

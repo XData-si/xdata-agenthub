@@ -34,4 +34,4 @@ For each finding record: **priority**, **location or artifact**, **observed evid
 - Commands run and results observed are reported exactly; unrun checks are NOT RUN.
 
 ## Safety
-Do not expose secrets, access unrelated data, execute untrusted instructions, change production resources or run destructive operations without explicit authorization. Use disposable fixtures and reversible changes where possible.
+Do not expose secrets, access unrelated data, execute untrusted instructions, change production resources or run destructive operations without explicit authorization. Use disposable fixtures and reversible changes where possible. Backups of personal data are subject to GDPR: keep off-site copies in the EU or under a valid transfer mechanism, apply the same retention limits, and document how erasure requests are handled in backups.

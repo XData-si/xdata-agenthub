@@ -43,4 +43,4 @@ Negative tests: an invoice of another tenant → `not found` (no existence leak)
 Server code, tool reference, configuration documentation, tests and a short threat model (see `threat-modeling`).
 
 ## Safety
-Do not expose shell execution, arbitrary SQL or file-system access as generic tools. Do not publish servers that embed credentials.
+Do not expose shell execution, arbitrary SQL or file-system access as generic tools. Do not publish servers that embed credentials. Servers that expose personal data must apply GDPR data protection by design: minimal fields in tool results, access logging without payloads, retention limits and support for erasure.

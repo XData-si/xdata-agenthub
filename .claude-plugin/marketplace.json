@@ -10,7 +10,7 @@
       "name": "xdata-agenthub",
       "displayName": "XData AgentHub (all skills)",
       "source": "./",
-      "description": "All 61 curated, security-first XData AgentHub skills, including the agenthub-router meta-skill.",
+      "description": "All 64 curated, security-first XData AgentHub skills, including the agenthub-router meta-skill.",
       "skills": [
         "./skills/"
       ],
@@ -78,7 +78,7 @@
       "name": "xdata-security",
       "displayName": "XData Security",
       "source": "./",
-      "description": "Threat modeling, security review, OAuth/OIDC, supply-chain provenance, secrets, privacy, EU AI Act readiness and MCP review skills.",
+      "description": "Threat modeling, security review, OAuth/OIDC, supply-chain provenance, secrets, privacy and MCP review skills.",
       "skills": [
         "./skills/security-review",
         "./skills/threat-modeling",
@@ -88,7 +88,6 @@
         "./skills/supply-chain-provenance",
         "./skills/secrets-management",
         "./skills/data-privacy",
-        "./skills/eu-ai-act-readiness",
         "./skills/mcp-review",
         "./skills/architecture-decision"
       ],
@@ -172,6 +171,34 @@
         "agents",
         "mcp",
         "evaluation"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/XData-si/xdata-agenthub",
+      "repository": "https://github.com/XData-si/xdata-agenthub",
+      "author": {
+        "name": "XData",
+        "url": "https://xdata.si"
+      }
+    },
+    {
+      "name": "xdata-eu",
+      "displayName": "XData EU Sovereignty & Legislation",
+      "source": "./",
+      "description": "EU data sovereignty, EU AI Act, NIS2 and Cyber Resilience Act readiness skills (not legal advice).",
+      "skills": [
+        "./skills/eu-data-sovereignty",
+        "./skills/eu-ai-act-readiness",
+        "./skills/nis2-readiness",
+        "./skills/cyber-resilience-act"
+      ],
+      "category": "security",
+      "keywords": [
+        "eu",
+        "gdpr",
+        "ai-act",
+        "nis2",
+        "cra",
+        "sovereignty"
       ],
       "license": "MIT",
       "homepage": "https://github.com/XData-si/xdata-agenthub",

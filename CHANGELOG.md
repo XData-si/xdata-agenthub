@@ -4,6 +4,13 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Skill review, seal of approval and EU
+- `scripts/skill_security_check.py`: deterministic security gate for skill packages (executable content, hidden Unicode and HTML comments, piped downloads, decode-and-execute, encoded blobs, shortened or plain-HTTP links, prompt-injection and exfiltration phrasing outside quoted fixtures, required Safety section). Fixed four skills without a Safety section.
+- `scripts/ai_skill_review.py`: advisory AI review through any OpenAI-compatible endpoint; skill content treated as untrusted; malformed or manipulated output never becomes a pass; PR comments are neutralized. GitHub Models was retired on 2026-07-30, so the endpoint is configurable (`AI_REVIEW_BASE_URL`, `AI_REVIEW_API_KEY`, `AI_REVIEW_MODEL`).
+- `.github/workflows/skill-review.yml`: required security gate plus digest and seal checks; advisory AI review with a PR comment (skipped for forks).
+- Seal of approval (`registry/seals.json`, `scripts/seal.py`, `docs/SEAL.md`): XData Reviewed, XData Verified, EU Ready — bound to package digests, stale on any change; shown on the catalog site.
+- EU: new skills `eu-data-sovereignty`, `nis2-readiness`, `cyber-resilience-act`; new `xdata-eu` plugin bundle; `docs/EU_SOVEREIGNTY.md` (64 skills, 67 resources).
+
 ### Verification and signing
 - Catalog schema v2 with a SHA-256 **package digest** for every item (`cli/package_digest.py`); `scripts/update_digests.py --check` and the release gate fail on stale digests; `xah doctor` and `xah inspect` compare package digests.
 - New `xah verify` for catalog sources, project installs (`--target`) and user-scope installs (`--scope user`): states verified / outdated / modified / unknown; added files in an installed skill count as modifications; exit status 2 unless everything is verified.

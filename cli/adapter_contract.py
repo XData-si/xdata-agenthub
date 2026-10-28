@@ -1,6 +1,9 @@
 """Pure, declarative runtime adapter contract for XAH installations."""
 from pathlib import PurePosixPath
 
+# Bump when destinations or semantics change; adapters and tests reference it so changes are explicit in review.
+CONTRACT_VERSION = 2  # 1: project scope (v0.3.0 RC1), 2: user scope added
+
 ADAPTERS = {
     "generic": {"skills": "skills", "instructions": "AGENTS.md"},
     "claude": {"skills": ".claude/skills", "instructions": "CLAUDE.md"},

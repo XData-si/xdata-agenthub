@@ -42,4 +42,4 @@ Header: Authentication-Results: mx.receiver; spf=pass smtp.mailfrom=bounce.maile
 Record changes, test-message evidence, a DMARC rollout plan and a list of unknown senders.
 
 ## Safety
-DNS changes affect all mail: lower TTLs before changes and keep previous values. Do not send spoofing tests to third-party mailboxes.
+DNS changes affect all mail: lower TTLs before changes and keep previous values. Do not send spoofing tests to third-party mailboxes. Apply DNS and policy changes (SPF, DKIM, DMARC, MX) only with explicit approval of the domain owner. DMARC aggregate and forensic reports contain IP addresses and possibly email addresses: treat them as personal data under GDPR, limit access and retention, and prefer an EU-based report processor.

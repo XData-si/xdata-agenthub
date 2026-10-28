@@ -45,4 +45,4 @@ if claims.get("role") == "admin":                                 # finding: tru
 Findings with flow diagrams where useful, configuration fixes, and negative test cases.
 
 ## Safety
-Use test tenants and test accounts. Do not attempt token theft or replay against production identity providers without authorization.
+Use test tenants and test accounts. Do not attempt token theft or replay against production identity providers without authorization. Tokens and identity claims are personal data: request only the scopes and claims you need, avoid logging tokens or full claim sets, and define retention for identity logs (GDPR).

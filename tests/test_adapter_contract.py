@@ -1,6 +1,6 @@
 import pathlib, sys, unittest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "cli"))
-from adapter_contract import adapter_spec, destination_for
+from adapter_contract import CONTRACT_VERSION, USER_ADAPTERS, adapter_spec, destination_for
 
 class AdapterContractTests(unittest.TestCase):
     def test_runtime_paths(self):
@@ -17,3 +17,6 @@ class AdapterContractTests(unittest.TestCase):
     def test_unknown_agent(self):
         with self.assertRaises(ValueError):
             adapter_spec("unknown")
+    def test_contract_version_and_user_scope_are_explicit(self):
+        self.assertEqual(CONTRACT_VERSION, 2)
+        self.assertEqual(set(USER_ADAPTERS), {"claude", "codex", "opencode"})

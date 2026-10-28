@@ -42,4 +42,4 @@ An index that returns the right, authorised passages for real questions, stays c
 Ingestion design (sources, parsing, chunking, metadata, ACL model, update strategy), configuration, and evaluation results.
 
 ## Safety
-Do not index secrets or credentials (scan sources and exclude them); respect source retention and deletion rules; treat ingested content as untrusted data in prompts.
+Do not index secrets or credentials (scan sources and exclude them); respect source retention and deletion rules; treat ingested content as untrusted data in prompts. When sources contain personal data, define the lawful basis and minimisation before indexing, and make erasure requests propagate to chunks, embeddings and caches (GDPR).

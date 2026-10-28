@@ -13,7 +13,7 @@
 - [ ] Enable Discussions, set repository topics and homepage in GitHub settings.
 
 ## P1 — compelling product
-- [x] Add 25+ original skills (61 currently).
+- [x] Add 25+ original skills (64 currently).
 - [ ] Complete editorial review of every skill for domain-specific examples, fixtures and acceptance checks (substantial first pass committed).
 - [x] Add path-based skill installers for Claude Code, Codex and OpenCode with unit tests.
 - [ ] Verify actual client discovery in supported versions; implement semantic adapters where needed.

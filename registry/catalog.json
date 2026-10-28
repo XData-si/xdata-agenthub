@@ -31,7 +31,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "6d88480b42c0e6bb927118910593c132dc71142a0b774e4f6157761b8e070e90"
+        "value": "697e78de4a64e04fe7d175a7dc3001bf412bbd6cd349df108eae1f49577dacee"
       }
     },
     {
@@ -98,7 +98,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "e2cdf42595d0359b8dc7ec2c61167bf01adee54aea3196797660f514369da881"
+        "value": "959be9b7458bd44455b20823a5f508f6abe47c574781b57fec91e891f6aeec6e"
       }
     },
     {
@@ -155,7 +155,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "47f0f43e33e957d4275a524872576dbe24ee58d0edf0a939d08e85b2e4af1705"
+        "value": "6033718d160d254d8b8626b22c389df85a6d92b943c7b812fa270449bc06606a"
       }
     },
     {
@@ -174,7 +174,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "0793345da33236edc40d49514f875433e47790f4529ff3d499ff9e96f6d8956b"
+        "value": "cfa4b22e4e4ec3057fec9aa6ac937012ac17d40bbea01a2ff1df367765d157c5"
       }
     },
     {
@@ -250,7 +250,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "4259683b3d4e96f5366d70ce553be8ec253e30216d0989990c8d138cd1751b43"
+        "value": "a8bceae72e45b00faa0ec0eb8339d74eb67ac4769aca664fd60d8b86462197f3"
       }
     },
     {
@@ -269,7 +269,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "d11e996796891e2e03a6836c27223d6636e4d7b355960098bb8de489476d0d9f"
+        "value": "0cd73390410a1c25fa3f22e2d4569aca2cbdbc7a3f61bf65ea94fd0a6c850c18"
       }
     },
     {
@@ -307,7 +307,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "5936c5d3cb760b95164374e4cab532001089ba3d158640e0f0de2bee83ca91a2"
+        "value": "4eb9040c2e09ca801428ac6c639893d996e56e2ee1f91270ab5f7281c3056833"
       }
     },
     {
@@ -497,7 +497,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "a6f142ccc5b1d8bc1e8a5f16c1abef4fc289927ffbac08b44679ed1c4a06a92d"
+        "value": "7b33020f3350e4bb2574e2b95500c7d4e53bd2dfcdd1e8d33e542a7b04bb112f"
       }
     },
     {
@@ -535,7 +535,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "9595a835b7d59f9b6075b6eaf59f51785974425bfd9e78020690210f77ceb116"
+        "value": "be97eab48bc031dddb00458c98b93bc59f93030a24a2e58879ed2bd8cabd3ef5"
       }
     },
     {
@@ -782,7 +782,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "243074f2f04ce4dfb0706021d1a647ca76484c5ea3a7c8de4d6cb8c7f623581c"
+        "value": "a1526b059f7cab51c013575e26d6fdfcaa7f029a108d07fdf571f527834e92ec"
       }
     },
     {
@@ -801,7 +801,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "480d8124454f2f7a718a5cf29d225751d9a031f9b309b34bb6221f55ad2f7e4e"
+        "value": "55fd4c625dcc479dabfcb0e41ef7a060a7631167ae3a0194c53a1be5aeb0a4fb"
       }
     },
     {
@@ -858,7 +858,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "26245ab444f43ad6bbbda1b65e77d44b4ee9a693623da51a5a40ad66b095916f"
+        "value": "2f796f807ab60e99a4a4b4bf01b9183c0cdf1c8206bc67f3a9b2c89f79228a2e"
       }
     },
     {
@@ -915,7 +915,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "b441bfb8d6f8d8ec44411ae17122240c439f6e2c174862864828278e38b85d9e"
+        "value": "bcc234b053d4d2afefa35ad3e57fd75664243d4572cd5dd1d7e9cf95a410eac3"
       }
     },
     {
@@ -953,7 +953,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "51b959a9710008e4693735a95b26333097142288d6709453eda2b00dfbc5204d"
+        "value": "0aa2494d7ae60a170bdd23ebec8a3c14471ff87fbb76c70beccdc27936e51a19"
       }
     },
     {
@@ -972,7 +972,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "7a569bded3021ff6b8879101698a0366f28ac884ca29e67ca08486e84b7f46be"
+        "value": "4e62e9d002309e15ee1ec6be392e570fd8d86cc667157d11d35f9a915e562adc"
       }
     },
     {
@@ -1048,7 +1048,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "46eca3521d99e5219b8d29fcc39b62a74b030337a0c84f50853fed14ae67c9ba"
+        "value": "7835e31aa611379262e90d2f918851f4765e0c6d9d05da9e60fa63753494bf09"
       }
     },
     {
@@ -1086,7 +1086,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "62561518acc7d88f12fcef81b4d97baab20b628d16584431a99810ad9673f014"
+        "value": "0b55cbb7ca81acdf55940696b62370a89ca467899e92e361b9bd326d7b83cf59"
       }
     },
     {
@@ -1105,7 +1105,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "e2894bb460e2b539550910f6fef2641ba8ea596279023faee2679f738959307d"
+        "value": "cd493210f656e48d1d9ceeccda45344b89d1de1b33994ae9cf237c429b9a4903"
       }
     },
     {
@@ -1124,7 +1124,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "e3b62f0f95ee43e3cda136ec754824c9387f465fdf65e7c7983a75260b582f51"
+        "value": "d9e2c5ea14cfba534fd10b72cc789ed77cda3e0a2eee72e26e5c3df2f119d577"
       }
     },
     {
@@ -1162,7 +1162,7 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "a08f2dbb6a66f5c54ed0b231a52a247792f5615e7073af63990a52f21262a4fe"
+        "value": "f1ced53ccd80e573b2d88239dff1b774dc31786fbc8110caf07d1f2aa7e17b35"
       }
     },
     {
@@ -1200,7 +1200,64 @@
       ],
       "digest": {
         "algorithm": "sha256",
-        "value": "b85ba2a7cd9d6e29ac892d2e0d5f86799a073ddb5bd8ebbad78cb989b771b949"
+        "value": "0af7d6a36e3b690b7616927647a408ca9296a4a126e10c3c0a4173c7ef74f550"
+      }
+    },
+    {
+      "id": "eu-data-sovereignty",
+      "type": "skill",
+      "name": "EU Data Sovereignty",
+      "description": "Data residency, jurisdiction, GDPR transfers, keys and exit plans (not legal advice)",
+      "path": "skills/eu-data-sovereignty/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "abb6e49841d589d75320f272068df5735e20c4424d9414f749871e91ba6764a2"
+      }
+    },
+    {
+      "id": "nis2-readiness",
+      "type": "skill",
+      "name": "NIS2 Readiness",
+      "description": "NIS2 scope, risk-management measures and 24h/72h reporting (not legal advice)",
+      "path": "skills/nis2-readiness/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "6e24067e7b6c3116ad64c117f3cef25795b0bd1894e4cb0e16e79909048f2bb0"
+      }
+    },
+    {
+      "id": "cyber-resilience-act",
+      "type": "skill",
+      "name": "Cyber Resilience Act",
+      "description": "CRA scope, essential requirements, SBOM and vulnerability reporting (not legal advice)",
+      "path": "skills/cyber-resilience-act/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ],
+      "digest": {
+        "algorithm": "sha256",
+        "value": "3702e61684ab31f1cc30096eaa8429ef160657a5161efa13fb8b9dd5511f352f"
       }
     }
   ]
