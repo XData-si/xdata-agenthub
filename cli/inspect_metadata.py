@@ -2,10 +2,12 @@
 import hashlib
 from pathlib import Path
 from installed_manifest import load_manifest, file_states
+from package_digest import package_digest
 
 
-def inspect_metadata(item, source_path, target=None):
+def inspect_metadata(item, source_path, target=None, package_files=None):
     digest = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    package = package_digest(package_files) if package_files is not None else digest
     result = {
         "id": item["id"],
         "type": item["type"],
@@ -14,6 +16,7 @@ def inspect_metadata(item, source_path, target=None):
         "license": {"value": item["license"], "verification": "catalog-declared"},
         "version": {"value": item.get("version"), "verification": "catalog-declared" if "version" in item else "not-provided"},
         "local_sha256": {"value": digest, "verification": "computed-from-local-file"},
+        "package_sha256": {"value": package, "verification": "computed-from-local-package"},
         "catalog_digest": {"value": item.get("digest"), "verification": "catalog-declared" if "digest" in item else "not-provided"},
         "digest_matches": None,
         "compatibility": {"value": item.get("compatibility", {}), "verification": "catalog-declared-not-runtime-tested"},
@@ -23,7 +26,7 @@ def inspect_metadata(item, source_path, target=None):
     }
     declared = item.get("digest")
     if declared is not None:
-        result["digest_matches"] = declared["algorithm"] == "sha256" and declared["value"] == digest
+        result["digest_matches"] = declared["algorithm"] == "sha256" and declared["value"] == package
     if target is not None:
         target = Path(target).expanduser().resolve()
         if not target.is_dir():

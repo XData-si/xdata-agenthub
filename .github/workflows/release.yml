@@ -1,0 +1,61 @@
+name: Signed release
+# Runs when a version tag is pushed. Re-runs the release gates, builds source archives and the catalog, signs the
+# checksum file with Sigstore (keyless, GitHub OIDC identity of this workflow), attests SLSA build provenance and
+# creates a DRAFT GitHub release. A maintainer reviews and publishes the draft.
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+*']
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Release gates
+        run: |
+          python -m unittest discover -s tests
+          python scripts/validate_release.py
+          python scripts/update_digests.py --check
+          python cli/xah.py doctor
+          python cli/xah.py verify
+      - name: Build artifacts
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          mkdir dist
+          git archive --format=tar.gz --prefix="xdata-agenthub-$VERSION/" -o "dist/xdata-agenthub-$VERSION.tar.gz" "$GITHUB_SHA"
+          git archive --format=zip --prefix="xdata-agenthub-$VERSION/" -o "dist/xdata-agenthub-$VERSION.zip" "$GITHUB_SHA"
+          cp registry/catalog.json "dist/catalog-$VERSION.json"
+          (cd dist && sha256sum -- * > SHA256SUMS)
+          cat dist/SHA256SUMS
+      - uses: sigstore/cosign-installer@v3
+      - name: Sign checksums (Sigstore keyless)
+        run: cosign sign-blob --yes --bundle dist/SHA256SUMS.sigstore.json dist/SHA256SUMS
+      - name: Verify signature before publishing
+        env:
+          IDENTITY: https://github.com/${{ github.repository }}/.github/workflows/release.yml@${{ github.ref }}
+        run: |
+          cosign verify-blob --bundle dist/SHA256SUMS.sigstore.json \
+            --certificate-identity "$IDENTITY" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com dist/SHA256SUMS
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/catalog-*.json
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          gh release create "$VERSION" dist/* --draft --verify-tag \
+            --title "XData AgentHub $VERSION" --generate-notes

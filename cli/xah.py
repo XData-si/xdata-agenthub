@@ -211,7 +211,12 @@ def main():
     gates = sub.add_parser("release-check", help="Evaluate explicit release evidence JSON (no publishing)")
     gates.add_argument("--evidence", required=True, help="Path to evidence JSON")
     gates.add_argument("--json", action="store_true")
-    sub.add_parser("doctor", help="Check Python version, catalog and template paths")
+    sub.add_parser("doctor", help="Check Python version, catalog, template paths and package digests")
+    verify = sub.add_parser("verify", help="Verify catalog sources or installed items against package digests")
+    verify.add_argument("--target", help="Verify items installed in this directory (default: verify catalog sources)")
+    verify.add_argument("--scope", choices=["project", "user"], default="project",
+                        help="user: verify the home directory installation")
+    verify.add_argument("--json", action="store_true")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
     args = parser.parse_args()
@@ -255,7 +260,7 @@ def main():
         elif args.cmd == "inspect":
             from inspect_metadata import inspect_metadata
             item = entry(args.id)
-            metadata = inspect_metadata(item, source(item), args.target)
+            metadata = inspect_metadata(item, source(item), args.target, package_files=skill_files(item))
             if args.json:
                 print(json.dumps(metadata, sort_keys=True, indent=2, ensure_ascii=False))
             else:
@@ -357,6 +362,25 @@ def main():
                 print("READY" if result["ready"] else "NOT READY")
             if not result["ready"]:
                 return 2
+        elif args.cmd == "verify":
+            from verify import verify_installed, verify_sources
+            if args.target is None and args.scope == "user":
+                args.target = "."
+            if args.target is None:
+                results = verify_sources(items(), skill_files)
+            else:
+                results = verify_installed(resolve_target(args), items())
+            if args.json:
+                print(json.dumps([{"id": i, "state": s, "detail": d} for i, s, d in results], indent=2))
+            else:
+                for item_id, state, detail in results:
+                    print(f"{state:10} {item_id:28} {detail}")
+                counts = {}
+                for _, state, _ in results:
+                    counts[state] = counts.get(state, 0) + 1
+                print("Summary: " + ", ".join(f"{k}={v}" for k, v in sorted(counts.items())) if counts else "Summary: nothing to verify")
+            if any(state != "verified" for _, state, _ in results):
+                return 2
         elif args.cmd == "doctor":
             print(f"Python: {platform.python_version()}")
             for path, _ in catalog_files():
@@ -370,9 +394,13 @@ def main():
                     raise ValueError("Duplicate catalog ID: " + item["id"])
                 seen.add(item["id"])
                 source(item)
-                if item["type"] == "skill":
-                    skill_files(item)
-            print(f"OK: {len(catalog)} catalog entries, all local paths valid")
+                files = skill_files(item)
+                declared = item.get("digest")
+                if declared:
+                    from package_digest import package_digest
+                    if package_digest(files) != declared["value"]:
+                        raise ValueError(f"Package digest mismatch: {item['id']} (run xah verify)")
+            print(f"OK: {len(catalog)} catalog entries, all local paths valid, declared digests match")
         elif args.cmd == "init":
             profiles = {
                 "developer": ["project-agents", "code-review", "documentation"],
