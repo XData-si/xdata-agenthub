@@ -19,7 +19,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/labeler@v5
+      - uses: actions/labeler@v7
   welcome:
     if: github.event_name == 'issues' || (github.event_name == 'pull_request_target' && github.event.action == 'opened')
     runs-on: ubuntu-24.04
