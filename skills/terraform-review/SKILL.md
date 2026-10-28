@@ -1,6 +1,6 @@
 ---
 name: terraform-review
-description: Review Terraform plans and state boundaries with evidence-based findings and actionable verification.
+description: Review Terraform plans and code — state boundaries, destructive changes, provider pinning, secrets and least-privilege IAM. Use before terraform apply or when reviewing infrastructure-as-code changes.
 license: MIT
 ---
 
@@ -18,7 +18,7 @@ Read the user request, repository instructions, relevant configuration and imple
 3. Check IAM blast radius, secret values in state, public ingress, lifecycle and prevent_destroy.
 4. Identify replacement operations, drift and import requirements.
 5. Validate module inputs, output sensitivity and workspace isolation.
-6. Require a reviewed plan and rollback before apply..
+6. Require a reviewed plan and rollback before apply.
 
 ## Illustrative review case
 A plan that replaces a production database must be flagged as destructive even when the HCL change appears small.

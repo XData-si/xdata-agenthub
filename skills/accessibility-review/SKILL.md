@@ -1,6 +1,6 @@
 ---
 name: accessibility-review
-description: Review accessibility with observable evidence with reproducible evidence and actionable recommendations.
+description: Review web and app interfaces for accessibility (WCAG) with observable evidence — keyboard use, focus, screen readers, contrast and forms. Use when reviewing UI changes, before a release, or when accessibility issues are reported.
 license: MIT
 ---
 

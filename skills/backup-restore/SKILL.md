@@ -1,10 +1,10 @@
 ---
 name: backup-restore
-description: Evaluate recoverability through restore evidence with evidence-based findings and actionable verification.
+description: Evaluate recoverability through real restore tests — RPO/RTO, backup coverage, off-site copies and restore duration. Use when setting up backups, auditing a backup system, or after data loss.
 license: MIT
 ---
 
-# Backup Restore
+# Backup and Restore
 
 ## Goal
 Evaluate recoverability through restore evidence. Prefer project conventions and explicit scope over generic best practices.
@@ -19,7 +19,7 @@ Read the user request, repository instructions, relevant configuration and imple
 4. Review consistency and point-in-time recovery.
 5. Perform staged restore to isolated infrastructure.
 6. Verify application correctness and record actual duration.
-7. Document ownership and expiry..
+7. Document ownership and expiry.
 
 ## Illustrative review case
 A backup job marked successful is not evidence of recoverability without a verified restore.

@@ -1,6 +1,6 @@
 ---
 name: docker-hardening
-description: Practical docker hardening methodology with validation criteria.
+description: Harden Dockerfiles, images and container runtime settings — minimal base images, non-root users, pinned digests, capabilities and secrets handling. Use when writing or reviewing a Dockerfile or Compose file, or before deploying containers.
 license: MIT
 ---
 

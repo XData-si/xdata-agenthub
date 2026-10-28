@@ -4,6 +4,9 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Changed skill metadata
+- Rewrote all 31 existing skill `description` fields to state what the skill does **and when to use it**, so agents select skills reliably; fixed title casing (API, GitHub, GitLab CI, LLM, PostgreSQL, SQL) and doubled full stops in workflow steps. No procedure changes.
+
 ### v0.3.0 RC1 preparation (not tagged or published)
 - Integrated adapter destination contract for Claude Code, Codex, OpenCode and generic projects.
 - Added local catalog `browse` pagination/facets and `trust` declared-provenance classification; trust output is not independent verification.

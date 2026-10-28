@@ -1,6 +1,6 @@
 ---
 name: data-privacy
-description: Review privacy requirements and data handling with evidence-based findings and actionable verification.
+description: Review personal-data handling — data inventory, legal basis, minimisation, retention, access and deletion of data subject requests (GDPR-style). Use when a feature collects, stores or shares personal data.
 license: MIT
 ---
 
@@ -18,7 +18,7 @@ Read the user request, repository instructions, relevant configuration and imple
 3. Trace collection, access, transfer, retention and deletion.
 4. Apply minimization and pseudonymization where suitable.
 5. Check cross-border transfer assumptions, access logging and breach escalation.
-6. Define data subject request verification and deletion evidence..
+6. Define data subject request verification and deletion evidence.
 
 ## Illustrative review case
 A retention period must be justified by the actual purpose and applicable obligations, not invented from a template.

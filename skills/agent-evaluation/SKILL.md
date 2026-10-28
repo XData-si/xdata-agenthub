@@ -1,6 +1,6 @@
 ---
 name: agent-evaluation
-description: Practical agent evaluation methodology with validation criteria.
+description: Evaluate AI agent behaviour on reproducible tasks — task success, tool use, safety, cost and failure modes. Use when comparing agent configurations, models or prompts, or before giving an agent more autonomy.
 license: MIT
 ---
 

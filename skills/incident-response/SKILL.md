@@ -1,6 +1,6 @@
 ---
 name: incident-response
-description: Coordinate authorized incident triage and recovery with evidence-based findings and actionable verification.
+description: Coordinate authorised incident triage, containment and recovery while preserving evidence and communicating status. Use during an active outage or security incident.
 license: MIT
 ---
 
@@ -19,7 +19,7 @@ Read the user request, repository instructions, relevant configuration and imple
 4. Contain through least-disruptive reversible action.
 5. Document hypotheses separately from observed facts.
 6. Verify recovery with customer-facing signals.
-7. Prepare postmortem with contributing factors and prevention owners..
+7. Prepare postmortem with contributing factors and prevention owners.
 
 ## Illustrative review case
 For an API outage, check error rate, dependency failures and deploy timeline before attributing root cause to a recent release.

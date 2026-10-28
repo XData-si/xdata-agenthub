@@ -1,6 +1,6 @@
 ---
 name: prompt-injection-defense
-description: Practical prompt injection defense methodology with validation criteria.
+description: Defend LLM applications and agents against prompt injection — separating instructions from untrusted data, limiting tool permissions and testing with attack cases. Use when an LLM processes user input, documents, web pages or tool output.
 license: MIT
 ---
 

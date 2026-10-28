@@ -1,6 +1,6 @@
 ---
 name: python-testing
-description: Design and run reproducible Python tests with isolated fixtures, regression cases, and evidence-based reporting.
+description: Design and run reproducible Python tests with isolated fixtures, regression cases and evidence-based reporting (pytest or unittest). Use when adding tests, fixing a bug in Python code, or making a test suite reliable.
 license: MIT
 ---
 

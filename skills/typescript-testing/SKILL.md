@@ -1,6 +1,6 @@
 ---
 name: typescript-testing
-description: Design reproducible TypeScript tests for runtime behavior, types and asynchronous failure paths.
+description: Design reproducible TypeScript tests for runtime behaviour, types and asynchronous failure paths (Vitest, Jest or node:test). Use when adding tests to TypeScript or JavaScript code or making them reliable.
 license: MIT
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: observability
-description: Design actionable service telemetry with evidence-based findings and actionable verification.
+description: Design actionable telemetry — metrics, logs, traces, dashboards and alerts tied to user impact. Use when instrumenting a service, building dashboards, or when incidents were detected late.
 license: MIT
 ---
 
@@ -19,7 +19,7 @@ Read the user request, repository instructions, relevant configuration and imple
 4. Protect personal data and secrets.
 5. Define alert thresholds using error budgets and sustained windows.
 6. Validate alert routing, silence policy and runbook links.
-7. Test dashboards against representative failures..
+7. Test dashboards against representative failures.
 
 ## Illustrative review case
 An alert on raw CPU alone is not proof of user impact; correlate saturation with latency and errors.

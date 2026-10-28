@@ -1,6 +1,6 @@
 ---
 name: rag-evaluation
-description: Practical rag evaluation methodology with validation criteria.
+description: Evaluate retrieval-augmented generation — retrieval recall, answer faithfulness, citations, abstention and access control on a fixed question set. Use when building or changing a RAG assistant, its index or its prompts.
 license: MIT
 ---
 

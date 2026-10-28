@@ -1,6 +1,6 @@
 ---
 name: api-design
-description: Design and review stable HTTP APIs with explicit contracts, authorization and operational behavior.
+description: Design and review stable HTTP APIs with explicit contracts, authorization and operational behaviour. Use when adding or changing endpoints, writing an OpenAPI specification, or reviewing breaking changes.
 license: MIT
 ---
 

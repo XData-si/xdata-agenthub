@@ -1,6 +1,6 @@
 ---
 name: security-review
-description: Practical security review methodology with validation criteria.
+description: Perform an evidence-based security review of code or a design — injection, authentication, authorization, data exposure and unsafe defaults. Use when reviewing security-sensitive changes or before exposing a service.
 license: MIT
 ---
 

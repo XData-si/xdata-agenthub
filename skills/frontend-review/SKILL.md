@@ -1,6 +1,6 @@
 ---
 name: frontend-review
-description: Review frontend correctness, accessibility and resilience with reproducible evidence and actionable recommendations.
+description: Review frontend code for correctness and resilience — state and async transitions, forms and validation, untrusted rendering, keyboard and responsive layout, loading and network failures. Use when reviewing UI changes or a new frontend component.
 license: MIT
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: dependency-audit
-description: Audit dependency and supply-chain risk with reproducible evidence and actionable recommendations.
+description: Audit direct and transitive dependencies against advisories, with reachability, provenance, integrity and licence checks, and minimal update proposals. Use when adding a dependency, before a release, or when a vulnerability advisory appears.
 license: MIT
 ---
 
