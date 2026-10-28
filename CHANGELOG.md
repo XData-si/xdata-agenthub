@@ -4,6 +4,12 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Distribution
+- Claude Code plugin marketplace: `/plugin marketplace add XData-si/xdata-agenthub`, with an all-skills plugin and four topic bundles (`xdata-engineering`, `xdata-security`, `xdata-ops`, `xdata-ai`); validated with `claude plugin validate` and a local install.
+- New `agenthub-router` meta-skill that routes tasks to skills and requires reporting their acceptance checks (61 skills, 64 resources).
+- Tests for Agent Skills specification limits (name, description length and trigger phrase, body size, reference depth) and for marketplace consistency.
+- README install table and positioning; `docs/COMPARISON.md`.
+
 ### Changed skill metadata
 - Rewrote all 31 existing skill `description` fields to state what the skill does **and when to use it**, so agents select skills reliably; fixed title casing (API, GitHub, GitLab CI, LLM, PostgreSQL, SQL) and doubled full stops in workflow steps. No procedure changes.
 

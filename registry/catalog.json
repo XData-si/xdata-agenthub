@@ -930,6 +930,21 @@
         "codex",
         "opencode"
       ]
+    },
+    {
+      "id": "agenthub-router",
+      "type": "skill",
+      "name": "AgentHub Router",
+      "description": "Route a task to the right AgentHub skills and report their acceptance checks",
+      "path": "skills/agenthub-router/SKILL.md",
+      "license": "MIT",
+      "source": "XData original",
+      "targets": [
+        "generic",
+        "claude",
+        "codex",
+        "opencode"
+      ]
     }
   ]
 }
