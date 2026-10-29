@@ -1,0 +1,6 @@
+{
+  "shell-baseline-1": {"S7 remote command built from local unquoted variables": true, "reason": "finding 12: HOST and TARGET 'are interpolated into a remote shell command, so odd values break the command or inject into it'"},
+  "shell-baseline-3": {"S7 remote command built from local unquoted variables": true, "reason": "finding 11: '$TARGET is expanded locally inside double quotes and is not quoted for the remote shell ... injects commands on the server'"},
+  "shell-skill-1": {"S6 health check result ignored": true, "reason": "line 17: 'A 500 response still exits 0, and the result is never checked'"},
+  "shell-skill-2": {"S6 health check result ignored": true, "reason": "'there is no --fail ... A failed upload, extract or health check would still pass in CI'"}
+}

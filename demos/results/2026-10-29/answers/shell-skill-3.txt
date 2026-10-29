@@ -1,0 +1,45 @@
+`deploy.sh` is not safe to use in CI yet. I read it only and did not run it or ShellCheck. The script is 12 lines and has no `set -euo pipefail`, so every failure below is silent and the script exits 0.
+
+## Critical
+
+- **Line 7:** `rm -rf $TARGET/*` is built from unvalidated, unquoted input and runs on the production server.
+  - If `APP_NAME` is empty, `TARGET` becomes `/var/www` and the command wipes every site on the host.
+  - A value like `../..` points the delete at an arbitrary path.
+  - Because the string is expanded locally inside double quotes, the remote shell parses its contents, so a value containing `;` or `$(...)` is command injection.
+  - It deletes before it extracts, so a failed or partial extract leaves the site empty. There is no rollback or atomic swap.
+- **Line 4:** `cd $BUILD_OUT` is unquoted and not checked.
+  - If `BUILD_OUT` is empty, `cd` goes to `$HOME`. If the directory is missing, `cd` fails and the script carries on in the current directory.
+  - Line 5 then tars up the wrong directory, possibly including secrets or the CI workspace, and line 7 deploys it.
+
+## High
+
+- **Line 11:** `curl -k` turns off TLS verification, so a man-in-the-middle can fake the health check.
+  - `curl` has no `-f`, so an HTTP 500 still exits 0.
+  - There are no retries or timeouts, so a service that is still starting counts as a failure.
+- **Lines 11–12:** the health check never gates the result. `echo "deployed"` always runs and the script always exits 0, so CI reports success even if the scp, ssh or health check failed.
+- **Lines 8–10:** the `.conf` copy looks wrong, and it is unsafe either way.
+  - It runs `cp` on the CI runner, not on `$HOST`, so it either fails for lack of permission or overwrites the runner's `/etc/app/`. It was probably meant to run on the server.
+  - `for f in $(find ...)` splits on whitespace and expands globs, and `$f` is unquoted on line 9.
+  - Files from different subdirectories with the same name overwrite each other when flattened into one directory.
+  - Build output can overwrite system config.
+- **Line 1 onward:** there is no `set -euo pipefail`. A failed `tar`, `scp` or `cd` doesn't stop the script. Together with line 4, this means a failed step is followed by the destructive step on line 7.
+
+## Medium
+
+- **Lines 3, 4, 6, 7:** the required variables (`APP_NAME`, `BUILD_OUT`, `HOST`) are never checked. Use `${APP_NAME:?}` and similar, plus an allowlist pattern for `APP_NAME` such as `^[a-z0-9._-]+$`.
+- **Lines 5–7:** `/tmp/release.tgz` is a fixed, predictable path locally and on the server.
+  - Concurrent CI jobs overwrite each other's archive, so one job can deploy another's build.
+  - On a shared runner, a pre-planted symlink or file is a tampering risk.
+  - The archive is never cleaned up.
+  - Use `mktemp` with a `trap ... EXIT` cleanup, or a per-run name.
+- **Lines 6–7:** `ssh` and `scp` have no non-interactive or host-key settings.
+  - Use `-o BatchMode=yes` and a pinned `known_hosts` entry with strict checking, so CI fails fast instead of hanging on a prompt or trusting an unknown host.
+  - The key is not specified, and `$HOST` is unquoted.
+
+## Low
+
+- **Line 7:** the script doesn't say what the archive's ownership and permissions will be on the server. It also extracts straight into the live directory. Extracting into a new release directory and switching a symlink would be atomic and repeatable.
+- **Throughout:** the script is not safe to re-run after a partial failure, and errors are not sent to stderr.
+- **Line 2:** the comment doesn't say what the script requires, such as the variables, SSH access or the target OS.
+
+I can write a patched version or a diff if you want one. It would add strict mode, validated variables, a `mktemp` and `trap` cleanup, an atomic release swap, a remote config copy, and a health check that fails the job.

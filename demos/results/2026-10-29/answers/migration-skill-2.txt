@@ -1,0 +1,109 @@
+Below is the plan, using expand–contract. I didn't modify any file or run anything. I'm assuming `users` has an integer primary key `id`, which `context.md` doesn't state.
+
+A one-step `ALTER TABLE users RENAME COLUMN fullname TO display_name` is instant, but it breaks every old instance during the 30-minute rolling deploy. The new column and the old one must coexist until no old code is running.
+
+## SQL
+
+**Step 1: Expand.** Run it as a migration, before any app deploy.
+```sql
+SET lock_timeout = '3s';          -- fail fast instead of queueing behind long transactions; retry if it fails
+SET statement_timeout = '30s';
+
+-- Metadata-only change in PG16, no table rewrite
+ALTER TABLE users ADD COLUMN display_name text;
+
+-- Keeps the two columns in sync whichever app version writes
+CREATE OR REPLACE FUNCTION users_sync_name() RETURNS trigger
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.display_name IS NULL THEN
+      NEW.display_name := NEW.fullname;
+    ELSIF NEW.fullname IS NULL THEN
+      NEW.fullname := NEW.display_name;   -- BEFORE trigger, so the NOT NULL check still passes
+    END IF;
+  ELSE
+    IF NEW.fullname IS DISTINCT FROM OLD.fullname
+       AND NEW.display_name IS NOT DISTINCT FROM OLD.display_name THEN
+      NEW.display_name := NEW.fullname;
+    ELSIF NEW.display_name IS DISTINCT FROM OLD.display_name
+       AND NEW.fullname IS NOT DISTINCT FROM OLD.fullname THEN
+      NEW.fullname := NEW.display_name;
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$;
+
+CREATE TRIGGER users_sync_name_trg
+  BEFORE INSERT OR UPDATE ON users
+  FOR EACH ROW EXECUTE FUNCTION users_sync_name();
+```
+
+**Step 2: Backfill.** Run it after the trigger exists, off-peak. The procedure commits per batch, is idempotent and can be resumed.
+```sql
+CREATE OR REPLACE PROCEDURE backfill_display_name(batch int DEFAULT 5000, pause_s float DEFAULT 0.05)
+LANGUAGE plpgsql AS $$
+DECLARE lo bigint; hi bigint; maxid bigint;
+BEGIN
+  SELECT coalesce(min(id),0), coalesce(max(id),0) INTO lo, maxid FROM users;
+  WHILE lo <= maxid LOOP
+    hi := lo + batch - 1;
+    UPDATE users SET display_name = fullname
+     WHERE id BETWEEN lo AND hi AND display_name IS NULL;
+    COMMIT;
+    PERFORM pg_sleep(pause_s);
+    lo := hi + 1;
+  END LOOP;
+END $$;
+
+CALL backfill_display_name();
+```
+Watch replication lag, WAL volume and bloat. Run `VACUUM (ANALYZE) users;` afterwards, because the backfill creates about 40M dead tuples.
+
+**Step 3: Verify.** Run on a replica or off-peak.
+```sql
+SELECT count(*) FROM users WHERE display_name IS DISTINCT FROM fullname;   -- expect 0
+```
+
+**Step 4: Prepare NOT NULL on the new column.** Do this before the contract step.
+```sql
+SET lock_timeout = '3s';
+ALTER TABLE users ADD CONSTRAINT users_display_name_nn CHECK (display_name IS NOT NULL) NOT VALID;
+ALTER TABLE users VALIDATE CONSTRAINT users_display_name_nn;   -- does not block writes
+ALTER TABLE users ALTER COLUMN display_name SET NOT NULL;      -- PG12+ uses the validated CHECK and skips the scan
+ALTER TABLE users DROP CONSTRAINT users_display_name_nn;
+```
+
+**Step 5: Contract.** Run it in a later release, after the stable period and a verified backup.
+```sql
+SET lock_timeout = '3s';
+DROP TRIGGER users_sync_name_trg ON users;
+DROP FUNCTION users_sync_name();
+ALTER TABLE users DROP COLUMN fullname;   -- metadata-only, but irreversible
+```
+
+## Deployment steps
+
+1. **Pre-checks.**
+   - Rehearse steps 1 to 5 on a production-sized copy. Measure backfill duration, lock waits and the query plans of the login queries.
+   - Take a fresh, verified-restorable backup and get approval.
+2. **Release 0 (DB only).** Run step 1. Old app instances keep working untouched, because the trigger fills `display_name` for them.
+3. **Backfill and verify.** Run steps 2 and 3. Don't proceed until the mismatch count is 0.
+4. **Release 1 (app).** The code reads and writes only `display_name`. The trigger keeps `fullname` correct for any old instance still running during the roll. Roll out over about 30 minutes, watching error rate, latency, lock waits and replication lag.
+5. **Wait** until all old instances are gone and the system has been stable, for example a few days. Check `pg_stat_activity` and logs to confirm nothing still references `fullname`. Re-run step 3, then run step 4.
+6. **Release 2 (contract).** Take a backup or export of `users(id, fullname)`, then run step 5.
+
+## Rollback
+
+| Stage | Down-path |
+|---|---|
+| Step 1 | `DROP TRIGGER`, `DROP FUNCTION`, `ALTER TABLE users DROP COLUMN display_name` |
+| Backfill | Stop the procedure. It is idempotent and resumable, and needs no undo. |
+| Release 1 | Redeploy the previous app version. `fullname` is still complete and in sync. |
+| Step 4 | Run `ALTER COLUMN display_name DROP NOT NULL`. |
+| Step 5 | Not reversible. Restore `fullname` from the backup or export taken beforehand. |
+
+## Notes
+
+- Don't drop `fullname` in the same release as the app switch. Any old instance still running would fail.
+- If the table is partitioned, uses logical replication or is read by other services, check them before step 5. Logical replication, for example, needs the column change applied on subscribers.

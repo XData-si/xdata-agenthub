@@ -1,0 +1,68 @@
+# Review of `deploy.sh`
+
+I read the file only. I did not run ShellCheck or the script, as you asked, so these findings come from reading alone. Don't use it in CI as written.
+
+## Critical
+
+- **Lines 3 and 7: an unset `APP_NAME` can wipe the whole web root.**
+  - `TARGET=/var/www/$APP_NAME` becomes `/var/www/` when the variable is empty.
+  - Line 7 then runs `rm -rf /var/www/*` on the production host, deleting every site on it.
+  - There is no `${APP_NAME:?}` check and no validation. A value such as `../..` or `x; cmd` is also accepted.
+- **Line 7: command injection into the remote shell.**
+  - `$TARGET` is expanded locally into a double-quoted string, which the remote shell then parses.
+  - A crafted `APP_NAME` can run arbitrary commands as `deploy` on the server.
+- **Lines 4–6: a failed or empty `cd` ships the wrong directory to production.**
+  - There is no `set -e` and no check on `cd`.
+  - If `BUILD_OUT` is unset, `cd` goes to `$HOME`. If the directory doesn't exist, `cd` fails and the script stays in the current directory.
+  - Line 5 then archives whichever directory it is in, possibly including keys and CI secrets. Line 6 uploads it and line 7 unpacks it into the web root.
+
+## High
+
+- **Line 11: `curl -k` turns off TLS certificate verification.**
+  - The health check can be spoofed or intercepted.
+  - There is also no `-f`, so an HTTP 500 still gives exit code 0.
+- **Lines 11–12: the script always reports success.**
+  - `echo "deployed"` runs unconditionally, and the script's exit status is that of `echo`.
+  - A failed upload, extract or health check would still pass in CI.
+- **Lines 8–10: `for f in $(find ...)` breaks on filenames with spaces or glob characters.**
+  - `cp $f` is unquoted and has no `--`, so a filename starting with `-` is read as an option.
+  - Files in different subdirectories with the same name overwrite each other in the flat `/etc/app/`.
+- **Line 9: the config files are copied on the CI runner, not on the server.**
+  - `/etc/app/` is local, and writing there needs root on the runner.
+  - This is almost certainly a bug, because the configs should go to the target host. Either it fails in CI or it modifies the runner.
+- **Line 7: the deploy is not atomic and has no rollback.**
+  - The old files are deleted before the new ones are extracted. If `tar` fails, the site is left empty.
+  - `$TARGET/*` also skips dotfiles, so stale hidden files remain.
+
+## Medium
+
+- **Lines 5–6: a fixed `/tmp/release.tgz` path, locally and on the remote.**
+  - Concurrent CI jobs on the same runner or host overwrite each other's archive.
+  - On a shared host, a predictable path allows symlink or race attacks.
+  - Use `mktemp` with a `trap ... EXIT` cleanup. The archive is never removed from either machine.
+- **Line 6: unquoted `$HOST` and no integrity check.**
+  - There is no `--`, no checksum of the archive, and no explicit host-key policy such as a pinned `known_hosts`.
+  - ssh and scp may prompt or fail unpredictably in CI. Set `BatchMode=yes`.
+- **Line 1 (whole script): there is no `set -euo pipefail`.**
+  - Every failure above is silently ignored.
+  - There is no `trap` and no input validation for `APP_NAME`, `BUILD_OUT` or `HOST`.
+
+## Low
+
+- **Line 4:** `cd $BUILD_OUT` is unquoted, so it breaks on paths containing spaces.
+- **Line 2 and the structure:**
+  - The script has no usage message or documentation of its required environment variables.
+  - It writes progress and errors to stdout instead of stderr.
+  - It has no lock to stop two deploys of the same app running at once.
+
+## Suggested fixes
+
+1. Add `set -euo pipefail`.
+2. Require all variables with `: "${APP_NAME:?}" "${BUILD_OUT:?}" "${HOST:?}"`.
+3. Validate `APP_NAME` against `^[A-Za-z0-9._-]+$`.
+4. Use `cd -- "$BUILD_OUT"` and a `mktemp -d` archive path with a `trap` cleanup.
+5. Extract into a new release directory on the server and switch a symlink, instead of using `rm -rf`.
+6. Copy the config files to the remote host with `find -print0` and a quoted loop.
+7. Replace `curl -k` with `curl --fail --silent --show-error`, and exit non-zero if the check fails.
+
+The skill's output format also asks for a patched script and test commands. I haven't written either, since you said not to modify or run anything. I can supply the patched version as text if you want it.

@@ -1,0 +1,64 @@
+**Review of `deploy.sh`** (13 lines, read only, not run)
+
+The script is not safe to use in CI as written. The first two findings can destroy data or leak files.
+
+### Critical
+
+1. **Lines 3 and 7: unset `APP_NAME` wipes every site on the server.**
+   - If `APP_NAME` is empty, `TARGET` becomes `/var/www/`, and line 7 runs `rm -rf /var/www/*` on the remote host.
+   - Nothing checks that the variable is set. A value containing `..` or `/` can also point the delete somewhere else.
+   - Fix: use `${APP_NAME:?}` and validate the value against something like `^[a-z0-9_-]+$`.
+
+2. **Lines 4 and 5: `cd` is unchecked and `BUILD_OUT` is unvalidated.**
+   - If `BUILD_OUT` is unset, `cd` goes to `$HOME`. If the directory doesn't exist, `cd` fails and the script carries on in the current directory.
+   - Line 5 then archives whatever directory it is in, which could include the CI workspace, secrets or `.git`. Line 6 uploads the archive to the web server.
+   - Fix: use `cd "${BUILD_OUT:?}" || exit 1`.
+
+### High
+
+3. **Line 1: no `set -euo pipefail`.**
+   - Every failure is ignored. If `scp` fails, line 7 still deletes the live site and extracts a stale or missing archive.
+   - Line 7 also runs `rm` and `tar` with `&&`, so a failed extract leaves the site empty.
+   - Fix: add `set -euo pipefail` at the top.
+
+4. **Line 7: the deploy is not atomic and has no rollback.**
+   - The site is deleted before the new files are extracted, so there is downtime. Any failure after the `rm` leaves the site broken.
+   - `rm -rf $TARGET/*` skips dotfiles, so old hidden files linger.
+   - Fix: extract to a new release directory, then switch a symlink, and keep the previous release.
+
+5. **Lines 8–10: config files are copied on the CI runner, not on the server.**
+   - `cp` writes to the local `/etc/app/`, not the remote host. This either fails without root or modifies the runner.
+   - Overwriting system config from build output without review is risky. Nothing reloads the service afterwards.
+   - Fix: copy the files to the remote host over ssh and reload the service.
+
+6. **Line 11: `curl -k` disables TLS verification.**
+   - A man-in-the-middle could return a fake healthy response.
+   - Fix: remove `-k` and fix the certificate or CA bundle instead.
+
+7. **Lines 11 and 12: the health check result is ignored and success is always reported.**
+   - `curl` has no `-f`, so a 500 response still exits 0. There are no retries or timeout either.
+   - Line 12 prints "deployed" regardless of what happened, and the script's exit code comes from `echo`, so CI will always see success.
+   - Fix: use `curl -fsS --retry 5 --max-time 10`, and exit non-zero on failure.
+
+### Medium
+
+8. **Lines 5 and 6: predictable shared archive path `/tmp/release.tgz`.**
+   - Concurrent CI jobs overwrite each other's archive, and other local users can swap the file or plant a symlink.
+   - The same applies on the remote host, where nothing is cleaned up either.
+   - Fix: use `mktemp`, and add `trap` cleanup for both the local and remote copies.
+
+9. **Lines 8 and 9: `for f in $(find ...)` with unquoted `$f`.**
+   - Filenames with spaces or glob characters are split or expanded.
+   - Files with the same name in different subdirectories overwrite each other in `/etc/app/`.
+   - Fix: use `find -print0` with a `while read -d ''` loop, and quote `"$f"`.
+
+10. **Lines 6 and 7: ssh and scp options are not set for CI.**
+    - Nothing sets `BatchMode`, a key file, `StrictHostKeyChecking` or known_hosts handling, so the job can hang on a prompt or trust an unknown host.
+    - An unset `HOST` gives `deploy@`, which fails confusingly.
+    - Fix: use `${HOST:?}` and set these options explicitly.
+
+### Low
+
+11. **Lines 4, 6, 7 and 9: unquoted variables.** `$BUILD_OUT`, `$HOST`, `$TARGET` and `$f` should all be quoted.
+12. **Line 7: `$TARGET` is expanded locally inside the double-quoted ssh command.** Escape or quote it for the remote shell, using `printf %q` if the value can vary.
+13. **Line 1: `#!/bin/bash` and no usage or argument handling.** The script relies entirely on implicit environment variables. Declare and validate them at the top, or take them as arguments.

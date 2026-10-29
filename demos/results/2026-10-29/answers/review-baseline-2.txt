@@ -1,0 +1,56 @@
+## Review of `invoices.py`
+
+### Critical
+
+**1. SQL injection, line 12.**
+- `invoice_id` goes straight into an f-string: `f"SELECT * FROM invoices WHERE id = {invoice_id}"`.
+- The route uses the default string converter, so any string reaches the query.
+- An authenticated user can send `/invoices/0 OR 1=1`, or use `UNION` to read any table.
+- Fix: use a parameterized query: `db.execute("SELECT * FROM invoices WHERE id = ? AND tenant_id = ?", (invoice_id, current_user.tenant_id))`.
+
+**2. Tenant isolation is missing in `get_invoice`, line 12.**
+- Even without the injection, the query never filters on `tenant_id`.
+- Any logged-in user can read any tenant's invoice by guessing or enumerating IDs (an IDOR).
+- CONTEXT.md says users may only see their own tenant's invoices.
+- Return 404 rather than 403 when the invoice belongs to another tenant, so IDs don't leak.
+
+**3. Tenant isolation is missing in `export_invoices`, line 21.**
+- The query returns invoices for all tenants.
+- It exposes every tenant's data in paginated form, which makes bulk exfiltration easy.
+- Add `WHERE tenant_id = ?` with `current_user.tenant_id`.
+
+### High
+
+**4. Credentials written to logs, line 13.**
+- `request.headers.get("Authorization")` logs the bearer token or basic-auth credentials in plaintext.
+- Anyone with log access can then impersonate users.
+- Remove it. If you need an audit trail, log only the user ID and invoice ID.
+- `current_user.email` is also PII in logs. Prefer `current_user.id`.
+
+**5. Pagination is off by one, line 21.**
+- Pages are numbered from 1 (CONTEXT.md), but the offset is `page * 100`.
+- Page 1 therefore skips the first 100 rows, and those rows can never be exported with the default `page=1`.
+- Fix: `(page - 1) * 100`.
+
+### Medium
+
+**6. Unhandled `None` in `get_invoice`, line 14.**
+- `fetchone()` returns `None` when no row matches, so `dict(row)` raises `TypeError` and the endpoint returns a 500.
+- Check for `None` and return 404. This also becomes necessary once the tenant filter is added.
+
+**7. No validation of `page`, line 20.**
+- `int(...)` raises `ValueError` on non-numeric input, which gives a 500 instead of a 400.
+- `page=0` or a negative value produces a negative `OFFSET`. Depending on the DB, that either errors or returns unexpected rows.
+- Fix: parse with `request.args.get("page", 1, type=int)` and reject values below 1 with a 400.
+
+**8. `SELECT *` exposes every column, lines 12 and 21.**
+- Any internal or sensitive column, such as internal notes or payment tokens, goes straight into the JSON response.
+- Select an explicit column list instead.
+
+### Low / Notes
+
+- **Line 6:** `app = Flask(__name__)` is created at module level alongside a relative import (`.db`). Check that this doesn't create a second app, separate from the one that configures `LoginManager` and the secret key. A blueprint is usually the better fit in a package.
+- **Line 21:** `ORDER BY id` with offset pagination gets slow on large tables. Keyset pagination (`WHERE id > ?`) would scale better.
+- **Missing tests:** No tests are included. Add cross-tenant access tests for both endpoints, and tests for a missing invoice and for invalid `page` values.
+
+The `/invoices/export` and `/invoices/<invoice_id>` routes don't conflict. Flask matches the static route first, so no change is needed there.

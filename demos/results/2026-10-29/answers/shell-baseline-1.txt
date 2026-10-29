@@ -1,0 +1,34 @@
+**Review of `deploy.sh`** (read only, nothing run or changed)
+
+**Critical**
+
+1. **Lines 3, 7: an empty `APP_NAME` wipes the whole web root.** If `APP_NAME` is unset, `TARGET` becomes `/var/www/`, and line 7 runs `rm -rf /var/www/*` on the production host, deleting every site on it. Nothing checks that the variable is set. Use `${APP_NAME:?}` and validate its format.
+2. **Line 4: unchecked, unquoted `cd $BUILD_OUT`.**
+   - If `BUILD_OUT` is empty, `cd` goes to `$HOME`, and line 5 archives the home directory (keys, tokens, and so on) and uploads it to the server.
+   - If `cd` fails (the directory is missing or has spaces), the script keeps going and archives whatever the current directory is.
+   - Use `cd "${BUILD_OUT:?}" || exit 1`.
+3. **Line 1: no `set -euo pipefail`.** Every failure is ignored. For example, a failed `scp` on line 6 still lets line 7 delete the live site and try to extract a missing or stale archive.
+
+**High**
+
+4. **Line 7: the deploy is destructive and not atomic.** It deletes the live files and then extracts, so there is downtime. If `tar` fails (disk full, a corrupt or missing archive), the site stays empty and there is no rollback. Extract into a new release directory and switch a symlink instead (or `rsync --delete`).
+5. **Line 11: `curl -k` turns off TLS verification.** This hides certificate problems and allows man-in-the-middle attacks. Remove `-k`.
+6. **Line 11: the health check doesn't check anything.** There is no `-f`, so a 500 response still exits 0. There is also no retry or wait, and no failure path or rollback. Use `curl -fsS --retry N --max-time T`.
+7. **Line 12: "deployed" prints and the script exits 0 regardless of what happened.** CI will report success on a broken deploy.
+8. **Lines 8–10: config files are copied on the wrong machine.** This loop runs on the CI runner, not on `$HOST`. It copies `*.conf` into the runner's `/etc/app/`, which needs root and is almost certainly not what you intended. If the server needs the configs, they must be sent over `scp`/`ssh`. The server also isn't told to reload the app afterwards.
+
+**Medium**
+
+9. **Lines 5–7: the archive path is fixed and shared.** `/tmp/release.tgz` is predictable on both the runner and the remote host. Concurrent CI jobs overwrite each other's archive, and on a shared `/tmp` it can be swapped or symlink-attacked. Use `mktemp` (or a per-build name) and delete the file on both sides afterwards, for example with `trap`.
+10. **Lines 6–7: no SSH options for CI.** An unknown host key makes `ssh` and `scp` wait for a prompt and hang the job. Set `-o BatchMode=yes`, manage `known_hosts` deliberately (don't use `StrictHostKeyChecking=no`), and pass the key explicitly.
+11. **Line 5: `tar czf ... .` packs everything.** That includes dotfiles such as `.env` and `.git`, and any `.conf` files that might hold secrets, and it puts them in the web root. Build from an explicit artifact list or add excludes.
+12. **Lines 3, 6, 7: `HOST` and `TARGET` are never validated or quoted.** On line 7 they are interpolated into a remote shell command, so odd values break the command or inject into it.
+13. **Missing validation of required variables (`APP_NAME`, `BUILD_OUT`, `HOST`).** Check them all up front.
+
+**Low**
+
+14. **Lines 8–9: the `for f in $(find ...)` loop splits on whitespace and `cp $f` is unquoted.** Filenames with spaces break it, and configs from different subdirectories overwrite each other in the flat `/etc/app/`. Use `find ... -print0` with a `while read -d ''` loop and quote the variables.
+15. **No concurrency lock, no logging, and no `--` or `-p` handling.** Two simultaneous deploys to the same host will interfere. Add a lock (`flock`) and timestamped output.
+16. **Line 1: the script is tied to `/bin/bash`.** `#!/usr/bin/env bash` is more portable. Minor.
+
+**Recommendation:** don't use it in CI until items 1–8 are fixed. Items 1–3 alone could cause an outage or leak data.

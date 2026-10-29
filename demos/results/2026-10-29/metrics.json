@@ -1,0 +1,272 @@
+{
+  "migration-baseline-1": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 1,
+    "turns": 2,
+    "duration_s": 20.0,
+    "output_tokens": 2484,
+    "cost_usd": 0.0627,
+    "is_error": false
+  },
+  "migration-baseline-2": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 1,
+    "turns": 2,
+    "duration_s": 24.0,
+    "output_tokens": 2953,
+    "cost_usd": 0.0674,
+    "is_error": false
+  },
+  "migration-baseline-3": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 1,
+    "turns": 2,
+    "duration_s": 20.6,
+    "output_tokens": 2779,
+    "cost_usd": 0.0656,
+    "is_error": false
+  },
+  "migration-skill-1": {
+    "skill_calls": [
+      "database-migrations"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 2,
+    "turns": 4,
+    "duration_s": 27.3,
+    "output_tokens": 3646,
+    "cost_usd": 0.078,
+    "is_error": false
+  },
+  "migration-skill-2": {
+    "skill_calls": [
+      "database-migrations"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 2,
+    "turns": 4,
+    "duration_s": 25.9,
+    "output_tokens": 3766,
+    "cost_usd": 0.0792,
+    "is_error": false
+  },
+  "migration-skill-3": {
+    "skill_calls": [
+      "database-migrations"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 2,
+    "turns": 4,
+    "duration_s": 29.6,
+    "output_tokens": 3792,
+    "cost_usd": 0.0795,
+    "is_error": false
+  },
+  "review-baseline-1": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 3,
+    "turns": 4,
+    "duration_s": 16.8,
+    "output_tokens": 1857,
+    "cost_usd": 0.0627,
+    "is_error": false
+  },
+  "review-baseline-2": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 3,
+    "turns": 4,
+    "duration_s": 15.4,
+    "output_tokens": 1759,
+    "cost_usd": 0.0617,
+    "is_error": false
+  },
+  "review-baseline-3": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 3,
+    "turns": 4,
+    "duration_s": 14.1,
+    "output_tokens": 1457,
+    "cost_usd": 0.0587,
+    "is_error": false
+  },
+  "review-skill-1": {
+    "skill_calls": [
+      "code-review"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 3,
+    "turns": 5,
+    "duration_s": 15.9,
+    "output_tokens": 1983,
+    "cost_usd": 0.0597,
+    "is_error": false
+  },
+  "review-skill-2": {
+    "skill_calls": [
+      "code-review"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 3,
+    "turns": 5,
+    "duration_s": 17.3,
+    "output_tokens": 2188,
+    "cost_usd": 0.0617,
+    "is_error": false
+  },
+  "review-skill-3": {
+    "skill_calls": [
+      "code-review"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 4,
+    "turns": 6,
+    "duration_s": 19.8,
+    "output_tokens": 2091,
+    "cost_usd": 0.0662,
+    "is_error": false
+  },
+  "shell-baseline-1": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 2,
+    "turns": 3,
+    "duration_s": 22.8,
+    "output_tokens": 2488,
+    "cost_usd": 0.0681,
+    "is_error": false
+  },
+  "shell-baseline-2": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 2,
+    "turns": 3,
+    "duration_s": 22.2,
+    "output_tokens": 2473,
+    "cost_usd": 0.068,
+    "is_error": false
+  },
+  "shell-baseline-3": {
+    "skill_calls": [],
+    "skill_sources": [],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 2,
+    "turns": 3,
+    "duration_s": 23.1,
+    "output_tokens": 2533,
+    "cost_usd": 0.0686,
+    "is_error": false
+  },
+  "shell-skill-1": {
+    "skill_calls": [
+      "shell-script-review"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 2,
+    "turns": 4,
+    "duration_s": 23.8,
+    "output_tokens": 2790,
+    "cost_usd": 0.0691,
+    "is_error": false
+  },
+  "shell-skill-2": {
+    "skill_calls": [
+      "shell-script-review"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 3,
+    "turns": 5,
+    "duration_s": 25.6,
+    "output_tokens": 2834,
+    "cost_usd": 0.075,
+    "is_error": false
+  },
+  "shell-skill-3": {
+    "skill_calls": [
+      "shell-script-review"
+    ],
+    "skill_sources": [
+      "project"
+    ],
+    "client": "2.1.308",
+    "model": "openrouter/anthropic/claude-sonnet-5.5",
+    "mcp_servers": 0,
+    "tool_calls": 3,
+    "turns": 5,
+    "duration_s": 24.2,
+    "output_tokens": 2536,
+    "cost_usd": 0.072,
+    "is_error": false
+  }
+}
