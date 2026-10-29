@@ -42,7 +42,7 @@ def verify_installed(target, catalog_items):
         by_item.setdefault(record["item_id"], []).append((rel, record["sha256"]))
     catalog = {item["id"]: item for item in catalog_items}
     results = []
-    for item_id, records in sorted(by_item.items()):
+    for item_id, label, records in _installations(by_item, catalog):
         rels = [PurePosixPath(rel) for rel, _ in records]
         root = rels[0].parent if len(rels) == 1 else PurePosixPath(*_common_parts([r.parent.parts for r in rels]))
         item = catalog.get(item_id)
@@ -63,21 +63,41 @@ def verify_installed(target, catalog_items):
             detail = "; ".join(filter(None, [
                 ("missing: " + ", ".join(missing)) if missing else "",
                 ("unexpected: " + ", ".join(extra)) if extra else ""]))
-            results.append((item_id, "modified", detail))
+            results.append((label, "modified", detail))
             continue
         files = [(target / r, r.relative_to(root)) for r in rels]
         current = package_digest(files)
         recorded = digest_from_entries((PurePosixPath(rel).relative_to(root).as_posix(), sha) for rel, sha in records)
         declared = (item or {}).get("digest", {}).get("value")
         if item is None or not declared:
-            results.append((item_id, "unknown", "not in catalog or no catalog digest"))
+            results.append((label, "unknown", "not in catalog or no catalog digest"))
         elif current == declared:
-            results.append((item_id, "verified", current))
+            results.append((label, "verified", current))
         elif current == recorded:
-            results.append((item_id, "outdated", "unchanged since install; catalog version differs (see xah update)"))
+            results.append((label, "outdated", "unchanged since install; catalog version differs (see xah update)"))
         else:
-            results.append((item_id, "modified", "installed files changed after install"))
+            results.append((label, "modified", "installed files changed after install"))
     return results
+
+
+def _installations(by_item, catalog):
+    """Split manifest records into installations: one skill can be installed for several agents in one project.
+
+    Yields (item id, label, records). Records of a skill are grouped under the SKILL.md directory that contains them;
+    the label names that directory when the item is installed more than once.
+    """
+    for item_id, records in sorted(by_item.items()):
+        item = catalog.get(item_id)
+        roots = sorted({PurePosixPath(rel).parent for rel, _ in records if PurePosixPath(rel).name == "SKILL.md"})
+        if item is None or item["type"] != "skill" or len(roots) < 2:
+            yield item_id, item_id, records
+            continue
+        groups = {root: [] for root in roots}
+        for rel, sha in records:
+            owner = next((root for root in roots if root in PurePosixPath(rel).parents), None)
+            groups.setdefault(owner, []).append((rel, sha))
+        for root, group in groups.items():
+            yield item_id, f"{item_id} ({root.as_posix() if root else 'outside a skill directory'})", group
 
 
 def _common_parts(part_lists):

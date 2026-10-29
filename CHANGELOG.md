@@ -4,6 +4,16 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-29
+
+First signed release. Highlights: 104 security-reviewed skills (seals bound to package digests), Claude Code plugin
+marketplace, `xah verify`, Sigstore-signed checksums with SLSA provenance, catalog site, EU sovereignty skills, and
+measured before/after demos. Details below.
+
+### Fixed
+- `xah verify --target` failed with a path error when the same skill was installed for several agents in one project;
+  each installation is now verified separately and named by its directory (found in the release walkthrough).
+
 ### Before/after demos
 - `demos/`: three reproducible demos (shell script review, production migration, code review), each run with and
   without the skill. The harness gives every run an isolated agent configuration, the rubric is fixed in advance,
@@ -67,7 +77,7 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 - Additional local catalogs via repeatable `--catalog PATH` and `XAH_CATALOGS`; item paths resolve relative to each catalog file, duplicate IDs across catalogs are refused.
 - `add`/`update --scope user` installs skills into user-level client directories (`~/.claude/skills`, `~/.agents/skills`, `~/.config/opencode/skills`); instructions and the generic adapter are refused at user scope. User-scope runtime discovery is not yet verified.
 
-### v0.3.0 RC1 preparation (not tagged or published)
+### v0.3.0 RC1 preparation
 - Integrated adapter destination contract for Claude Code, Codex, OpenCode and generic projects.
 - Added local catalog `browse` pagination/facets and `trust` declared-provenance classification; trust output is not independent verification.
 - Added `release-check` evidence-shape validation; it does not authenticate reviewers, CI or signatures.
@@ -77,7 +87,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 ### v0.3.0 known limitations
 - Multi-file rollback is not crash-atomic; cooperative locking cannot prevent unrelated writers, and a TOCTOU window remains.
 - Native client acceptance is scenario/version-limited; catalog metadata is not independently authenticated.
-- No RC1 release approval, tag or publication has occurred.
+- Codex CLI native loading was not re-tested for this release; Codex support is path-level (`.agents/skills/`) plus the earlier XAH-205 evidence.
+- User-scope runtime discovery is not yet verified in a client.
 
 ### Earlier development work
 

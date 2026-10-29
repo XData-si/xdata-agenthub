@@ -57,3 +57,22 @@ Before any RC tag or publication:
 6. Obtain explicit release-owner authorization **separately** before tagging or publishing.
 
 See [release process](RELEASE_PROCESS.md), [operator runbook](OPERATOR_RUNBOOK.md), [compatibility evidence](AGENT_COMPATIBILITY_EVIDENCE.md), and [XAH-308 gates](XAH-308_RELEASE_GATES.md).
+
+## Final release record (v0.3.0, 2026-10-29)
+
+The RC1 preparation above was superseded by a direct v0.3.0 release. The release commit is the merge commit of the
+release pull request; the `v0.3.0` tag points at it, and `release.yml` re-runs every gate on that exact commit before
+it signs anything.
+
+| Gate | Evidence | Status |
+| --- | --- | --- |
+| Unit, integration and release tests | `Tests` and `Release validation` (Linux, macOS, Windows × Python 3.10/3.12/3.13) on the release PR, then re-run by `release.yml` on the tagged commit | Passed on the PR; the tag run is linked from the release |
+| Catalog, digests, seals, security gate | `validate_release.py`, `update_digests.py --check`, `seal.py check` (137 seals on 104 skills), `skill_security_check.py` (104 skills, 0 failed) | Passed |
+| Operator walkthrough | [2026-10-29 walkthrough](integration-evidence/2026-10-29-v0.3.0-operator-walkthrough.md): fresh checkout, installer twice in a disposable home, multi-agent install, tamper detection, conflict-safe update, user scope | Passed after one fix (`xah verify` with the same skill for several agents) |
+| Native-client compatibility | [2026-10-28 runtime results](integration-evidence/2026-10-28-runtime-results.md): Claude Code 2.1.308 and OpenCode 1.19.4 with native loading traces; [before/after demos](../demos/results/2026-10-29/RESULTS.md) | Claude Code and OpenCode verified for the tested scenarios; Codex path-level only for this release |
+| Security review and risk acceptance | Known limitations below and in the changelog; no new code execution paths since v0.2.0 (skills stay instructions only) | Accepted by the release owner with the release decision |
+| Release owner approval | John Aleksander Jazbec requested the v0.3.0 release on 2026-10-29; approval is final when the release pull request is merged and the draft release is published | Pending publication |
+
+Risks accepted for v0.3.0: rollback is not crash-atomic across multiple files; the writer lock is cooperative; catalog
+metadata and seals are maintainer statements bound to digests, not third-party certification; Codex CLI native loading
+and user-scope runtime discovery were not re-tested for this release.

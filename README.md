@@ -14,6 +14,8 @@
 
 [![Skills](https://img.shields.io/badge/skills-104-2563eb)](docs/CATALOG.md) [![Agent Skills spec](https://img.shields.io/badge/Agent%20Skills-spec%20checked-16a34a)](https://agentskills.io/specification) [![Tests](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml/badge.svg)](https://github.com/XData-si/xdata-agenthub/actions/workflows/test.yml)
 
+[![Release](https://img.shields.io/github/v/release/XData-si/xdata-agenthub?label=release&color=2563eb)](https://github.com/XData-si/xdata-agenthub/releases) [![Signed with Sigstore](https://img.shields.io/badge/signed-Sigstore-6f42c1)](docs/VERIFYING.md) [![SLSA build provenance](https://img.shields.io/badge/SLSA-build%20provenance-1f6feb)](docs/VERIFYING.md#3-build-provenance-slsa-attestation) [![Digest verified](https://img.shields.io/badge/xah%20verify-sha256%20digests-0f766e)](docs/VERIFYING.md) [![Security reviewed](https://img.shields.io/badge/security%20reviewed-104%2F104-16a34a)](docs/SEAL.md) [![EU ready](https://img.shields.io/badge/EU%20ready-30-003399)](docs/EU_SOVEREIGNTY.md) [![Runtime verified](https://img.shields.io/badge/runtime%20verified-3-0e7490)](docs/SEAL.md)
+
 ## Install in one command
 
 | Client | Command |
@@ -102,11 +104,16 @@ bash scripts/install.sh
 xah --help
 ```
 
-## v0.3.0 RC1 preparation (not published)
+## v0.3.0 (2026-10-29)
 
-The development `main` branch now includes `xah browse`, `xah trust`, `xah release-check`, the shared adapter destination contract, and additional recovery tests. `browse` supports local catalog facets/pagination; `trust` reports **declared metadata only**, not verified publisher identity; `release-check` validates evidence-file structure, not reviewer authenticity. None of these commands downloads or executes third-party code.
+v0.3.0 is the first signed release: the archives, the catalog and `SHA256SUMS` are signed with Sigstore and carry
+SLSA build provenance ([how to verify](docs/VERIFYING.md)). The release record is in the
+[readiness checklist](docs/RC1_v0.3.0_READINESS.md#final-release-record-v030-2026-10-29) and the
+[release notes](docs/RELEASE_NOTES_v0.3.0.md).
 
-**No v0.3.0 RC1 tag or GitHub Release has been published.** The [RC1 readiness checklist](docs/RC1_v0.3.0_READINESS.md) lists pending operator, security and frozen-SHA verification. Rollback remains non-atomic across multiple files and its lock cannot prevent writes by unrelated processes.
+It also includes `xah browse`, `xah trust`, `xah release-check`, the shared adapter destination contract, and additional recovery tests. `browse` supports local catalog facets/pagination; `trust` reports **declared metadata only**, not verified publisher identity; `release-check` validates evidence-file structure, not reviewer authenticity. None of these commands downloads or executes third-party code.
+
+Known limitations: rollback remains non-atomic across multiple files and its lock cannot prevent writes by unrelated processes.
 
 ## v0.2.0 development migration and operations
 
