@@ -57,5 +57,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ github.ref_name }}
         run: |
+          # Curated notes in docs/RELEASE_NOTES_<tag>.md come first; GitHub appends the generated change list.
+          notes=()
+          if [ -f "docs/RELEASE_NOTES_$VERSION.md" ]; then notes=(--notes-file "docs/RELEASE_NOTES_$VERSION.md"); fi
           gh release create "$VERSION" dist/* --draft --verify-tag \
-            --title "XData AgentHub $VERSION" --generate-notes
+            --title "XData AgentHub $VERSION" --generate-notes "${notes[@]}"

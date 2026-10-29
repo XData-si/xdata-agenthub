@@ -102,11 +102,16 @@ bash scripts/install.sh
 xah --help
 ```
 
-## v0.3.0 RC1 preparation (not published)
+## v0.3.0 (2026-10-29)
 
-The development `main` branch now includes `xah browse`, `xah trust`, `xah release-check`, the shared adapter destination contract, and additional recovery tests. `browse` supports local catalog facets/pagination; `trust` reports **declared metadata only**, not verified publisher identity; `release-check` validates evidence-file structure, not reviewer authenticity. None of these commands downloads or executes third-party code.
+v0.3.0 is the first signed release: the archives, the catalog and `SHA256SUMS` are signed with Sigstore and carry
+SLSA build provenance ([how to verify](docs/VERIFYING.md)). The release record is in the
+[readiness checklist](docs/RC1_v0.3.0_READINESS.md#final-release-record-v030-2026-10-29) and the
+[release notes](docs/RELEASE_NOTES_v0.3.0.md).
 
-**No v0.3.0 RC1 tag or GitHub Release has been published.** The [RC1 readiness checklist](docs/RC1_v0.3.0_READINESS.md) lists pending operator, security and frozen-SHA verification. Rollback remains non-atomic across multiple files and its lock cannot prevent writes by unrelated processes.
+It also includes `xah browse`, `xah trust`, `xah release-check`, the shared adapter destination contract, and additional recovery tests. `browse` supports local catalog facets/pagination; `trust` reports **declared metadata only**, not verified publisher identity; `release-check` validates evidence-file structure, not reviewer authenticity. None of these commands downloads or executes third-party code.
+
+Known limitations: rollback remains non-atomic across multiple files and its lock cannot prevent writes by unrelated processes.
 
 ## v0.2.0 development migration and operations
 

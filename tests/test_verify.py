@@ -61,6 +61,19 @@ class VerifyCliTests(unittest.TestCase):
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout)
 
+    def test_same_skill_for_several_agents_is_verified_per_installation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for agent in ("claude", "codex", "opencode"):
+                self.assertEqual(run_cli("add", "threat-modeling", "--agent", agent, "--target", tmp).returncode, 0)
+            ok = run_cli("verify", "--target", tmp)
+            self.assertEqual(ok.returncode, 0, ok.stdout + ok.stderr)
+            self.assertIn("verified=3", ok.stdout)
+            skill_md = pathlib.Path(tmp) / ".claude/skills/threat-modeling/SKILL.md"
+            skill_md.write_text(skill_md.read_text(encoding="utf-8") + "\nextra\n", encoding="utf-8")
+            results = {label: state for label, state, _ in verify_installed(pathlib.Path(tmp), CATALOG["items"])}
+            self.assertEqual(results["threat-modeling (.claude/skills/threat-modeling)"], "modified")
+            self.assertEqual(sorted(results.values()).count("verified"), 2)
+
     def test_installed_skill_states(self):
         with tempfile.TemporaryDirectory() as tmp:
             target = pathlib.Path(tmp)
