@@ -38,10 +38,13 @@ re-runs all release gates, then publishes:
 - `SHA256SUMS.sigstore.json` — a Sigstore bundle signing `SHA256SUMS` with the workflow's GitHub OIDC identity
   (no long-lived keys exist; the signature is recorded in the public Rekor transparency log).
 
-Verify a download:
+Verify a download. You need [cosign](https://docs.sigstore.dev/cosign/system_config/installation/) and the
+[GitHub CLI](https://cli.github.com/) (macOS: `brew install cosign gh`, then `gh auth login` once):
 
 ```bash
 VERSION=v0.3.0
+mkdir agenthub-$VERSION && cd agenthub-$VERSION
+gh release download $VERSION --repo XData-si/xdata-agenthub   # or download the assets from the release page
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
   --certificate-identity "https://github.com/XData-si/xdata-agenthub/.github/workflows/release.yml@refs/tags/$VERSION" \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
