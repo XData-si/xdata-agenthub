@@ -5,3 +5,6 @@ updates:
     schedule:
       interval: weekly
     labels: [ci, dependencies]
+    groups:
+      github-actions:
+        patterns: ['*']
