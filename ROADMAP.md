@@ -1,11 +1,31 @@
 # Roadmap
 
-| Phase | Outcome | Acceptance criteria |
-|---|---|---|
-| Alpha | Local curated templates and CLI | List/search/inspect/add/audit; offline; safe no-overwrite |
-| Beta | Agent compatibility | Three tested adapters and fixture tests |
-| Registry | Trusted catalog | Provenance, license, checksums, review process |
-| Hub | Web explorer and bundles | Searchable UI, reproducible bundles, versioned releases |
-| Community | Sustainable contribution model | Clear governance, review SLAs, contributor docs |
+**Vision: the Verified AI Capabilities Registry** — the first place developers go for agent capabilities they can trust:
+skills today, MCP servers next, and tested combinations of both. Fewer entries, each with reproducible evidence.
 
-Stars are not a product KPI on their own: track issue quality, community contributions and successful opt-in installs.
+## Where we are
+
+| Phase | Outcome | Status |
+|---|---|---|
+| Alpha | Local curated templates and CLI (list, search, inspect, add, audit; offline; no overwrite) | done |
+| Beta | Agent compatibility: Claude Code, Codex, OpenCode adapters, user scope, runtime evidence | done for tested scenarios; more evidence ongoing |
+| Registry | Trusted catalog: provenance, package digests, `xah verify`, Sigstore-signed releases with SLSA provenance | done (first signed release pending) |
+| Review | Security gate, AI review and maintainer review for every skill; seals bound to digests | done |
+| Hub | Searchable catalog site, Claude Code plugin marketplace with topic bundles | done |
+| Community | Contribution pipeline: every contribution security-reviewed before distribution | done; growing |
+
+## Next
+
+| Priority | Item | Tracking |
+|---|---|---|
+| P0 | First signed release (v0.3.0) and verified installation paths | release workflow |
+| P0 | **Verified MCP** phase 1–2: MCP catalog imported from the official registry; identity (L1) and security scanning (L2) for 20–30 curated servers | [VERIFIED_MCP.md](docs/VERIFIED_MCP.md), label `verified-mcp` |
+| P1 | Sandbox runtime tests (L3), permission profiles, skill + MCP capability bundles | `verified-mcp` |
+| P1 | Public verification reports and badges for skill and MCP authors | `verified-mcp` |
+| P1 | "Before / after" demonstrations: the same task with and without a skill, with measured differences | `demo` |
+| P1 | More runtime-verified skills (Codex, OpenCode, Claude Code), starting with the most used | `verification` |
+| P2 | Continuous verification and revocation (L4); private self-hosted registry for organisations | `verified-mcp` |
+
+## How we measure progress
+Stars are a signal, not the goal. We track successful installs reported by users, verified skills and servers,
+external contributions that pass review, issue quality and response times.
