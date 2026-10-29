@@ -23,12 +23,16 @@ Codex, OpenCode and any client that reads the Agent Skills format.
 
 ## Verify this release
 
+Requirements: [cosign](https://docs.sigstore.dev/cosign/system_config/installation/) and the [GitHub CLI](https://cli.github.com/) (macOS: `brew install cosign gh`; `gh auth login` once).
+
 ```sh
 VERSION=v0.3.0
+mkdir agenthub-$VERSION && cd agenthub-$VERSION
+gh release download $VERSION --repo XData-si/xdata-agenthub
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
   --certificate-identity "https://github.com/XData-si/xdata-agenthub/.github/workflows/release.yml@refs/tags/$VERSION" \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com SHA256SUMS
-sha256sum -c SHA256SUMS
+sha256sum -c SHA256SUMS    # macOS without coreutils: shasum -a 256 -c SHA256SUMS
 gh attestation verify xdata-agenthub-$VERSION.tar.gz --repo XData-si/xdata-agenthub
 ```
 
