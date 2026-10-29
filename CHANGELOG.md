@@ -4,6 +4,11 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Vision: Verified AI Capabilities Registry
+- `docs/VERIFIED_MCP.md`: proposed verification of MCP servers as a downstream registry of the official MCP Registry — levels L0–L4 bound to exact artifacts, permission profiles, verification pipeline, skill + MCP capability bundles, public reports and badges, phases.
+- `ROADMAP.md` rewritten around the vision, with current status and next priorities.
+- README: single headline promise, "See it work" example from recorded runtime evidence, and a pointer to Verified MCP.
+
 ### Skills batch 3 and contributor pipeline
 - 40 new original skills (104 skills, 107 resources), each through the security gate, AI review and seal process:
   languages and frameworks (Go, Rust, Java/Spring, React, Node.js, Django/FastAPI, mobile), architecture and data
