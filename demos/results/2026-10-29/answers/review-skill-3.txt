@@ -1,0 +1,51 @@
+# Review of `invoices.py`
+
+**Summary:** The PR has two cross-tenant data leaks, a SQL injection, and a credential leak into logs. Do not merge as is. I only read the code and ran nothing.
+
+## Blocking
+
+**1. Critical: SQL injection, line 12 (fact).**
+`f"SELECT * FROM invoices WHERE id = {invoice_id}"` puts the URL segment straight into the SQL. The `<invoice_id>` converter is a plain string, so any logged-in user can send something like `/invoices/0 OR 1=1` or a `UNION SELECT` to read any table.
+Fix: `db.execute("SELECT ... WHERE id = ? AND tenant_id = ?", (invoice_id, current_user.tenant_id))`. Consider `<int:invoice_id>` too.
+
+**2. Critical: no tenant isolation in `get_invoice`, line 12 (fact).**
+The query has no `tenant_id` filter, so any authenticated user can fetch any tenant's invoice by guessing ids. CONTEXT.md says users may only see their own tenant's invoices. Fix: add `AND tenant_id = ?` as in finding 1. Return 404, not 403, for other tenants' rows so ids can't be probed.
+
+**3. Critical: no tenant isolation in `export_invoices`, line 21 (fact).**
+`SELECT * FROM invoices ORDER BY id ...` returns every tenant's invoices, 100 per page. A user can page through the whole table. Fix: `WHERE tenant_id = ?` with `current_user.tenant_id`.
+
+**4. High: credentials and PII written to logs, line 13 (fact).**
+The `Authorization` header (bearer token or basic credentials) goes into the log in plaintext. Anyone with log access can replay it. The user's email is logged as well.
+Fix: remove the header from the log line. Log `current_user.id` instead of the email.
+
+**5. High: pagination off by one, line 21 (fact).**
+Pages start at 1 (CONTEXT.md), but the offset is `page * 100`. Page 1 therefore skips the first 100 rows and those rows are never exported. Fix: `(page - 1) * 100`.
+
+## Non-blocking
+
+**6. Medium: missing input validation, lines 20-21.**
+- `int(...)` raises `ValueError` on `?page=abc`, which gives a 500. Use `request.args.get("page", 1, type=int)`.
+- `page=0` or a negative value gives a negative offset. SQLite treats it as 0, but other databases error. Enforce `page >= 1`, with 400 on violation, and ideally cap the maximum.
+
+**7. Medium: missing row is not handled, line 14.**
+If `fetchone()` returns `None`, `dict(row)` raises `TypeError` and the user gets a 500. Return 404 instead. This is also what finding 2's fix needs.
+
+**8. Low: `SELECT *`, lines 12 and 21.**
+This returns every column, including any internal ones such as `tenant_id` or cost or notes fields, and any column added later. Select an explicit list of columns.
+
+**9. Low, hypothesis: app structure, lines 1-6.**
+The module creates its own `Flask(__name__)` while also using a relative import (`from .db import ...`). This is probably meant to be a Blueprint registered on the main app. If it is a second app, it won't share the main app's `LoginManager` or config, and `@login_required` won't work. Please confirm.
+
+## Test gaps
+There are no tests in the PR. Suggested cases:
+- User A requests tenant B's invoice id and gets 404.
+- `/invoices/1 OR 1=1` and `/invoices/1;--` are rejected or return no data.
+- The export returns only the caller's tenant's rows.
+- With 150 rows, page 1 returns rows 1-100 and page 2 returns 101-150.
+- `page=0`, `page=-1` and `page=abc` return 400.
+- A non-existent id returns 404.
+- The log output never contains the `Authorization` value (check with `caplog`).
+
+## Residual risks
+- Check the other queries in the codebase for the same missing `tenant_id` filter. A shared tenant-scoped query helper, or row-level security, would prevent this class of bug.
+- If tokens were logged in any deployed environment, rotate them and purge the logs.

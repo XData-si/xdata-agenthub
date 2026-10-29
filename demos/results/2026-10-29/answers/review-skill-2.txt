@@ -1,0 +1,48 @@
+# Review of `invoices.py`
+
+**Summary:** This should not merge. The tenant isolation that CONTEXT.md requires is missing on both endpoints, there is an SQL injection, and the code logs credentials. I only read the code, ran nothing and changed no files.
+
+## Blocking (Critical)
+
+1. **SQL injection, line 12.** `invoice_id` is placed straight into the SQL with an f-string. The route has no `<int:...>` converter, so any string reaches the query.
+   - Example: `GET /invoices/0 OR 1=1`, or a `UNION SELECT` to read other tables.
+   - Fix: use `db.execute("... WHERE id = ? AND tenant_id = ?", (invoice_id, current_user.tenant_id))`, and use `<int:invoice_id>` if the ids are integers.
+
+2. **Cross-tenant read (IDOR), line 12.** The query has no `tenant_id` filter, so any logged-in user can fetch any tenant's invoice by id. This breaks the core rule in CONTEXT.md.
+   - Fix: add `AND tenant_id = ?` as shown above. Return 404, not 403, for other tenants' invoices so ids can't be probed.
+
+3. **Export leaks every tenant's invoices, line 21.** The query has no `WHERE tenant_id = ?`. Any authenticated user gets 100 rows per page from all tenants and can page through the whole table.
+   - Fix: add `WHERE tenant_id = ?` with `current_user.tenant_id`.
+
+## Blocking (High)
+
+4. **Credentials in logs, line 13.** The code logs the full `Authorization` header, which holds bearer tokens or Basic credentials, in plaintext. Anyone who can read the logs can impersonate users.
+   - Fix: remove it. The log also records `current_user.email` (PII), and the unsanitised `invoice_id` allows log injection. Log `current_user.id` and the invoice id instead.
+
+5. **Off-by-one pagination, line 21.** CONTEXT.md says pages start at 1, but the offset is `page * 100`. Page 1 therefore returns rows 101–200 and the first 100 invoices can never be exported. The default `page=1` is wrong from the first request.
+   - Fix: use `(page - 1) * 100`.
+
+## Non-blocking (Medium)
+
+6. **Missing invoice gives a 500, line 14.** If `fetchone()` returns `None`, `dict(row)` raises `TypeError`. Return a 404 when `row is None`. This also gives the right behaviour for the tenant-mismatch case once finding 2 is fixed.
+
+7. **Unvalidated `page`, line 20.** `int(...)` raises `ValueError` on input like `?page=abc`, which gives a 500. `page=0` or a negative value produces a zero or negative offset. Negative offsets behave differently across databases, and some raise errors.
+   - Fix: use `request.args.get("page", 1, type=int)` and return 400 (or clamp) when `page < 1`.
+
+## Suggestions and residual risks
+
+- **`SELECT *` on lines 12 and 21.** This returns every column, including any internal fields added later. Select explicit columns.
+- **`app = Flask(__name__)` on line 6.** This may duplicate the application's main app, and the relative import from `.db` suggests the file is part of a package. If so, a `Blueprint` would be more appropriate. I couldn't confirm this because only this file was provided.
+- **Route order.** `/invoices/export` and `/invoices/<invoice_id>` look like they conflict. Werkzeug prefers static routes, so this works, but a test should lock it in.
+- **Export audit.** The export endpoint has no rate limit or audit logging, which is worth considering for a bulk-data endpoint.
+
+## Test gaps
+
+No tests are included. Suggested failing cases:
+- A user from tenant A requests tenant B's invoice and should get 404. It currently returns 200.
+- `GET /invoices/export` as tenant A returns only tenant A's rows. It currently returns all tenants' rows.
+- With more than 100 invoices, `page=1` should return the first 100 rows by id.
+- `GET /invoices/1 OR 1=1` should not return a row.
+- `GET /invoices/999999` should return 404.
+- `?page=abc` and `?page=0` should return 400.
+- The log output for a request with an `Authorization` header should not contain the token.

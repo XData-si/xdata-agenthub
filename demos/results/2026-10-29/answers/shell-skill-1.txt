@@ -1,0 +1,43 @@
+I reviewed `deploy.sh` by reading it only. I did not run it or ShellCheck, and I changed nothing.
+
+## Critical
+
+- **Lines 3 and 7: the `rm -rf` is unguarded.** If `APP_NAME` is unset or empty, `TARGET` becomes `/var/www/`. The remote command then runs `rm -rf /var/www//*` and deletes every site on the server.
+  - A value like `../x` or one containing spaces or `;` also changes what gets deleted.
+  - `$TARGET` is expanded locally inside double quotes, then parsed again by the remote shell. That makes it a remote command-injection point.
+  - Fix: use `${APP_NAME:?}` and check it against an allowlist such as `^[A-Za-z0-9._-]+$`.
+- **Whole script: there is no `set -euo pipefail` and no exit-code checks.** Failures are ignored and the script keeps going.
+  - If `cd` on line 4 fails, line 5 archives whatever directory the script started in, and line 6 uploads it. This could leak `.env` files or `.git`.
+  - If `scp` on line 6 fails, line 7 still runs. `rm -rf` wipes the site, then `tar` fails, which leaves a broken site.
+  - If `BUILD_OUT` is empty, `cd` goes to `$HOME` and the same thing happens.
+
+## High
+
+- **Line 11: `curl -k` disables TLS verification.** The health check can be intercepted or spoofed.
+- **Line 11: there is no `-f`, timeout or retry.** A 500 response still exits 0, and the result is never checked.
+- **Line 12: `echo "deployed"` prints and the script exits 0 even when everything failed.** CI will report a broken deploy as green.
+- **Lines 8–10: the config copy runs locally, not on `$HOST`.** The loop copies `*.conf` into the CI runner's `/etc/app/`, which needs root and is almost certainly meant to happen on the server. The conf files are already in the tarball, so this step is either wrong or redundant. Files with the same name in different subdirectories also overwrite each other.
+- **Lines 5–7: `/tmp/release.tgz` is a predictable shared path.** It is used on both the runner and the server.
+  - Concurrent deploys or other users on the same machine can collide or swap the file, which is a symlink or race risk.
+  - The files are never cleaned up.
+  - Fix: use `mktemp -d` with a `trap … EXIT` cleanup.
+
+## Medium
+
+- **Lines 4, 6 and 11: `cd $BUILD_OUT` and `$HOST` are unquoted.** These break on spaces. A `HOST` value starting with `-` could be read as an option.
+- **Line 8: `for f in $(find …)` splits on whitespace and expands globs.** Filenames with spaces break it.
+  - Fix: use `find -print0 | while IFS= read -r -d ''`.
+- **Line 9: `cp $f /etc/app/` is unquoted and has no `--`.** A filename starting with `-` is treated as an option.
+- **Line 7: the deploy is not atomic.** `rm -rf` runs before extraction, so the site is down or half-populated in between, and there is no rollback.
+  - `/*` skips dotfiles, so stale hidden files survive.
+  - If `$TARGET` doesn't exist, `tar -C` fails.
+  - Fix: extract into a new release directory and switch a symlink.
+- **Lines 6–7: the ssh/scp options are not hardened.** There is no `BatchMode=yes`, host-key policy or `ConnectTimeout`, so CI can hang on a prompt. The key handling is unspecified.
+
+## Low
+
+- **Line 1: `#!/bin/bash` should be `#!/usr/bin/env bash`.** The script needs a usage or required-variable check up front, such as `: "${APP_NAME:?}" "${BUILD_OUT:?}" "${HOST:?}"`.
+- **Whole script: no logging to stderr.** Errors are not reported, and the script is not safe to re-run or to run twice at once. A lock or unique release ID would fix that.
+- **Line 5: archiving `.` includes everything in the build output,** such as dotfiles and sourcemaps. Confirm that is intended.
+
+I can write a patched version or a diff if you want one. I'd only do that once you say it's okay to create or modify files.

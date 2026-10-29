@@ -1,0 +1,95 @@
+Don't run a plain `ALTER TABLE ... RENAME COLUMN` in production. It is instant, but old app instances keep running for up to 30 minutes after the deploy starts. Every login query on those instances would fail with `column "fullname" does not exist`. Use expand/contract instead. This assumes `users` has a primary key `id`, which `context.md` doesn't state.
+
+## Phase 1: Expand (SQL, before any app deploy)
+
+```sql
+-- 1a. Add the new column (metadata-only, instant). Fail fast instead of queueing behind long transactions.
+SET lock_timeout = '3s';
+ALTER TABLE users ADD COLUMN display_name text;
+
+-- 1b. Keep both columns in sync, whichever one a given app version writes.
+CREATE OR REPLACE FUNCTION users_sync_display_name() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.display_name IS NULL THEN NEW.display_name := NEW.fullname;
+    ELSIF NEW.fullname IS NULL THEN NEW.fullname := NEW.display_name;
+    END IF;
+  ELSE -- UPDATE
+    IF NEW.display_name IS DISTINCT FROM OLD.display_name THEN
+      NEW.fullname := NEW.display_name;      -- new app wrote display_name
+    ELSIF NEW.fullname IS DISTINCT FROM OLD.fullname THEN
+      NEW.display_name := NEW.fullname;      -- old app wrote fullname
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER users_sync_display_name
+BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW EXECUTE FUNCTION users_sync_display_name();
+```
+
+The trigger runs before the `NOT NULL` check on `fullname`. New-version inserts that only set `display_name` therefore still succeed.
+
+## Phase 2: Backfill (the 40M existing rows)
+
+Run this in batches with commits so locks stay short and replication lag stays small. Run it as a standalone `CALL`, not inside a transaction block.
+
+```sql
+CREATE OR REPLACE PROCEDURE backfill_display_name(batch int DEFAULT 10000) AS $$
+DECLARE n int;
+BEGIN
+  LOOP
+    UPDATE users SET display_name = fullname
+    WHERE id IN (SELECT id FROM users WHERE display_name IS NULL LIMIT batch);
+    GET DIAGNOSTICS n = ROW_COUNT;
+    EXIT WHEN n = 0;
+    COMMIT;
+    PERFORM pg_sleep(0.05);   -- throttle; tune based on replica lag
+  END LOOP;
+END $$ LANGUAGE plpgsql;
+
+CALL backfill_display_name();
+```
+
+For speed, add `CREATE INDEX CONCURRENTLY users_display_name_null_idx ON users (id) WHERE display_name IS NULL;` before the backfill. Drop it afterwards.
+
+Verify:
+
+```sql
+SELECT count(*) FROM users WHERE display_name IS DISTINCT FROM fullname;  -- expect 0
+```
+
+Then enforce `NOT NULL` without a long lock:
+
+```sql
+ALTER TABLE users ADD CONSTRAINT users_display_name_nn CHECK (display_name IS NOT NULL) NOT VALID;
+ALTER TABLE users VALIDATE CONSTRAINT users_display_name_nn;   -- scans, but doesn't block writes
+ALTER TABLE users ALTER COLUMN display_name SET NOT NULL;       -- PG12+ uses the validated CHECK, no rescan
+ALTER TABLE users DROP CONSTRAINT users_display_name_nn;
+```
+
+The backfill rewrites every row, so run `VACUUM (ANALYZE) users;` afterward. Expect temporary table bloat and WAL volume.
+
+## Phase 3: Application deployments
+
+1. **Release A (rolling):** The app reads and writes `display_name`. The trigger keeps `fullname` correct for any old instances still running. Wait until all old instances are gone, which is more than 30 minutes. Because of the trigger, even a fully new-only release is safe, so rollback to the old version also remains safe.
+2. **Soak:** Watch errors and the mismatch query above for a day or so. The old column remains a complete fallback.
+3. **Release B (optional):** Remove any remaining reference to `fullname` from code, queries, ORMs, reports, and ETL jobs. Grep for it, and check BI tools and other services that read the DB.
+
+## Phase 4: Contract (only when nothing reads `fullname`)
+
+```sql
+SET lock_timeout = '3s';
+DROP TRIGGER users_sync_display_name ON users;
+DROP FUNCTION users_sync_display_name();
+ALTER TABLE users DROP COLUMN fullname;   -- instant; space is reclaimed gradually
+DROP PROCEDURE backfill_display_name(int);
+```
+
+## Notes
+
+- **Rollback:** Until Phase 4, you can revert the app to the old version at any time. After Phase 4 it is a one-way door, so take a backup or snapshot first.
+- **Lock timeouts:** If `lock_timeout` fires on a DDL statement, simply retry it. Never leave a DDL statement waiting, because it blocks all queries queued behind it.
+- **Indexes and constraints:** If `fullname` is indexed, used in views, or in constraints, create the equivalent on `display_name` (`CREATE INDEX CONCURRENTLY`) before Release A.
+- **Rehearsal:** Run the whole sequence on a staging copy first. Check backfill duration and replica lag.

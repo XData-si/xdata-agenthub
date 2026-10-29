@@ -1,0 +1,86 @@
+Don't run a single `ALTER TABLE users RENAME COLUMN fullname TO display_name`. It is instant in PostgreSQL 16, but during the rolling deploy (up to 30 minutes) the old instances would fail on every login query that mentions `fullname`. The safe route is expand, migrate, contract across several steps. This assumes `users` has an integer primary key `id`, so check that first.
+
+## Step 1: Expand (DB migration, no app change)
+
+```sql
+SET lock_timeout = '3s';   -- fail fast instead of queueing behind long transactions
+
+ALTER TABLE users ADD COLUMN display_name text;   -- nullable, metadata-only
+
+CREATE OR REPLACE FUNCTION users_sync_display_name() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    NEW.display_name := COALESCE(NEW.display_name, NEW.fullname);
+    NEW.fullname     := COALESCE(NEW.fullname, NEW.display_name);
+  ELSIF NEW.fullname IS DISTINCT FROM OLD.fullname THEN
+    NEW.display_name := NEW.fullname;
+  ELSIF NEW.display_name IS DISTINCT FROM OLD.display_name THEN
+    NEW.fullname := NEW.display_name;
+  END IF;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER users_sync_display_name
+  BEFORE INSERT OR UPDATE ON users
+  FOR EACH ROW EXECUTE FUNCTION users_sync_display_name();
+```
+
+The trigger keeps both columns in sync no matter which app version writes. Old instances write only `fullname`, and new ones will write only `display_name`. If `fullname` has indexes, views or constraints, recreate them on `display_name` with `CREATE INDEX CONCURRENTLY` before Step 3.
+
+## Step 2: Backfill (script run outside a transaction, one commit per batch)
+
+```sql
+UPDATE users
+   SET display_name = fullname
+ WHERE id BETWEEN :lo AND :hi
+   AND display_name IS NULL;
+```
+
+- Loop `:lo`/`:hi` over the id range in batches of 5–10k rows, with a short sleep between batches.
+- The script is idempotent and resumable, because the `display_name IS NULL` filter skips rows already done.
+- Watch replication lag, and let autovacuum keep up. 40M updates roughly double the table's dead tuples.
+- Verify, in id ranges if the full scan is too heavy: `SELECT count(*) FROM users WHERE display_name IS DISTINCT FROM fullname;` must return 0.
+
+Then add NOT NULL without a long lock:
+
+```sql
+ALTER TABLE users ADD CONSTRAINT users_display_name_nn
+  CHECK (display_name IS NOT NULL) NOT VALID;
+ALTER TABLE users VALIDATE CONSTRAINT users_display_name_nn;  -- doesn't block writes
+ALTER TABLE users ALTER COLUMN display_name SET NOT NULL;     -- uses the validated check, no rescan (PG12+)
+ALTER TABLE users DROP CONSTRAINT users_display_name_nn;
+```
+
+## Step 3: Application release (rolling)
+
+- The new version reads and writes only `display_name`.
+- Mixed old and new instances are safe for the 30-minute window because the trigger keeps the columns in sync.
+- Wait until every instance runs the new version, then hold a stable period (for example a few days). Confirm nothing still reads `fullname`, using `pg_stat_statements` or logs.
+
+## Step 4: Contract (later release, after the stable period)
+
+```sql
+SET lock_timeout = '3s';
+BEGIN;
+DROP TRIGGER users_sync_display_name ON users;
+DROP FUNCTION users_sync_display_name();
+ALTER TABLE users DROP COLUMN fullname;   -- metadata-only, but irreversible
+COMMIT;
+```
+
+Retry if the `lock_timeout` fires.
+
+## Rollback per step
+
+| Step | Down-path |
+|---|---|
+| 1 | Drop the trigger and function, then `ALTER TABLE users DROP COLUMN display_name;`. |
+| 2 | Nothing to undo. Stop the script, since the data is only a copy. |
+| 3 | Redeploy the previous app version. `fullname` is still current because of the trigger. |
+| 4 | Irreversible without a backup. Before running it, take a fresh backup or export (for example `CREATE TABLE users_fullname_bak AS SELECT id, fullname FROM users;`, or a verified PITR point) and confirm it restores. |
+
+## Before production
+
+- Get approval and take a fresh backup.
+- Rehearse on a production-sized copy. Measure the backfill duration, the lock waits and the login query plans.
+- Watch error rate, latency, locks and replication lag during every step.

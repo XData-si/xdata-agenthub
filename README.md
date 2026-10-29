@@ -43,6 +43,12 @@ file system root when the variable is empty (critical); command injection throug
 `ls` output (high); no error handling (high) — and stated that ShellCheck was **not run** instead of pretending it was.
 That is the point of a skill: a consistent procedure, explicit evidence and honest limits, every time.
 
+**Measured, not claimed.** In our [before/after demos](demos/) (3 tasks, 18 runs, rubric fixed in advance), a frontier
+model found every planted issue with *and* without the skills. The difference was in how it worked: with the skill it
+stated which tools were not run (3/3 vs 0/3), listed residual risks (3/3 vs 0/3) and asked for approval before a
+production change (2/3 vs 0/3). Skills buy consistent process and honest reporting. We publish the runs where they
+did not help, too.
+
 ## Why AgentHub
 
 Public skill registries grew to hundreds of thousands of entries in 2026 — and became an attack surface: poisoned `SKILL.md` files on open marketplaces were used to trick agents and users into installing malware. AgentHub takes the opposite approach:

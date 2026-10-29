@@ -1,0 +1,35 @@
+I read `deploy.sh` and did not run or change it. I would not use it in CI as written. Findings are ordered by severity.
+
+## Critical
+
+1. **Lines 3, 4, 7: unvalidated variables can wipe the web root.** Nothing checks `APP_NAME`, `BUILD_OUT` or `HOST`. If `APP_NAME` is unset or empty, `TARGET` becomes `/var/www/`, and line 7 runs `rm -rf /var/www//*` on the server. That deletes every site hosted there. Use `${APP_NAME:?}` and similar so the script aborts when a variable is missing.
+2. **Lines 4–5: a failed `cd` packages the wrong directory.** If `BUILD_OUT` is unset, `cd` goes to `$HOME`. If it is a bad path, `cd` fails and the script stays in the current directory. Line 5 then tars that directory, which could include `~/.ssh`, credentials or the CI workspace. Line 6 uploads the archive and line 7 deploys it publicly.
+3. **Line 1: no `set -euo pipefail`.** A failed `cd`, `tar`, `scp` or `ssh` does not stop the script. Line 7 is the worst case. If `rm -rf` succeeds and `tar xzf` fails, the site is left empty. The script still prints "deployed" and exits 0, so CI reports success.
+
+## High
+
+4. **Line 11: `curl -k` disables TLS verification.** Anyone on the network path can answer the health check, so a pass proves nothing. There is also no `-f`, so an HTTP 500 still returns exit code 0. There is no retry or wait, and the result is never checked. Use `curl -fsS --retry N` and fail the script on error.
+5. **Line 12: "deployed" is printed unconditionally.** Nothing before it is verified, so it can report success after a failed deploy.
+6. **Lines 8–10: the config copy looks wrong and is unsafe.**
+   - It runs on the CI runner, not the remote server, so it copies `*.conf` files into the runner's local `/etc/app/`. That needs root and never reaches `$HOST`.
+   - `for f in $(find ...)` splits on whitespace, so filenames with spaces break.
+   - `$f` is unquoted in `cp`.
+   - Configs from different subdirectories with the same name overwrite each other in the flat `/etc/app/`.
+   - It runs after the site is already live, so a failure leaves the deploy half-applied.
+7. **Lines 5–6: predictable temp file `/tmp/release.tgz`.** Concurrent CI jobs on the same runner or server overwrite each other's archive. On a shared host it is also open to symlink and race attacks. Use `mktemp`, and clean up on both ends with a `trap`.
+8. **Lines 6–7: no SSH hardening for CI.** There is no `-i key`, no `BatchMode=yes`, no `StrictHostKeyChecking` or known-hosts pinning, and no connect timeout. A first-time host prompt can hang the job, and disabling host-key checking to get past it would allow man-in-the-middle attacks.
+
+## Medium
+
+9. **Line 7: the deploy is neither atomic nor reversible.** The site is empty between `rm` and extraction, so users see an outage. A failed extract leaves nothing to fall back to. A release directory with a `current` symlink swap would fix both.
+10. **Line 7: `$TARGET/*` does not match dotfiles.** Stale `.something` files survive from earlier releases.
+11. **Line 7: `$TARGET` is expanded locally inside double quotes and is not quoted for the remote shell.** A space or metacharacter in `APP_NAME` breaks the command or injects commands on the server.
+12. **Line 5: the whole `BUILD_OUT` is archived.** Source maps, `.env` files or other build leftovers get published. Consider an explicit allowlist.
+13. **Lines 6–7: the server-side `/tmp/release.tgz` is never deleted.** There is also no checksum to confirm the archive arrived intact.
+
+## Low
+
+14. **Line 1:** use `#!/usr/bin/env bash`, and run `shellcheck` in CI. It will flag the unquoted `$BUILD_OUT`, `$HOST`, `$f` and `$(find ...)`.
+15. **Whole script:** no logging of what is being deployed (version, commit, host) and no usage message listing the required environment variables.
+
+If you want, I can write a corrected version in a new file, leaving the original untouched.

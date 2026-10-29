@@ -1,0 +1,91 @@
+Don't run a plain `ALTER TABLE users RENAME COLUMN fullname TO display_name` in production. The rename itself is instant (a metadata change), but old app instances run for up to 30 minutes during the rolling deploy. Every login from those instances would fail with `column "fullname" does not exist`. Use expand/contract instead, in four steps.
+
+## Step 1: Expand (SQL, before any app deploy)
+
+```sql
+-- Fail fast instead of queueing behind long transactions and blocking logins
+SET lock_timeout = '3s';
+
+-- Nullable, no default: metadata-only, instant on 40M rows
+ALTER TABLE users ADD COLUMN display_name text;
+
+-- Keep both columns in sync while old and new app versions coexist
+CREATE OR REPLACE FUNCTION users_sync_display_name() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.display_name IS NULL THEN
+      NEW.display_name := NEW.fullname;      -- old app wrote only fullname
+    ELSIF NEW.fullname IS NULL THEN
+      NEW.fullname := NEW.display_name;      -- new app wrote only display_name
+    END IF;
+  ELSE
+    IF NEW.fullname IS DISTINCT FROM OLD.fullname
+       AND NEW.display_name IS NOT DISTINCT FROM OLD.display_name THEN
+      NEW.display_name := NEW.fullname;      -- old app changed fullname
+    ELSIF NEW.display_name IS DISTINCT FROM OLD.display_name
+       AND NEW.fullname IS NOT DISTINCT FROM OLD.fullname THEN
+      NEW.fullname := NEW.display_name;      -- new app changed display_name
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER users_sync_display_name
+BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW EXECUTE FUNCTION users_sync_display_name();
+```
+
+The `NOT NULL` on `fullname` is checked after BEFORE triggers run, so inserts from the new app that omit `fullname` still succeed.
+
+## Step 2: Backfill in batches (run from psql or a script, outside one big transaction)
+
+```sql
+-- Repeat until it reports UPDATE 0, committing each batch and pausing briefly between batches
+UPDATE users
+SET display_name = fullname
+WHERE id IN (
+  SELECT id FROM users
+  WHERE display_name IS NULL
+  ORDER BY id
+  LIMIT 10000
+);
+```
+
+This assumes a primary key `id`. If `fullname` is unchanged, the trigger leaves these updates alone. Watch replication lag and autovacuum, because this creates about 40M dead tuples.
+
+Then add the `NOT NULL` constraint without a long lock:
+
+```sql
+ALTER TABLE users ADD CONSTRAINT users_display_name_nn
+  CHECK (display_name IS NOT NULL) NOT VALID;
+ALTER TABLE users VALIDATE CONSTRAINT users_display_name_nn;  -- scans, but doesn't block writes
+ALTER TABLE users ALTER COLUMN display_name SET NOT NULL;     -- PG16 uses the validated CHECK, no rescan
+ALTER TABLE users DROP CONSTRAINT users_display_name_nn;
+```
+
+If `fullname` has indexes, views, or other dependent objects, recreate them on `display_name` here. Use `CREATE INDEX CONCURRENTLY` for indexes.
+
+## Step 3: Deploy the application (rolling)
+
+1. Release N reads and writes `display_name` only. The trigger keeps `fullname` correct for any old instances still running.
+2. Wait until all old instances are gone, which is more than 30 minutes. Then confirm that no code, jobs, reports, or analytics queries still reference `fullname`.
+3. Check consistency before the final step:
+   ```sql
+   SELECT count(*) FROM users WHERE display_name IS DISTINCT FROM fullname;  -- expect 0
+   ```
+
+## Step 4: Contract (a later release, after N is stable)
+
+```sql
+SET lock_timeout = '3s';
+DROP TRIGGER users_sync_display_name ON users;
+DROP FUNCTION users_sync_display_name();
+ALTER TABLE users DROP COLUMN fullname;  -- instant; disk space is reclaimed gradually
+```
+
+## Rollback
+
+- **Before step 4:** roll back the app to the previous version. The trigger keeps both columns in sync, so no data is lost.
+- **After step 4:** rollback requires restoring the column from a backup. Keep a verified backup, or wait a few days before dropping.
+
+Take the lock-sensitive statements (`ADD COLUMN`, `SET NOT NULL`, `DROP`) at a low-traffic time. Retry them if `lock_timeout` trips.

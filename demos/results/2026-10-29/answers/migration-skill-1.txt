@@ -1,0 +1,98 @@
+A direct `ALTER TABLE ... RENAME COLUMN` would break every old instance during the 30-minute rolling deploy. Use expand–contract over three releases. I haven't modified any file or run anything.
+
+## Before you start
+- Take a fresh backup and rehearse on a production-sized copy. Measure the backfill duration, lock times and replication lag.
+- Check for anything else that depends on `fullname`: indexes, views, functions, reports and ETL jobs. If an index on `fullname` serves real queries, build the equivalent on `display_name` with `CREATE INDEX CONCURRENTLY` before release 2.
+- This plan assumes `users` has a bigint primary key `id`.
+
+## Release 1: Expand (schema only, no behavior change)
+
+```sql
+SET lock_timeout = '3s';   -- fail fast instead of queueing behind long transactions
+
+ALTER TABLE users ADD COLUMN display_name text;   -- nullable, no default: metadata only, instant
+
+CREATE OR REPLACE FUNCTION users_sync_name() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    NEW.display_name := COALESCE(NEW.display_name, NEW.fullname);
+    NEW.fullname     := COALESCE(NEW.fullname, NEW.display_name);
+  ELSE
+    IF NEW.fullname IS DISTINCT FROM OLD.fullname
+       AND NEW.display_name IS NOT DISTINCT FROM OLD.display_name THEN
+      NEW.display_name := NEW.fullname;          -- old app wrote fullname
+    ELSIF NEW.display_name IS DISTINCT FROM OLD.display_name
+       AND NEW.fullname IS NOT DISTINCT FROM OLD.fullname THEN
+      NEW.fullname := NEW.display_name;          -- new app wrote display_name
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER users_sync_name
+  BEFORE INSERT OR UPDATE ON users
+  FOR EACH ROW EXECUTE FUNCTION users_sync_name();
+```
+
+The trigger keeps both columns in sync whichever app version writes. It also fills `fullname` on inserts from the new app, so the existing `NOT NULL` is never violated. No app code needs to dual-write.
+
+**Rollback:** `DROP TRIGGER users_sync_name ON users; DROP FUNCTION users_sync_name(); ALTER TABLE users DROP COLUMN display_name;`. No data is lost because `fullname` is untouched.
+
+## Backfill (run after the trigger is live)
+Run it outside a transaction block, for example with `psql -f`. It commits per batch, can be resumed, and is idempotent.
+
+```sql
+DO $$
+DECLARE
+  lo bigint := (SELECT min(id) FROM users);
+  mx bigint := (SELECT max(id) FROM users);
+  step constant bigint := 10000;
+BEGIN
+  WHILE lo <= mx LOOP
+    UPDATE users SET display_name = fullname
+     WHERE id >= lo AND id < lo + step AND display_name IS NULL;
+    COMMIT;
+    PERFORM pg_sleep(0.05);        -- throttle; tune from rehearsal
+    lo := lo + step;
+  END LOOP;
+END $$;
+```
+
+- Watch replication lag, WAL volume and autovacuum, because roughly 40M updates will bloat the table. Pause or slow down if lag grows.
+- To resume, re-run it. Rows that are already filled are skipped.
+- Check completion with `SELECT 1 FROM users WHERE display_name IS NULL LIMIT 1;`. It should return no rows.
+
+Then enforce `NOT NULL` without a long lock:
+
+```sql
+SET lock_timeout = '3s';
+ALTER TABLE users ADD CONSTRAINT users_display_name_nn CHECK (display_name IS NOT NULL) NOT VALID;
+ALTER TABLE users VALIDATE CONSTRAINT users_display_name_nn;   -- scans, but does not block writes
+ALTER TABLE users ALTER COLUMN display_name SET NOT NULL;      -- PG16 uses the validated check, no rescan
+ALTER TABLE users DROP CONSTRAINT users_display_name_nn;
+```
+
+## Release 2: Migrate application code
+- Deploy code that reads and writes only `display_name`.
+- Old and new versions can run together for the 30 minutes, because the trigger keeps both columns consistent.
+- **Verify consistency:** run `SELECT count(*) FROM users WHERE display_name IS DISTINCT FROM fullname;` on a replica. It should return 0.
+- **Rollback:** redeploy the previous app version. `fullname` is still current.
+
+## Release 3: Contract (a later release, after a stable period)
+Proceed only when:
+- All instances have run release 2 for a soak period, for example a week.
+- `pg_stat_statements` and code search show no reads of `fullname`.
+- The consistency check still returns 0.
+- Before the drop, export `(id, fullname)` as a restorable backup, and test the restore.
+
+```sql
+SET lock_timeout = '3s';          -- retry if it times out
+DROP TRIGGER users_sync_name ON users;
+DROP FUNCTION users_sync_name();
+ALTER TABLE users DROP COLUMN fullname;   -- metadata-only, but needs a brief ACCESS EXCLUSIVE lock
+```
+
+**Rollback:** this step is irreversible, so only the verified backup helps. Re-add the column and restore the values from the export.
+
+## Monitor throughout
+Watch error rate, latency, lock waits and replication lag during and after each release. Do not move to the next release until the current one is stable.

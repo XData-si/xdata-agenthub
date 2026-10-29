@@ -1,0 +1,104 @@
+**Don't run a plain `ALTER TABLE ... RENAME COLUMN` in production.** The rename itself is instant, but during a rolling deploy old instances would still use `fullname`. Every login on those instances would fail with `column "fullname" does not exist` until the last one is replaced, which can take up to 30 minutes. Use expand/contract instead: add the new column, keep the two in sync, move the app over, then drop the old column.
+
+## Phase 1: Expand (SQL, before any app deploy)
+
+```sql
+SET lock_timeout = '3s';  -- fail fast instead of queueing behind long transactions and blocking logins
+
+-- 1. New column (metadata-only in PG 16, no table rewrite)
+ALTER TABLE users ADD COLUMN display_name text;
+
+-- 2. Two-way sync trigger so old and new app versions both work
+CREATE OR REPLACE FUNCTION users_sync_name() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.display_name IS NULL THEN NEW.display_name := NEW.fullname;
+    ELSIF NEW.fullname IS NULL THEN NEW.fullname := NEW.display_name;
+    END IF;
+  ELSE  -- UPDATE
+    IF NEW.fullname IS DISTINCT FROM OLD.fullname THEN
+      NEW.display_name := NEW.fullname;          -- old app wrote
+    ELSIF NEW.display_name IS DISTINCT FROM OLD.display_name THEN
+      NEW.fullname := NEW.display_name;          -- new app wrote
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER users_sync_name_trg
+BEFORE INSERT OR UPDATE ON users
+FOR EACH ROW EXECUTE FUNCTION users_sync_name();
+```
+
+The `BEFORE` trigger fires ahead of the `NOT NULL` check, so a new-version insert that only supplies `display_name` still succeeds.
+
+## Phase 2: Backfill (in batches, not one 40M-row UPDATE)
+
+Run this as a standalone statement (not inside an explicit transaction) so each batch commits. It assumes an integer primary key `id`.
+
+```sql
+DO $$
+DECLARE
+  lo bigint := (SELECT coalesce(min(id),0) FROM users);
+  hi bigint := (SELECT coalesce(max(id),0) FROM users);
+  step bigint := 10000;
+BEGIN
+  WHILE lo <= hi LOOP
+    UPDATE users
+       SET display_name = fullname
+     WHERE id >= lo AND id < lo + step
+       AND display_name IS NULL;
+    COMMIT;
+    PERFORM pg_sleep(0.05);   -- throttle to limit replication lag and vacuum pressure
+    lo := lo + step;
+  END LOOP;
+END $$;
+```
+
+Check that it finished and that no rows were missed:
+
+```sql
+SELECT count(*) FROM users WHERE display_name IS NULL;   -- expect 0
+```
+
+Then enforce `NOT NULL` without a long lock:
+
+```sql
+ALTER TABLE users ADD CONSTRAINT users_display_name_nn
+  CHECK (display_name IS NOT NULL) NOT VALID;
+ALTER TABLE users VALIDATE CONSTRAINT users_display_name_nn;  -- only takes a light lock
+ALTER TABLE users ALTER COLUMN display_name SET NOT NULL;      -- uses the validated CHECK, no scan
+ALTER TABLE users DROP CONSTRAINT users_display_name_nn;
+```
+
+## Phase 3: Deployment steps
+
+1. Apply Phase 1 and confirm it's healthy. Old app versions keep working because they only use `fullname`.
+2. Run the Phase 2 backfill and the `NOT NULL` steps.
+3. Deploy app version N+1 as a rolling release. It reads and writes only `display_name`. The trigger keeps `fullname` current for any old instances still running.
+4. Wait until all old instances are gone (at least 30 minutes after the rollout finishes) and verify there are no remaining `fullname` references in app code, jobs, reports, views or BI queries.
+5. Optionally, check that nothing still uses the old column. For example, temporarily compare `fullname` against `display_name` and confirm they are identical:
+   ```sql
+   SELECT count(*) FROM users WHERE fullname IS DISTINCT FROM display_name;  -- expect 0
+   ```
+
+## Phase 4: Contract (a later release, once step 4 is confirmed)
+
+```sql
+SET lock_timeout = '3s';
+DROP TRIGGER users_sync_name_trg ON users;
+DROP FUNCTION users_sync_name();
+ALTER TABLE users DROP COLUMN fullname;   -- metadata-only, fast
+```
+
+## Rollback
+
+- **Before Phase 4:** redeploy the old app version. `fullname` is still complete and in sync, so nothing is lost.
+- **After Phase 4:** the data lives only in `display_name`. Rolling back the app would require re-adding `fullname`, so only run Phase 4 once you're confident.
+
+## Notes
+
+- Take a backup or snapshot before starting.
+- Run the DDL during a low-traffic window. It's fast, but it needs a brief `ACCESS EXCLUSIVE` lock, which is why `lock_timeout` is set. If it times out, retry.
+- The backfill generates WAL and dead tuples. Watch replica lag and autovacuum, and tune `step` and the sleep as needed.
+- If you have indexes, views, or constraints on `fullname`, recreate them on `display_name` before step 3 of the deployment (using `CREATE INDEX CONCURRENTLY` for indexes).

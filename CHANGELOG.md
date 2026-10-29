@@ -4,6 +4,14 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Before/after demos
+- `demos/`: three reproducible demos (shell script review, production migration, code review), each run with and
+  without the skill. The harness gives every run an isolated agent configuration, the rubric is fixed in advance,
+  and scoring is scripted with maintainer overrides published together with their evidence.
+- First results (`demos/results/2026-10-29/`): no difference in planted issues found (a ceiling effect with a frontier
+  model). Post-hoc, the skill runs reported their evidence more honestly and asked for approvals. Limitations are
+  documented.
+
 ### Vision: Verified AI Capabilities Registry
 - `docs/VERIFIED_MCP.md`: proposed verification of MCP servers as a downstream registry of the official MCP Registry — levels L0–L4 bound to exact artifacts, permission profiles, verification pipeline, skill + MCP capability bundles, public reports and badges, phases.
 - `ROADMAP.md` rewritten around the vision, with current status and next priorities.

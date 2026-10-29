@@ -1,0 +1,40 @@
+Review of `invoices.py` (23 lines, read-only; no files modified).
+
+## Critical
+
+**1. SQL injection, line 12.** `invoice_id` goes into the query through an f-string. A request like `/invoices/0 OR 1=1`, or a UNION payload, lets any logged-in user read or modify arbitrary data, including other tenants' rows.
+Fix: `db.execute("SELECT * FROM invoices WHERE id = ? AND tenant_id = ?", (invoice_id, current_user.tenant_id))`.
+
+**2. Tenant isolation is missing in `get_invoice`, line 12.** Even with the injection fixed, there is no `tenant_id` filter. Any authenticated user can fetch any tenant's invoice by guessing or enumerating IDs (an IDOR). CONTEXT.md says users may only see their own tenant's invoices. This is the core requirement and it is not met.
+
+**3. Tenant isolation is missing in `export_invoices`, line 21.** The export query has no `WHERE tenant_id = ?`, so it dumps every tenant's invoices, 100 at a time. This is a cross-tenant data leak.
+Fix: `WHERE tenant_id = ? ORDER BY id LIMIT 100 OFFSET ?`.
+
+## High
+
+**4. The `Authorization` header is written to the logs, line 13.** This stores bearer tokens or credentials in plaintext in log storage, so anyone with log access can impersonate users. Remove it from the log call.
+
+## Medium
+
+**5. Off-by-one pagination, line 21.** Pages are numbered from 1 (CONTEXT.md), but the offset is `page * 100`. Page 1 skips the first 100 invoices, so the first 100 records can never be exported. Use `(page - 1) * 100`.
+
+**6. Route conflict, lines 9 and 17.** `/invoices/<invoice_id>` and `/invoices/export` overlap. Flask/Werkzeug normally gives the static rule priority, so `export` should work. But the dynamic route is declared first and the converter is untyped, which is fragile. Use `<int:invoice_id>`, which also helps with finding 1.
+
+**7. Unvalidated `page` parameter, line 20.** `int(...)` raises `ValueError` on non-numeric input, which gives a 500 instead of a 400. A page of 0 or a negative number gives a negative offset. Validate `page >= 1`, for example with `request.args.get("page", 1, type=int)` plus a range check.
+
+## Low
+
+**8. Crash on a missing invoice, lines 12–14.** `fetchone()` returns `None` for an unknown ID, so `dict(row)` raises `TypeError` and the user gets a 500. It should return 404. After fixing finding 2, a cross-tenant ID will also hit this path, and a 404 there avoids revealing that the invoice exists.
+
+**9. PII in logs, line 13.** `current_user.email` is logged on every fetch. Prefer a user ID, and log only after the access check succeeds.
+
+**10. `SELECT *` returns every column, lines 12 and 21.** Any internal or sensitive columns, now or added later, are exposed in the JSON. Select an explicit field list.
+
+**11. Other points.**
+- `app = Flask(__name__)` at module level (line 6) is probably a second app instance. Routes would normally go on a blueprint registered on the main app.
+- The export has no total count or "next page" indicator.
+- There are no tests.
+
+## Summary
+
+Do not merge. Findings 1–3 are security blockers (SQL injection and cross-tenant data exposure), and finding 4 leaks credentials into logs. Finding 5 is a functional bug that silently drops the first 100 invoices.

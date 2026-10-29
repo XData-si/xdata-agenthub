@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "note": "Planted issues and expected practices, fixed before any run. Each item counts as found when any pattern matches the agent's final answer (case-insensitive). Patterns are a first pass; every score is checked by a maintainer against the answer text (see demos/README.md).",
+  "demos": {
+    "shell": {
+      "skill": "shell-script-review",
+      "fixture": "fixtures/shell",
+      "prompt": "Review deploy.sh before we use it in CI. List the problems by severity with line numbers. Answer in English. Do not modify or run any file.",
+      "items": {
+        "S1 empty APP_NAME makes rm -rf wipe /var/www": ["APP_NAME[^\\n]{0,120}(empty|unset)", "(empty|unset)[^\\n]{0,120}APP_NAME", "/var/www/\\*", "\\$\\{APP_NAME:\\?"],
+        "S2 no set -e / unchecked cd": ["set -e", "errexit", "cd[^\\n]{0,80}(fail|\\|\\| *exit|unchecked|check)"],
+        "S3 predictable /tmp/release.tgz": ["mktemp", "predictable", "symlink", "race"],
+        "S4 unquoted variables / word splitting in find loop": ["word[- ]split", "unquoted", "find[^\\n]{0,80}(-exec|-print0|while)"],
+        "S5 curl -k disables TLS verification": ["curl -k", "--insecure", "(tls|certificate)[^\\n]{0,60}verif"],
+        "S6 health check result ignored": ["health[^\\n]{0,160}(ignor|not checked|unchecked|exit (code|status)|always|--fail|-f\\b)", "(--fail|-f)[^\\n]{0,60}health"],
+        "S7 remote command built from local unquoted variables": ["(remote|ssh)[^\\n]{0,160}(injection|quot|expan)", "printf %q"]
+      }
+    },
+    "migration": {
+      "skill": "database-migrations",
+      "fixture": "fixtures/migration",
+      "prompt": "Read context.md. Give me the SQL and the deployment steps to rename users.fullname to display_name in production. Answer in English. Do not modify any file.",
+      "items": {
+        "M1 no in-place RENAME while old app versions run (expand-contract)": ["expand[- /]{1,3}(and[- ])?contract", "(old|previous) (app|application|version|instances?)[^\\n]{0,120}(break|fail|still)", "dual[- ]?(write|read)"],
+        "M2 batched backfill": ["batch"],
+        "M3 lock_timeout or statement_timeout": ["lock_timeout", "statement_timeout"],
+        "M4 rollback plan": ["rollback", "roll back"],
+        "M5 backup or restore point before the destructive step": ["backup", "pg_dump", "snapshot", "restore point"],
+        "M6 verification before dropping the old column": ["(verify|verification|check|compare)[^\\n]{0,120}(count|null|match|equal|consisten|diverg|mismatch)", "IS DISTINCT FROM"]
+      }
+    },
+    "review": {
+      "skill": "code-review",
+      "fixture": "fixtures/review",
+      "prompt": "Review this pull request (invoices.py; see CONTEXT.md). Report findings by severity with line numbers. Answer in English. Do not modify any file.",
+      "items": {
+        "R1 SQL injection via f-string": ["sql injection", "injection"],
+        "R2 missing tenant check on single invoice (IDOR)": ["idor", "insecure direct object", "tenant[^\\n]{0,160}(get_invoice|single|any invoice|other tenant|cross-tenant)", "(get_invoice|single)[^\\n]{0,160}tenant"],
+        "R3 export returns all tenants": ["export[^\\n]{0,200}tenant", "tenant[^\\n]{0,200}export", "all tenants"],
+        "R4 Authorization header logged": ["(log|logged|logging)[^\\n]{0,120}(authorization|token|credential|secret)", "(authorization|token|credential)[^\\n]{0,120}(log|logged|logging)"],
+        "R5 off-by-one: page 1 skips the first 100 rows": ["off[- ]by[- ]one", "skip[^\\n]{0,80}(first|100)", "\\(page ?- ?1\\)"],
+        "R6 missing row crashes instead of 404": ["404", "none[^\\n]{0,80}(row|fetchone|crash|typeerror|500)", "not found"],
+        "R7 no input validation on page (negative, huge, non-integer)": ["(page)[^\\n]{0,160}(negative|valueerror|non-integer|validat|bound|cap|limit)"]
+      }
+    }
+  }
+}

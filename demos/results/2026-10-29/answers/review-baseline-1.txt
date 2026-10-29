@@ -1,0 +1,34 @@
+# Review of `invoices.py`
+
+The PR has three critical findings, two of them cross-tenant data leaks, and one high-severity credential leak. It should not merge as is.
+
+## Critical
+
+1. **SQL injection (line 12).** `invoice_id` is interpolated into the query with an f-string. A request like `/invoices/0 OR 1=1` or a `UNION SELECT` returns arbitrary data. Use a bound parameter: `db.execute("SELECT ... WHERE id = ? AND tenant_id = ?", (invoice_id, current_user.tenant_id))`. Declaring the route as `<int:invoice_id>` is a good extra guard.
+
+2. **Missing tenant isolation in `get_invoice` (line 12).** The query has no `tenant_id` filter. Any logged-in user can read any tenant's invoice by guessing or enumerating ids, which breaks the rule in CONTEXT.md. The fix is to add `AND tenant_id = ?` with `current_user.tenant_id`. Return 404, not 403, for other tenants' rows so that ids can't be probed.
+
+3. **Missing tenant isolation in `export_invoices` (line 21).** The export query has no `WHERE tenant_id = ?`, so it dumps every tenant's invoices, 100 per page. This is the larger leak because it is bulk and needs no id guessing.
+
+## High
+
+4. **Credentials written to logs (line 13).** The line logs the raw `Authorization` header, which holds bearer tokens or basic-auth credentials. Anyone with log access can replay them. It also logs `current_user.email`, which is PII. Remove the header, and log `current_user.id` instead of the email.
+
+## Medium
+
+5. **Off-by-one in pagination (line 21).** Pages are numbered from 1 (CONTEXT.md), but the offset is `page * 100`. Page 1 skips the first 100 invoices and starts at row 101, and the first 100 rows can never be reached. The offset should be `(page - 1) * 100`.
+
+6. **Unhandled missing row (lines 12–14).** `fetchone()` returns `None` for an unknown id, so `dict(row)` raises `TypeError` and the user gets a 500. The "fetched" log line also runs before any check, so it records fetches that found nothing. Add `if row is None: abort(404)` before logging.
+
+7. **No input validation on `page` (line 20).**
+   - `int(...)` raises `ValueError` on input like `?page=abc`, which gives a 500.
+   - `page=0` or a negative page gives a zero or negative offset (an error on some databases).
+   - Use `request.args.get("page", 1, type=int)`, reject values below 1, and consider an upper bound.
+
+## Low
+
+8. **`SELECT *` (lines 12, 21).** It returns every column, including any internal or sensitive ones such as cost or internal notes, and the returned columns change silently whenever the schema does. Select explicit columns.
+
+9. **Export has no pagination metadata (line 22).** It returns a bare list with no total count or next-page indicator, so clients can't tell when to stop. Consider a response envelope.
+
+10. **Structure (lines 1–6).** The module creates its own global `Flask(__name__)` and uses a relative import of `.db`. A `Blueprint` registered by the main app factory is more usual, since a second `app` instance here may not carry the app's config or login manager setup. Also, no tests are included, and the tenant-isolation and pagination behavior should have some.
