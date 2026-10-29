@@ -16,7 +16,7 @@ jobs:
       attestations: write
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Release gates
@@ -46,7 +46,7 @@ jobs:
           cosign verify-blob --bundle dist/SHA256SUMS.sigstore.json \
             --certificate-identity "$IDENTITY" \
             --certificate-oidc-issuer https://token.actions.githubusercontent.com dist/SHA256SUMS
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             dist/*.tar.gz
