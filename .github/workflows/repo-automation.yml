@@ -19,7 +19,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/labeler@v5
+      - uses: actions/labeler@v7
   welcome:
     if: github.event_name == 'issues' || (github.event_name == 'pull_request_target' && github.event.action == 'opened')
     runs-on: ubuntu-24.04
@@ -27,12 +27,12 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/first-interaction@v1
+      - uses: actions/first-interaction@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: |
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
             Thanks for opening your first issue in XData AgentHub! A maintainer will triage it. For security problems, please use private vulnerability reporting instead of public issues.
-          pr-message: |
+          pr_message: |
             Thanks for your first pull request! Every skill is security-reviewed before distribution: the security gate and an AI review run automatically, then a maintainer reviews it and grants the seal. See CONTRIBUTING.md for the full path.
   stale:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
