@@ -13,6 +13,7 @@ from installed_manifest import file_states, record_install, load_manifest
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "registry" / "catalog.json"
+MCP_CATALOG = ROOT / "registry" / "mcp-servers.json"
 # Additional local catalogs (e.g. private organisation skills) from --catalog or XAH_CATALOGS
 # (os.pathsep-separated). Item paths in an additional catalog are relative to that catalog file's directory.
 EXTRA_CATALOGS_ENV = "XAH_CATALOGS"
@@ -219,10 +220,61 @@ def main():
     verify.add_argument("--json", action="store_true")
     audit = sub.add_parser("audit", help="Heuristic inspection of markdown in a target")
     audit.add_argument("--target", default=".")
+    mcp = sub.add_parser("mcp", help="Browse listed MCP servers (metadata only; never installs or runs them)")
+    mcp_sub = mcp.add_subparsers(dest="mcp_cmd", required=True)
+    mcp_sub.add_parser("list", help="List MCP servers with their verification level")
+    mcp_search = mcp_sub.add_parser("search", help="Search MCP servers")
+    mcp_search.add_argument("query", nargs="?", default="")
+    mcp_search.add_argument("--level", choices=["L0", "L1", "L2", "L3", "L4"])
+    mcp_search.add_argument("--transport", choices=["stdio", "streamable-http", "sse"])
+    mcp_search.add_argument("--json", action="store_true")
+    mcp_inspect = mcp_sub.add_parser("inspect", help="Print one MCP server entry")
+    mcp_inspect.add_argument("id")
+    mcp_inspect.add_argument("--json", action="store_true")
     args = parser.parse_args()
     _extra_catalogs[:] = args.catalog
     try:
-        if args.cmd in ("list", "search"):
+        if args.cmd == "mcp":
+            import mcp_catalog
+            servers = mcp_catalog.load(MCP_CATALOG)
+            if args.mcp_cmd == "inspect":
+                found = [s for s in servers if s["id"] == args.id]
+                if not found:
+                    raise ValueError(f"Unknown MCP server: {args.id}")
+                server = found[0]
+                if args.json:
+                    print(json.dumps(server, indent=2, ensure_ascii=False))
+                else:
+                    print(f'# {server.get("title", server["id"])} ({server["id"]})')
+                    print(f'Registry name: {server["name"]}')
+                    print(f'Version: {server["version"]} (registry status: {server["registry"]["status"]})')
+                    print(f'Level: {server["level"]} {mcp_catalog.LEVEL_LABELS[server["level"]]}')
+                    if server["level"] == "L0":
+                        print("  Listed only: metadata from the official MCP Registry; not reviewed, scanned or tested.")
+                    print(f'Description (declared): {server["description"]}')
+                    if "repository" in server:
+                        print(f'Repository: {server["repository"]}')
+                    for artifact in server["artifacts"]:
+                        if artifact["kind"] == "package":
+                            print(f'Package: {artifact["registry"]} {artifact["identifier"]}@{artifact["version"]} ({artifact["transport"]})')
+                        else:
+                            print(f'Remote: {artifact["url"]} ({artifact["transport"]})')
+                    secrets = [v["name"] for v in server.get("environment", []) if v["secret"]]
+                    if secrets:
+                        print("Secrets it asks for: " + ", ".join(secrets))
+                    if "evidence" in server:
+                        print(f'Evidence: {server["evidence"]}')
+            else:
+                found = (servers if args.mcp_cmd == "list" else
+                         mcp_catalog.filter_servers(servers, query=args.query, level=args.level, transport=args.transport))
+                if args.mcp_cmd == "search" and args.json:
+                    print(json.dumps(found, indent=2, ensure_ascii=False))
+                else:
+                    for server in sorted(found, key=lambda s: s["id"]):
+                        print(f'{server["id"]:14} {server["level"]:3} {",".join(mcp_catalog.transports(server)):24} {server["name"]}')
+                    if args.mcp_cmd == "list":
+                        print("L0 = listed only (metadata, not verified). Levels: docs/VERIFIED_MCP.md")
+        elif args.cmd in ("list", "search"):
             from catalog_search import filter_items
             found = (sorted(items(), key=lambda item: item["id"]) if args.cmd == "list" else
                      filter_items(items(), query=args.query, kind=args.kind, tag=args.tag,
@@ -401,6 +453,9 @@ def main():
                     if package_digest(files) != declared["value"]:
                         raise ValueError(f"Package digest mismatch: {item['id']} (run xah verify)")
             print(f"OK: {len(catalog)} catalog entries, all local paths valid, declared digests match")
+            if MCP_CATALOG.is_file():
+                import mcp_catalog
+                print(f"OK: {len(mcp_catalog.load(MCP_CATALOG))} MCP server entries valid")
         elif args.cmd == "init":
             profiles = {
                 "developer": ["project-agents", "code-review", "documentation"],

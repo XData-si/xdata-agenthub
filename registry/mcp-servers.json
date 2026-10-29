@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "source": "https://registry.modelcontextprotocol.io/v0.1",
+  "servers": [
+    {
+      "id": "atlassian",
+      "name": "com.atlassian/atlassian-mcp-server",
+      "description": "Connect to Atlassian Jira, Confluence, Loom, and more to search, create, and manage your work.",
+      "version": "2.0.0",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.atlassian.com/v2/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.atlassian.com/v1/mcp/authv2"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-09-09T17:53:32.01107Z",
+        "updated_at": "2026-09-09T17:53:32.01107Z"
+      },
+      "level": "L0",
+      "title": "Atlassian Rovo MCP Server",
+      "repository": "https://github.com/atlassian/atlassian-mcp-server",
+      "website": "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/"
+    },
+    {
+      "id": "cloudflare",
+      "name": "com.cloudflare.mcp/mcp",
+      "description": "Cloudflare MCP servers",
+      "version": "1.0.0",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://docs.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://observability.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://bindings.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://builds.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://radar.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://containers.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://browser.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://logs.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://ai-gateway.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://autorag.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://auditlogs.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://dns-analytics.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://dex.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://casb.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://graphql.mcp.cloudflare.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://docs.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://observability.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://bindings.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://builds.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://radar.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://containers.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://browser.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://logs.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://ai-gateway.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://autorag.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://auditlogs.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://dns-analytics.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://dex.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://casb.mcp.cloudflare.com/sse"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://graphql.mcp.cloudflare.com/sse"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2025-09-16T22:06:29.987729Z",
+        "updated_at": "2025-09-16T22:06:29.987729Z"
+      },
+      "level": "L0",
+      "repository": "https://github.com/cloudflare/mcp-server-cloudflare"
+    },
+    {
+      "id": "github",
+      "name": "io.github.github/github-mcp-server",
+      "description": "Connect AI assistants to GitHub - manage repos, issues, PRs, and workflows through natural language.",
+      "version": "2.0.3",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "oci",
+          "identifier": "ghcr.io/github/github-mcp-server:2.0.3",
+          "version": "2.0.3",
+          "transport": "stdio"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://api.githubcopilot.com/mcp/"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-10-21T09:53:50.501608Z",
+        "updated_at": "2026-10-21T09:53:50.501608Z"
+      },
+      "level": "L0",
+      "title": "GitHub",
+      "repository": "https://github.com/github/github-mcp-server"
+    },
+    {
+      "id": "gitlab",
+      "name": "com.gitlab/mcp",
+      "description": "Official GitLab MCP Server",
+      "version": "0.0.1",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://gitlab.com/api/v4/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2025-10-02T04:59:37.530539Z",
+        "updated_at": "2025-10-02T04:59:37.530539Z"
+      },
+      "level": "L0",
+      "repository": "https://gitlab.com/gitlab-org/gitlab"
+    },
+    {
+      "id": "grafana",
+      "name": "io.github.grafana/mcp-grafana",
+      "description": "An MCP server giving access to Grafana dashboards, data and more.",
+      "version": "v2.1.1",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "oci",
+          "identifier": "docker.io/grafana/mcp-grafana:2.1.1",
+          "version": "v2.1.1",
+          "transport": "stdio"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.grafana.com/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-10-20T17:28:59.534981Z",
+        "updated_at": "2026-10-20T17:28:59.534981Z"
+      },
+      "level": "L0",
+      "repository": "https://github.com/grafana/mcp-grafana",
+      "environment": [
+        {
+          "name": "GRAFANA_EXTRA_HEADERS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "GRAFANA_FORWARD_HEADERS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "GRAFANA_ORG_ID",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "GRAFANA_PASSWORD",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "GRAFANA_SERVICE_ACCOUNT_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "GRAFANA_URL",
+          "required": true,
+          "secret": false
+        },
+        {
+          "name": "GRAFANA_USERNAME",
+          "required": false,
+          "secret": false
+        }
+      ]
+    },
+    {
+      "id": "notion",
+      "name": "com.notion/mcp",
+      "description": "Official Notion MCP server",
+      "version": "1.0.1",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.notion.com/mcp"
+        },
+        {
+          "kind": "remote",
+          "transport": "sse",
+          "url": "https://mcp.notion.com/sse"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2025-09-11T22:25:50.737872Z",
+        "updated_at": "2025-09-11T22:25:50.737872Z"
+      },
+      "level": "L0"
+    },
+    {
+      "id": "playwright",
+      "name": "io.github.microsoft/playwright-mcp",
+      "description": "Playwright Tools for MCP",
+      "version": "0.0.82",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "@playwright/mcp",
+          "version": "0.0.82",
+          "transport": "stdio"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-09-18T23:41:20.46032Z",
+        "updated_at": "2026-09-18T23:41:20.46032Z"
+      },
+      "level": "L0",
+      "repository": "https://github.com/microsoft/playwright-mcp"
+    },
+    {
+      "id": "sentry",
+      "name": "io.github.getsentry/sentry-mcp",
+      "description": "MCP server for Sentry - error monitoring, issue tracking, and debugging for AI assistants",
+      "version": "0.42.0",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "@sentry/mcp-server",
+          "version": "0.42.0",
+          "transport": "stdio"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.sentry.dev/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-09-25T14:49:17.516259Z",
+        "updated_at": "2026-09-25T14:49:17.516259Z"
+      },
+      "level": "L0",
+      "repository": "https://github.com/getsentry/sentry-mcp",
+      "environment": [
+        {
+          "name": "SENTRY_ACCESS_TOKEN",
+          "required": true,
+          "secret": true
+        }
+      ]
+    },
+    {
+      "id": "stripe",
+      "name": "com.stripe/mcp",
+      "description": "MCP server integrating with Stripe - tools for customers, products, payments, and more.",
+      "version": "0.2.4",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.stripe.com"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2025-10-28T22:06:18.495159Z",
+        "updated_at": "2025-10-28T22:06:18.495159Z"
+      },
+      "level": "L0",
+      "repository": "https://github.com/stripe/agent-toolkit"
+    }
+  ]
+}

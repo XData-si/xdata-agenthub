@@ -4,6 +4,12 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Added
+- Verified MCP phase 1 (#84): `registry/mcp-servers.json` lists MCP servers with metadata imported from the official
+  MCP Registry, pinned to one version and marked L0 (listed only, not verified). `scripts/import_mcp_registry.py`
+  refreshes listed servers idempotently and resets an entry to L0 when its upstream version changes.
+  `xah mcp list|search|inspect` and an MCP section on the catalog site show them. Nothing is installed or run.
+
 ## [0.3.0] - 2026-10-29
 
 First signed release. Highlights: 104 security-reviewed skills (seals bound to package digests), Claude Code plugin
