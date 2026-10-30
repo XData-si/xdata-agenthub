@@ -1,0 +1,9 @@
+{
+  "_comment": "Arguments the verifier appends when a server's registry entry does not declare how to start it on stdio. Each entry needs a reason and is reviewed like code.",
+  "servers": {
+    "grafana": {
+      "args": ["-t", "stdio"],
+      "reason": "the image starts the SSE transport by default; the upstream README runs it with -t stdio"
+    }
+  }
+}

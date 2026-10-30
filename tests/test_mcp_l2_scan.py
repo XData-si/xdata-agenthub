@@ -67,6 +67,14 @@ class ResultTests(unittest.TestCase):
             {"name": "FILES_ROOT", "required": False, "secret": False}]))
         self.assertEqual(env, {"FILES_URL": "http://127.0.0.1:9", "FILES_TOKEN": "xah-verifier-placeholder"})
 
+    def test_server_args(self):
+        record = {"packageArguments": [{"type": "positional", "value": "stdio"},
+                                       {"type": "named", "name": "--read-only"},
+                                       {"type": "named", "name": "--toolsets", "value": "repos"},
+                                       {"type": "named", "name": "--token", "value": "{token}"}]}
+        self.assertEqual(scanner.server_args(entry(), record), ["stdio", "--read-only", "--toolsets", "repos"])
+        self.assertEqual(scanner.server_args(entry(id="grafana"), None), ["-t", "stdio"])
+
     def test_unsafe_archive_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             archive = pathlib.Path(tmp) / "p.tgz"

@@ -15,6 +15,7 @@ on:
       - 'scripts/mcp_l2_scan.py'
       - 'scripts/mcp_tools_list.py'
       - 'scripts/verify_mcp_identity.py'
+      - 'scripts/mcp_verify_args.json'
       - 'cli/mcp_tool_scan.py'
       - 'cli/mcp_evidence.py'
       - '.github/workflows/mcp-verify.yml'
@@ -74,6 +75,7 @@ jobs:
           install -m 0755 osv-scanner bin/osv-scanner
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - name: Scan
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
           ID: ${{ matrix.id }}

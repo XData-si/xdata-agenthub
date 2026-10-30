@@ -43,6 +43,8 @@ OSI_LICENCES = {"MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MPL
                 "LGPL-2.1-only", "LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only", "AGPL-3.0-only", "EPL-2.0",
                 "LGPL-2.1-or-later", "LGPL-3.0-or-later", "GPL-2.0-or-later", "GPL-3.0-or-later", "AGPL-3.0-or-later"}
 HIGH_SEVERITY = 7.0
+# Reviewed per-server arguments for servers whose registry entry does not declare how to start them on stdio.
+EXTRA_ARGS = json.loads((ROOT / "scripts" / "mcp_verify_args.json").read_text(encoding="utf-8"))["servers"]
 
 
 def run(argv, timeout=900, **kwargs):
@@ -57,6 +59,20 @@ def tool_version(argv):
         return run(argv, timeout=60).strip().splitlines()[0][:80]
     except (OSError, RuntimeError, IndexError):
         return "unknown"
+
+
+def server_args(entry, package_record):
+    """Arguments after the image or executable: registry packageArguments plus reviewed extra arguments."""
+    args = []
+    for arg in (package_record or {}).get("packageArguments", []):
+        value = arg.get("value") or arg.get("default")
+        if value and "{" in value:
+            continue  # needs user input; never guessed
+        if arg.get("type") == "named":
+            args += [arg["name"]] + ([value] if value else [])
+        elif value:
+            args.append(value)
+    return args + EXTRA_ARGS.get(entry["id"], {}).get("args", [])
 
 
 def placeholder_env(entry):
@@ -136,7 +152,7 @@ def safe_extract(archive, target):
         tar.extractall(target, **({"filter": "data"} if hasattr(tarfile, "data_filter") else {}))
 
 
-def prepare_npm(artifact, entry, work, http):
+def prepare_npm(artifact, entry, work, http, extra):
     meta = http.json(f"https://registry.npmjs.org/{urllib.parse.quote(artifact['identifier'], safe='@')}/"
                      f"{urllib.parse.quote(artifact['version'], safe='')}")
     tarball, _ = http.get(meta["dist"]["tarball"], limit=verify_mcp_identity.MAX_BYTES)
@@ -147,16 +163,19 @@ def prepare_npm(artifact, entry, work, http):
     safe_extract(archive, work)
     package = work / "package"
     package_json = json.loads((package / "package.json").read_text(encoding="utf-8"))
+    # Only production dependencies are installed; devDependencies may name unpublished workspace packages.
+    install_json = {k: v for k, v in package_json.items() if k != "devDependencies"}
+    (package / "package.json").write_text(json.dumps(install_json, indent=2), encoding="utf-8")
     run(["npm", "install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund", "--package-lock"], cwd=package)
     binary = npm_bin(package_json)
     env = [x for k, v in placeholder_env(entry).items() for x in ("-e", f"{k}={v}")]
     command = ["docker", "run", *ISOLATION, "--user", "65534:65534", "-v", f"{package}:/app:ro", "-w", "/app", *env,
-               NODE_IMAGE, "node", f"/app/{binary}"]
+               NODE_IMAGE, "node", f"/app/{binary}", *extra]
     return {"command": command, "sbom": f"dir:{package}", "osv": ["scan", "source", "--lockfile", str(package / "package-lock.json")],
             "secrets_dir": package, "secrets_exclude": ["node_modules"], "licence": package_json.get("license")}
 
 
-def prepare_oci(artifact, entry, work):
+def prepare_oci(artifact, entry, work, extra):
     image = artifact["identifier"].rsplit(":", 1)[0] if "@" not in artifact["identifier"] else artifact["identifier"].split("@")[0]
     reference = f"{image}@sha256:{artifact['sha256']}"
     run(["docker", "pull", "--quiet", reference])
@@ -174,7 +193,7 @@ def prepare_oci(artifact, entry, work):
     finally:
         run(["docker", "rm", container])
     env = [x for k, v in placeholder_env(entry).items() for x in ("-e", f"{k}={v}")]
-    return {"command": ["docker", "run", *ISOLATION, *env, reference], "sbom": reference,
+    return {"command": ["docker", "run", *ISOLATION, *env, reference, *extra], "sbom": reference,
             "osv": ["scan", "image", reference], "secrets_dir": rootfs, "secrets_exclude": [],
             "licence": labels.get("org.opencontainers.image.licenses")}
 
@@ -187,9 +206,12 @@ def repository_spdx(entry, http):
     return (repo.get("license") or {}).get("spdx_id")
 
 
-def scan_package(artifact, entry, work, reports, http):
-    prepared = (prepare_npm(artifact, entry, work, http) if artifact["registry"] == "npm"
-                else prepare_oci(artifact, entry, work) if artifact["registry"] == "oci"
+def scan_package(artifact, entry, work, reports, http, record=None):
+    package_record = next((p for p in ((record or {}).get("server") or {}).get("packages", [])
+                           if p.get("registryType") == artifact["registry"] and p.get("identifier") == artifact["identifier"]), None)
+    extra = server_args(entry, package_record)
+    prepared = (prepare_npm(artifact, entry, work, http, extra) if artifact["registry"] == "npm"
+                else prepare_oci(artifact, entry, work, extra) if artifact["registry"] == "oci"
                 else None)
     if prepared is None:
         raise ValueError(f"{artifact['registry']} packages are not supported by the L2 scanner yet")
@@ -207,11 +229,15 @@ def scan_package(artifact, entry, work, reports, http):
     secrets_path = reports / f"{stem}-gitleaks.json"
     with tempfile.TemporaryDirectory() as config_dir:
         config = pathlib.Path(config_dir) / "gitleaks.toml"
-        paths = "".join(f"  '''(^|/){p}/''',\n" for p in prepared["secrets_exclude"])
-        config.write_text(f"[extend]\nuseDefault = true\n\n[allowlist]\npaths = [\n{paths}]\n", encoding="utf-8")
+        text = "[extend]\nuseDefault = true\n"
+        if prepared["secrets_exclude"]:
+            paths = "".join(f"  '''(^|/){p}/''',\n" for p in prepared["secrets_exclude"])
+            text += f"\n[allowlist]\npaths = [\n{paths}]\n"
+        config.write_text(text, encoding="utf-8")
         run(["gitleaks", "dir", str(prepared["secrets_dir"]), "--config", str(config), "--no-banner",
              "--report-format", "json", "--report-path", str(secrets_path), "--exit-code", "0", "--redact"])
     return {
+        "args": extra,
         "tools": listing["tools"],
         "sbom": sbom_result(json.loads(sbom_path.read_text(encoding="utf-8"))),
         "dependencies": osv_result(json.loads(osv_path.read_text(encoding="utf-8") or "{}")),
@@ -231,6 +257,9 @@ def assemble(evidence, entry, per_package, versions):
     details = f"{len(tools)} tools, {errors} errors, {len(findings) - errors} warnings" + (f": {shown}" if shown else "")
     if differing:
         details += "; packages expose different tools"
+    started = sorted({" ".join(p.get("args", [])) for p in per_package} - {""})
+    if started:
+        details += "; started with arguments: " + " / ".join(started)
     scans = {"tools": {"result": "pass" if tools_ok else "fail", "tool": "mcp_tool_scan.py", "details": details,
                        "count": len(tools), "digest": mcp_tool_scan.tools_digest(tools), "errors": errors,
                        "warnings": len(findings) - errors}}
@@ -256,6 +285,7 @@ def main(argv=None):
         parser.error(f"unknown id {args.id}")
     http = verify_mcp_identity.Http()
     evidence = verify_mcp_identity.verify(entry, http)
+    _, record = verify_mcp_identity.check_namespace(entry, http)
     if args.run_url:
         evidence["run"] = args.run_url
     # Scan exactly what the identity step pinned; a catalog pin that differs already failed identity.
@@ -275,7 +305,7 @@ def main(argv=None):
         for artifact in packages:
             with tempfile.TemporaryDirectory() as tmp:
                 try:
-                    per_package.append(scan_package(artifact, entry, pathlib.Path(tmp), reports, http))
+                    per_package.append(scan_package(artifact, entry, pathlib.Path(tmp), reports, http, record))
                 except (OSError, RuntimeError, ValueError, mcp_tools_list.McpError, subprocess.TimeoutExpired) as error:
                     problems.append(f"{artifact['identifier']}: {error}")
     if packages and len(per_package) == len(packages):
