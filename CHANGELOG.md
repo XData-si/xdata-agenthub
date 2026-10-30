@@ -11,6 +11,11 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   `xah mcp list|search|inspect` and an MCP section on the catalog site show them. Nothing is installed or run.
 - Weekly `MCP registry check` workflow: opens or updates a `verified-mcp` issue when listed MCP servers changed
   upstream (read-only; a maintainer runs the importer and reviews the diff).
+- Verified MCP phase 2 groundwork (#85): `cli/mcp_tool_scan.py` checks a `tools/list` snapshot for tool poisoning
+  (hidden characters, instruction tags, prompt injection, concealment, credential-file references) and for schemas that
+  model providers reject (for example a top-level `oneOf`); `cli/mcp_evidence.py` validates L1/L2 evidence documents
+  bound to the pinned version and sha256, and `xah doctor` rejects catalog levels the evidence does not support.
+  L1/L2 criteria are documented in `docs/VERIFIED_MCP.md`. No server is above L0 yet.
 - Demo recordings (`demos/recordings/`): VHS tapes for install, release verification, the with/without comparison
   and MCP search, rendered by the manual `Recordings` workflow as a downloadable artifact.
 
