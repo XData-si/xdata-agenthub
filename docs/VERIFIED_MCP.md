@@ -91,6 +91,8 @@ and rewrites only entries whose upstream record changed, so a second run is a no
 entry to L0 and drops its evidence. A record that fails validation or is missing upstream leaves the entry unchanged
 with a warning. `--check` exits 1 when a refresh would change the catalog. Only listed servers are imported:
 AgentHub curates, it does not mirror the registry.
+The `MCP registry check` workflow runs this comparison every Monday and opens or updates an issue labelled
+`verified-mcp` when listed servers changed upstream; it never writes to the repository.
 
 Browse: `xah mcp list`, `xah mcp search <text> [--level L0] [--transport stdio]`, `xah mcp inspect <id>`, and the
 "MCP servers (preview)" section of the catalog site.
