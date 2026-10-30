@@ -106,28 +106,34 @@ def licence_result(declared, repository_spdx):
 
 
 def osv_result(report):
-    """Fail on any known vulnerability with CVSS >= 7.0 (or an unscored one); list them in details."""
-    high, total = [], 0
+    """Fail on any known vulnerability with CVSS >= 7.0. Unscored advisories (common in the Go database) are listed
+    for the reviewer but do not fail the scan on their own."""
+    high, unscored, total = [], [], 0
     for result in report.get("results", []):
         for package in result.get("packages", []):
             name = f"{package['package'].get('name')}@{package['package'].get('version')}"
             for group in package.get("groups", []):
                 total += 1
+                label = f"{name} {','.join(group.get('ids', [])[:2])}"
                 try:
-                    severity = float(group.get("max_severity") or "nan")
+                    severity = float(group.get("max_severity") or "")
                 except ValueError:
-                    severity = float("nan")
-                if not severity < HIGH_SEVERITY:
-                    high.append(f"{name} {','.join(group.get('ids', [])[:2])} ({group.get('max_severity') or 'unscored'})")
-    details = f"{total} known vulnerabilities, {len(high)} high/critical or unscored"
+                    unscored.append(label)
+                    continue
+                if severity >= HIGH_SEVERITY:
+                    high.append(f"{label} ({group['max_severity']})")
+    details = f"{total} known vulnerabilities, {len(high)} high/critical, {len(unscored)} unscored"
     if high:
-        details += ": " + "; ".join(high[:20])
+        details += "; high/critical: " + "; ".join(high[:15])
+    if unscored:
+        details += "; unscored: " + "; ".join(unscored[:10])
     return {"result": "fail" if high else "pass", "details": details}
 
 
-def gitleaks_result(findings):
+def gitleaks_result(findings, root=None):
     if findings:
-        where = sorted({f"{f.get('File')}:{f.get('StartLine')} ({f.get('RuleID')})" for f in findings})
+        relative = lambda p: os.path.relpath(p, root) if root and os.path.isabs(p or "") else p
+        where = sorted({f"{relative(f.get('File'))}:{f.get('StartLine')} ({f.get('RuleID')})" for f in findings})
         return {"result": "fail", "details": f"{len(findings)} possible secrets: " + "; ".join(where[:20])}
     return {"result": "pass", "details": "no secrets found"}
 
@@ -241,7 +247,7 @@ def scan_package(artifact, entry, work, reports, http, record=None):
         "tools": listing["tools"],
         "sbom": sbom_result(json.loads(sbom_path.read_text(encoding="utf-8"))),
         "dependencies": osv_result(json.loads(osv_path.read_text(encoding="utf-8") or "{}")),
-        "secrets": gitleaks_result(json.loads(secrets_path.read_text(encoding="utf-8") or "[]")),
+        "secrets": gitleaks_result(json.loads(secrets_path.read_text(encoding="utf-8") or "[]"), str(prepared["secrets_dir"])),
         "licence": licence_result(prepared["licence"], repository_spdx(entry, http)),
     }
 

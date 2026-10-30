@@ -45,12 +45,14 @@ class ResultTests(unittest.TestCase):
                                                                "groups": [{"ids": ["GHSA-x"], "max_severity": severity}]}]}]}
         self.assertEqual(scanner.osv_result(report("5.3"))["result"], "pass")
         self.assertEqual(scanner.osv_result(report("9.8"))["result"], "fail")
-        self.assertEqual(scanner.osv_result(report(""))["result"], "fail")
+        unscored = scanner.osv_result(report(""))
+        self.assertEqual(unscored["result"], "pass")
+        self.assertIn("1 unscored", unscored["details"])
         self.assertEqual(scanner.osv_result({})["result"], "pass")
 
     def test_secrets_and_sbom(self):
         self.assertEqual(scanner.gitleaks_result([])["result"], "pass")
-        found = scanner.gitleaks_result([{"File": "dist/a.js", "StartLine": 3, "RuleID": "aws-access-token"}])
+        found = scanner.gitleaks_result([{"File": "/tmp/x/dist/a.js", "StartLine": 3, "RuleID": "aws-access-token"}], "/tmp/x")
         self.assertEqual(found["result"], "fail")
         self.assertIn("dist/a.js:3", found["details"])
         self.assertEqual(scanner.sbom_result({"components": [{}]})["result"], "pass")

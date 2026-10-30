@@ -137,7 +137,7 @@ The `MCP verify` workflow (manual, or on pull requests that change the verifier)
 `scripts/mcp_l2_scan.py <id>` for every entry with a package: identity checks, the artifact fetched and compared with
 its sha256 (npm tarball, OCI image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a
 container with `--network none`, a read-only file system, no capabilities and placeholder values for required
-variables, then syft (SBOM), osv-scanner (fails on CVSS ≥ 7.0 or unscored vulnerabilities) and gitleaks, all pinned by
+variables, then syft (SBOM), osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by
 version and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as
 a workflow artifact; the workflow writes nothing to the repository. PyPI packages are not scanned yet.
 

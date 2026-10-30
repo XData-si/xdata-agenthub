@@ -14,8 +14,9 @@ import hashlib
 import json
 import re
 
-from mcp_catalog import HIDDEN
 
+# Like mcp_catalog.HIDDEN, but descriptions may contain line breaks and tabs.
+HIDDEN = re.compile("[\x00-\x08\x0b\x0c\x0e-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u2069\ufeff]")
 TOOL_NAME = re.compile(r"[A-Za-z0-9_-]{1,64}\Z")
 TOOL_FIELDS = ("name", "title", "description", "inputSchema", "outputSchema", "annotations")
 TOP_LEVEL_FORBIDDEN = ("oneOf", "anyOf", "allOf", "not", "enum", "const", "if", "then", "else")
