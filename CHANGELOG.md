@@ -16,6 +16,12 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   model providers reject (for example a top-level `oneOf`); `cli/mcp_evidence.py` validates L1/L2 evidence documents
   bound to the pinned version and sha256, and `xah doctor` rejects catalog levels the evidence does not support.
   L1/L2 criteria are documented in `docs/VERIFIED_MCP.md`. No server is above L0 yet.
+- `scripts/verify_mcp_identity.py`: L1 checks for catalog entries (registry status of the exact version, repository
+  owner against the namespace, package sha256 and its link back to the repository); `--write` pins digests and writes
+  evidence without changing levels.
+- `MCP verify` workflow and `scripts/mcp_l2_scan.py`: L2 scans of npm and OCI MCP servers in CI — `tools/list` read from
+  the server in a network-less container (`scripts/mcp_tools_list.py`), SBOM, known vulnerabilities, secrets and
+  licence; evidence is uploaded as an artifact for review.
 - Demo recordings (`demos/recordings/`): VHS tapes for install, release verification, the with/without comparison
   and MCP search, rendered by the manual `Recordings` workflow as a downloadable artifact.
 
