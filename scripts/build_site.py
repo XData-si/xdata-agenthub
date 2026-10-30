@@ -140,6 +140,9 @@ article p{margin:0 0 8px;color:var(--muted);font-size:.92rem}a{color:var(--accen
 .installs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:28px 0 16px}
 .installs .install{margin:0}.install h3{margin:0 0 8px;font-size:1rem}
 </style>
+<!-- Umami web analytics (self-hosted, cookieless) -->
+<script defer src="https://analytics2.xdata.si/script.js" data-website-id="527ddb63-6a19-4654-8038-3b1885e82490"></script>
+<script defer src="https://analytics2.xdata.si/recorder.js" data-website-id="527ddb63-6a19-4654-8038-3b1885e82490"></script>
 </head>
 <body>
 <section class="hero"><div class="hero-in">
