@@ -1,0 +1,68 @@
+name: MCP registry check
+# Weekly: compares registry/mcp-servers.json with the official MCP Registry (read-only, nothing is written to the
+# repository). If listed servers changed upstream, opens or updates one issue with the importer output so a maintainer
+# can run scripts/import_mcp_registry.py and review the diff in a pull request. New versions reset entries to L0.
+on:
+  schedule:
+    - cron: '41 5 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Compare with the official registry
+        id: check
+        run: |
+          set +e
+          cp registry/mcp-servers.json "$RUNNER_TEMP/mcp-servers.json"
+          python3 scripts/import_mcp_registry.py --catalog "$RUNNER_TEMP/mcp-servers.json" > "$RUNNER_TEMP/out.txt" 2>&1
+          status=$?
+          cat "$RUNNER_TEMP/out.txt"
+          if [ "$status" -ne 0 ]; then echo "result=error" >> "$GITHUB_OUTPUT"
+          elif cmp -s registry/mcp-servers.json "$RUNNER_TEMP/mcp-servers.json"; then echo "result=current" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=changed" >> "$GITHUB_OUTPUT"
+            diff -u registry/mcp-servers.json "$RUNNER_TEMP/mcp-servers.json" > "$RUNNER_TEMP/diff.txt"
+          fi
+      - name: Open or update the tracking issue
+        if: steps.check.outputs.result != 'current'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ steps.check.outputs.result }}
+        run: |
+          title="MCP catalog: upstream registry changes"
+          {
+            echo "The weekly check found that \`registry/mcp-servers.json\` differs from the official MCP Registry (result: \`$RESULT\`)."
+            echo
+            echo "Run \`python3 scripts/import_mcp_registry.py\`, review the diff and open a pull request. A new upstream version resets the entry to L0."
+            echo
+            echo "Importer output:"
+            echo '```'
+            cat "$RUNNER_TEMP/out.txt"
+            echo '```'
+            if [ -f "$RUNNER_TEMP/diff.txt" ]; then
+              echo "<details><summary>Diff</summary>"
+              echo
+              echo '```diff'
+              head -c 60000 "$RUNNER_TEMP/diff.txt"
+              echo '```'
+              echo "</details>"
+            fi
+            echo
+            echo "Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          } > "$RUNNER_TEMP/body.md"
+          number=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --label verified-mcp --search "\"$title\" in:title" --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/body.md"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --label verified-mcp --body-file "$RUNNER_TEMP/body.md"
+          fi
