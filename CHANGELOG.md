@@ -14,6 +14,10 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 - Demo recordings (`demos/recordings/`): VHS tapes for install, release verification, the with/without comparison
   and MCP search, rendered by the manual `Recordings` workflow as a downloadable artifact.
 
+### Changed
+- `Release validation` runs on every pull request. Its jobs are required for `main`, and the previous path
+  filter left pull requests that touched only other files (for example `demos/`) without required checks.
+
 ## [0.3.0] - 2026-10-29
 
 First signed release. Highlights: 104 security-reviewed skills (seals bound to package digests), Claude Code plugin
