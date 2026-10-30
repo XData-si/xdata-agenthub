@@ -1,6 +1,8 @@
 # Verified MCP — specification (proposed)
 
-Status: **phase 1 implemented** (catalog format, import, search; all entries are L0). Later phases are proposed.
+Status: **phase 1 implemented** (catalog format, import, search; all entries are L0). **Phase 2 in progress**: the
+evidence format and the tool checks are implemented, the verifier workflow and the curated set follow. Later phases are
+proposed.
 This document describes how AgentHub will extend from verified *skills* to
 verified *Model Context Protocol (MCP) servers* — becoming a **Verified AI Capabilities Registry**. Tracking issues are
 labelled `verified-mcp`.
@@ -96,6 +98,40 @@ The `MCP registry check` workflow runs this comparison every Monday and opens or
 
 Browse: `xah mcp list`, `xah mcp search <text> [--level L0] [--transport stdio]`, `xah mcp inspect <id>`, and the
 "MCP servers (preview)" section of the catalog site.
+
+## Phase 2: L1 and L2 criteria
+Decisions for phase 2: the initial set contains only servers published by the vendor of the service they connect to
+(namespace owned by that vendor); servers without a package (remote endpoints only) can reach L1 at most, because their
+code cannot be scanned; the verifier starts a packaged server only to read `tools/list` (isolated container, no
+network, no credentials, no tool calls — exercising tools is L3); heavier scanners run in CI, never in `xah`.
+
+**L1 (identity)** — all three must pass:
+- *namespace*: the official registry lists the server as active under this name (its namespace proof is the
+  registry's GitHub or DNS/HTTP verification);
+- *repository*: the source repository exists, is not archived, and belongs to the namespace owner (`io.github.<owner>/`
+  → the GitHub owner; a domain namespace → the vendor's own organisation, linked from the vendor's website);
+- *artifacts*: every package is pinned by version and its sha256 is recorded (npm tarball, PyPI file, OCI digest).
+
+**L2 (security scan)** — L1 plus five passing scans of the same artifact:
+- *tools*: the `tools/list` snapshot has no errors from `cli/mcp_tool_scan.py`. Description rules: hidden or
+  bidirectional characters, instruction tags (`<IMPORTANT>`, `<system>`), prompt injection, concealment ("do not tell the
+  user"), credential-file references (`~/.ssh/`, `mcp.json`, …) and encoded blobs; warnings for cross-tool behaviour
+  instructions, mentions of other tools, URLs and very long descriptions. Schema rules: tool names
+  `[A-Za-z0-9_-]{1,64}`, unique; `inputSchema` an object schema without top-level `oneOf`/`anyOf`/`allOf`/`enum`/…;
+  `required` names declared; no remote `$ref`;
+- *dependencies*: no known vulnerability of high or critical severity without a documented exception;
+- *sbom*: an SBOM was generated for the artifact;
+- *secrets*: no secrets found in the artifact;
+- *licence*: an OSI-approved licence is declared and matches the repository.
+
+The patterns detect known techniques. A clean scan is not proof that descriptions are harmless.
+
+**Evidence** — `reports/mcp/<id>/<version>.json` (validated by `cli/mcp_evidence.py`, schema version 1): server id,
+name and version; `artifacts` with sha256 (must equal the pinned packages in the catalog); `identity` with the three
+L1 results; `scans` with the five L2 results and the tool names and versions used; and the `tools` snapshot itself.
+`xah doctor` re-runs the tool checks on the snapshot and recomputes its digest, so a report cannot claim a clean scan its
+snapshot contradicts, and rejects a catalog level the evidence does not support. Raising a level is a reviewed pull
+request that adds the evidence file and changes `level` in the same commit.
 
 ## Phases
 | Phase | Scope | Priority |

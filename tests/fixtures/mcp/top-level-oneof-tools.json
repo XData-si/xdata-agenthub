@@ -1,0 +1,47 @@
+{
+  "tools": [
+    {
+      "name": "search",
+      "description": "Search by id or by text.",
+      "inputSchema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "text"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "lookup",
+      "description": "Look up a record.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": []
+      }
+    }
+  ]
+}

@@ -455,7 +455,10 @@ def main():
             print(f"OK: {len(catalog)} catalog entries, all local paths valid, declared digests match")
             if MCP_CATALOG.is_file():
                 import mcp_catalog
-                print(f"OK: {len(mcp_catalog.load(MCP_CATALOG))} MCP server entries valid")
+                import mcp_evidence
+                servers = mcp_catalog.load(MCP_CATALOG)
+                verified = mcp_evidence.check_catalog_evidence(servers, ROOT)
+                print(f"OK: {len(servers)} MCP server entries valid, {verified} with evidence above L0")
         elif args.cmd == "init":
             profiles = {
                 "developer": ["project-agents", "code-review", "documentation"],
