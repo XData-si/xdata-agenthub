@@ -133,6 +133,14 @@ an organisation website on a different domain) fails and stays L0 rather than be
 
 The patterns detect known techniques. A clean scan is not proof that descriptions are harmless.
 
+The `MCP verify` workflow (manual, or on pull requests that change the verifier) runs
+`scripts/mcp_l2_scan.py <id>` for every entry with a package: identity checks, the artifact fetched and compared with
+its sha256 (npm tarball, OCI image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a
+container with `--network none`, a read-only file system, no capabilities and placeholder values for required
+variables, then syft (SBOM), osv-scanner (fails on CVSS ≥ 7.0 or unscored vulnerabilities) and gitleaks, all pinned by
+version and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as
+a workflow artifact; the workflow writes nothing to the repository. PyPI packages are not scanned yet.
+
 **Evidence** — `reports/mcp/<id>/<version>.json` (validated by `cli/mcp_evidence.py`, schema version 1): server id,
 name and version; `artifacts` with sha256 (must equal the pinned packages in the catalog); `identity` with the three
 L1 results; `scans` with the five L2 results and the tool names and versions used; and the `tools` snapshot itself.
