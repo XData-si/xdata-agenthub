@@ -18,6 +18,7 @@ import hashlib
 import json
 import os
 import pathlib
+import posixpath
 import shutil
 import subprocess
 import sys
@@ -132,7 +133,8 @@ def osv_result(report):
 
 def gitleaks_result(findings, root=None):
     if findings:
-        relative = lambda p: os.path.relpath(p, root) if root and os.path.isabs(p or "") else p
+        # gitleaks reports POSIX paths (the scan runs on Linux), also when these tests run on Windows.
+        relative = lambda p: posixpath.relpath(p, root) if root and posixpath.isabs(p or "") else p
         where = sorted({f"{relative(f.get('File'))}:{f.get('StartLine')} ({f.get('RuleID')})" for f in findings})
         return {"result": "fail", "details": f"{len(findings)} possible secrets: " + "; ".join(where[:20])}
     return {"result": "pass", "details": "no secrets found"}
