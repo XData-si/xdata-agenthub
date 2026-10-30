@@ -9,6 +9,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   MCP Registry, pinned to one version and marked L0 (listed only, not verified). `scripts/import_mcp_registry.py`
   refreshes listed servers idempotently and resets an entry to L0 when its upstream version changes.
   `xah mcp list|search|inspect` and an MCP section on the catalog site show them. Nothing is installed or run.
+- Weekly `MCP registry check` workflow: opens or updates a `verified-mcp` issue when listed MCP servers changed
+  upstream (read-only; a maintainer runs the importer and reviews the diff).
 
 ## [0.3.0] - 2026-10-29
 
