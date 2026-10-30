@@ -1,6 +1,7 @@
 # Verified MCP — specification (proposed)
 
-Status: **proposed, not implemented.** This document describes how AgentHub will extend from verified *skills* to
+Status: **phase 1 implemented** (catalog format, import, search; all entries are L0). Later phases are proposed.
+This document describes how AgentHub will extend from verified *skills* to
 verified *Model Context Protocol (MCP) servers* — becoming a **Verified AI Capabilities Registry**. Tracking issues are
 labelled `verified-mcp`.
 
@@ -69,6 +70,30 @@ This is where AgentHub differs from directories: users get a capability that is 
 ## Public verification reports and badges
 Each verified server gets a report page and a badge its authors can embed in their README, linking back to the
 evidence. Reports are reproducible: anyone can re-run the published test plan.
+
+## Catalog format (phase 1)
+`registry/mcp-servers.json` (validated by `cli/mcp_catalog.py`, schema version 1) holds one entry per server:
+
+| Field | Meaning |
+|---|---|
+| `id` | AgentHub slug, used by `xah mcp inspect` |
+| `name`, `title`, `description`, `repository`, `website` | as declared in the official registry; rejected if they contain control, zero-width or bidirectional characters |
+| `version` | the one upstream version the entry describes |
+| `artifacts` | pinned packages (`npm`, `pypi`, `oci`, `nuget`, `mcpb`; version, transport, optional `sha256`) and remote endpoints (https only) |
+| `environment` | variables the server asks for, with `required` and `secret` flags |
+| `registry` | upstream status and publish/update timestamps |
+| `level` | `L0`–`L4`; anything above L0 requires `evidence` and a `sha256` for every package, L3+ also a `permissions` profile |
+| `permissions`, `evidence` | permission profile (values from the table above) and a repository path to the evidence report |
+
+Import: `python3 scripts/import_mcp_registry.py --add <registry name> --id <slug>` starts listing a server;
+`python3 scripts/import_mcp_registry.py` refreshes all listed servers from the registry's `versions/latest` endpoint
+and rewrites only entries whose upstream record changed, so a second run is a no-op. A new upstream version resets the
+entry to L0 and drops its evidence. A record that fails validation or is missing upstream leaves the entry unchanged
+with a warning. `--check` exits 1 when a refresh would change the catalog. Only listed servers are imported:
+AgentHub curates, it does not mirror the registry.
+
+Browse: `xah mcp list`, `xah mcp search <text> [--level L0] [--transport stdio]`, `xah mcp inspect <id>`, and the
+"MCP servers (preview)" section of the catalog site.
 
 ## Phases
 | Phase | Scope | Priority |

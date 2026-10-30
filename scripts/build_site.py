@@ -7,6 +7,9 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "cli"))
+from mcp_catalog import LEVEL_LABELS
+
 REPO = "https://github.com/XData-si/xdata-agenthub"
 
 
@@ -50,6 +53,28 @@ def build(out_dir):
                 f'<p>{description}</p>'
                 f'<code>python3 cli/xah.py add {skill_id} --agent claude --scope user</code>'
                 '</article>')
+    mcp_path = ROOT / "registry/mcp-servers.json"
+    servers = json.loads(mcp_path.read_text(encoding="utf-8"))["servers"] if mcp_path.is_file() else []
+    if servers:
+        cards.append('<h2 data-section id="mcp">MCP servers (preview)</h2>'
+                     '<p class="note">Listed servers are metadata from the official MCP Registry, pinned to one '
+                     'version. <b>L0 means listed only: not reviewed, scanned or tested.</b> '
+                     f'<a href="{REPO}/blob/main/docs/VERIFIED_MCP.md">Verification levels</a></p>')
+    for server in servers:
+        title = html.escape(server.get("title", server["id"]))
+        name = html.escape(server["name"])
+        description = html.escape(server["description"])
+        level = html.escape(server["level"])
+        transport = html.escape(", ".join(sorted({a["transport"] for a in server["artifacts"]})))
+        link = html.escape(server.get("repository") or server.get("website") or "")
+        heading = f'<a href="{link}" rel="noopener">{title}</a>' if link else title
+        cards.append(
+            f'<article data-text="mcp {html.escape(server["id"])} {name.lower()} {description.lower()}">'
+            f'<h3>{heading}</h3>'
+            f'<span class="seal seal-mcp-{level.lower()}">{level} {LEVEL_LABELS[server["level"]]}</span>'
+            f'<p>{description}</p>'
+            f'<code>{name} {html.escape(server["version"])} · {transport}</code>'
+            '</article>')
     levels = [s["level"] for item in skills for s in seals.get(item["id"], [])]
     page = (TEMPLATE.replace("{{COUNT}}", str(len(skills))).replace("{{CARDS}}", "\n".join(cards))
             .replace("{{REVIEWED}}", str(levels.count("reviewed"))).replace("{{EU}}", str(levels.count("eu-ready")))
@@ -84,6 +109,7 @@ h2{grid-column:1/-1;margin:28px 0 0;font-size:1.1rem}.grid{display:grid;grid-tem
 article{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}article h3{margin:0 0 6px;font-size:1rem}
 .seal{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;margin:0 4px 6px 0;border:1px solid var(--line)}
 .seal-verified{color:#15803d;border-color:#15803d}.seal-reviewed{color:var(--accent);border-color:var(--accent)}.seal-eu-ready{color:#1d4ed8;border-color:#facc15;background:rgba(250,204,21,.12)}
+.seal-mcp-l0{color:var(--muted)}.note{grid-column:1/-1;margin:0;color:var(--muted);font-size:.92rem}
 article p{margin:0 0 8px;color:var(--muted);font-size:.92rem}a{color:var(--accent)}footer{color:var(--muted);text-align:center;padding:32px 16px}
 
 .hero{position:relative;overflow:hidden;color:#e2e8f0;background:radial-gradient(1200px 500px at 80% -10%,rgba(124,58,237,.45),transparent 60%),radial-gradient(900px 500px at 0% 110%,rgba(37,99,235,.40),transparent 60%),linear-gradient(160deg,#060b18 0%,#0b1120 55%,#111b3a 100%)}
@@ -160,7 +186,7 @@ article p{margin:0 0 8px;color:var(--muted);font-size:.92rem}a{color:var(--accen
 <section class="install"><h3>Contribute</h3><p>Your skill goes through the same security review and gets the same seal. <a href="https://github.com/XData-si/xdata-agenthub/blob/main/CONTRIBUTING.md">How to contribute</a> · <a href="https://github.com/XData-si/xdata-agenthub/blob/main/docs/SEAL.md">How seals work</a></p></section>
 </div>
 <h2 id="catalog" style="margin-top:8px">Catalog</h2>
-<input id="q" type="search" placeholder="Filter skills (e.g. oauth, migration, rag, incident)" aria-label="Filter skills">
+<input id="q" type="search" placeholder="Filter skills and MCP servers (e.g. oauth, migration, rag, mcp)" aria-label="Filter skills and MCP servers">
 <div class="grid">
 {{CARDS}}
 </div>
@@ -171,7 +197,8 @@ const q=document.getElementById('q');
 q.addEventListener('input',()=>{const v=q.value.trim().toLowerCase();
 document.querySelectorAll('article').forEach(a=>{a.hidden=v&&!a.dataset.text.includes(v)});
 document.querySelectorAll('h2[data-section]').forEach(h=>{let n=h.nextElementSibling,any=false;
-while(n&&n.tagName==='ARTICLE'){if(!n.hidden)any=true;n=n.nextElementSibling}h.hidden=!any});});
+while(n&&n.tagName!=='H2'){if(n.tagName==='ARTICLE'&&!n.hidden)any=true;n=n.nextElementSibling}h.hidden=!any;
+if(h.nextElementSibling&&h.nextElementSibling.classList.contains('note'))h.nextElementSibling.hidden=!any});});
 </script>
 </body>
 </html>
