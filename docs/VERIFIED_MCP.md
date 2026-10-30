@@ -159,7 +159,7 @@ request that adds the evidence file and changes `level` in the same commit.
 | `stripe` | 0.2.4 | L0 | L1 repository | the GitHub organisation's website is `stripe.dev`, not the namespace domain `stripe.com` |
 
 `playwright` 0.0.82 passed L2. `atlassian`, `cloudflare` and `gitlab` passed L1 and are remote-only, so L1 is their
-maximum. Gitleaks matches and unscored advisories are listed for review; a documented exception can clear them.
+maximum.
 
 ## Phases
 | Phase | Scope | Priority |
