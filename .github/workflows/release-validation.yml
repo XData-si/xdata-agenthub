@@ -2,20 +2,9 @@ name: Release validation
 
 on:
   workflow_dispatch:
+  # Runs on every pull request: its jobs are required checks for main, so a path filter would leave PRs
+  # outside the filtered paths unmergeable (as with #99, which only touched demos/).
   pull_request:
-    paths:
-      - 'cli/**'
-      - 'tests/**'
-      - 'registry/**'
-      - 'skills/**'
-      - 'scripts/**'
-      - 'instructions/**'
-      - 'agents/**'
-      - 'workflows/**'
-      - 'docs/**'
-      - 'CHANGELOG.md'
-      - 'LICENSE'
-      - '.github/workflows/release-validation.yml'
 
 permissions:
   contents: read
