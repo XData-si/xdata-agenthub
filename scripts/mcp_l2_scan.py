@@ -373,9 +373,11 @@ def scan_package(artifact, entry, work, reports, http, record=None):
     run(["syft", "scan", prepared["sbom"], "--quiet", "-o", f"cyclonedx-json={sbom_path}"])
     osv_path = reports / f"{stem}-osv.json"
     osv_args = prepared["osv"] or ["scan", "source", "--lockfile", str(sbom_path)]
-    osv = subprocess.run(["osv-scanner", *osv_args, "--format", "json", "--output", str(osv_path)],
+    osv = subprocess.run(["osv-scanner", *osv_args, "--format", "json", "--output-file", str(osv_path)],
                          capture_output=True, text=True, timeout=900)
-    if osv.returncode not in (0, 1):  # 1 = vulnerabilities found
+    # 1 = vulnerabilities found; 128 with no packages = nothing to audit (for example a single bundled file).
+    nothing_to_audit = osv.returncode == 128 and "found 0 packages" in osv.stderr + osv.stdout
+    if osv.returncode not in (0, 1) and not nothing_to_audit:
         raise RuntimeError(f"osv-scanner exited {osv.returncode}: {osv.stderr[-500:]}")
     secrets_path = reports / f"{stem}-gitleaks.json"
     with tempfile.TemporaryDirectory() as config_dir:
@@ -391,7 +393,8 @@ def scan_package(artifact, entry, work, reports, http, record=None):
         "args": extra,
         "tools": listing["tools"],
         "sbom": sbom_result(json.loads(sbom_path.read_text(encoding="utf-8"))),
-        "dependencies": osv_result(json.loads(osv_path.read_text(encoding="utf-8") or "{}")),
+        "dependencies": ({"result": "fail", "details": "no dependencies identified in the artifact; bundled code cannot be audited"}
+                         if nothing_to_audit else osv_result(json.loads(osv_path.read_text(encoding="utf-8") or "{}"))),
         "secrets": gitleaks_result(json.loads(secrets_path.read_text(encoding="utf-8") or "[]"), str(prepared["secrets_dir"])),
         "licence": licence_result(prepared["licence"], repository_spdx(entry, http)),
     }
