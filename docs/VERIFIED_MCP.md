@@ -140,15 +140,18 @@ different domain) fails and stays L0 rather than being guessed.
 The patterns detect known techniques. A clean scan is not proof that descriptions are harmless.
 
 The `MCP verify` workflow (manual, or on pull requests that change the verifier) runs `scripts/mcp_l2_scan.py <id>`
-for every entry with a package: identity checks, the artifact fetched and compared with its sha256 (npm tarball, OCI
-image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a container with `--network
-none`, a read-only file system, no capabilities and placeholder values for required variables, then syft (SBOM),
-osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by version
-and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as a
-workflow artifact; the workflow writes nothing to the repository. PyPI, NuGet and `mcpb` packages are not scanned yet;
-an entry with one stays at the level its identity evidence supports. So does a server that does not answer
-`tools/list` without network access. Only fixed `packageArguments` from the registry (and required ones with their
-default) are passed; options without a value are left out.
+for every entry with a package: identity checks, the artifact fetched and compared with its sha256 (npm tarball, PyPI
+wheel, MCP bundle, OCI image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a
+container with `--network none`, a read-only file system, no capabilities and placeholder values for required
+variables, then syft (SBOM), osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and
+gitleaks, all pinned by version and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and
+raw reports are uploaded as a workflow artifact; the workflow writes nothing to the repository. PyPI packages are
+scanned from their wheel, with dependencies installed as wheels only (`--only-binary`), and run in a pinned
+`python:3.12-slim` container; MCP bundles (`mcpb`) of type `node` run in the Node container, and their vulnerabilities
+are read from the SBOM of the bundle. NuGet packages, PyPI releases without a wheel and non-Node bundles are not
+scanned yet; an entry with one stays at the level its identity evidence supports. So does a server that does not
+answer `tools/list` without network access. Only fixed `packageArguments` from the registry (and required ones with
+their default) are passed; options without a value are left out.
 
 **Evidence** — `reports/mcp/<id>/<version>.json` (validated by `cli/mcp_evidence.py`, schema version 1): server id,
 name and version; `artifacts` with sha256 (must equal the pinned packages in the catalog); `identity` with the three
@@ -171,12 +174,12 @@ remote-only and stop at L1 by design. The others did not pass every check:
 | `tavily` | 0.2.15 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.25.2 (5 high advisories) |
 | `firecrawl` | 3.36.0 | L1 | L2 dependencies | `zod` 3.25.76 (GHSA-mrhx-c7xc-m3w5, 8.2) |
 | `supabase` | 0.14.0 | L1 | L2 tools | `tools/list` needs network access, so it cannot be read in the isolated container |
-| `context7` | 4.4.4 | L1 | L2 not run | the `mcpb` bundle cannot be scanned yet |
-| `clickhouse` | 0.7.0 | L1 | L2 not run | the PyPI package cannot be scanned yet |
-| `mongodb` | 3.2.1 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository |
-| `terraform` | 1.4.1 | L0 | L1 artifacts | same as `mongodb`; the image also declares no licence |
+| `context7` | 4.4.4 | L1 | L2 dependencies, sbom | the npm package passes; the `mcpb` bundle is one bundled file whose dependencies cannot be identified or audited |
+| `clickhouse` | 0.7.0 | L1 | L2 dependencies | the PyPI wheel passes (no high advisories); the OCI image has 124 high/critical advisories (authlib and others) |
+| `mongodb` | 3.2.1 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository ([reported](https://github.com/mongodb-js/mongodb-mcp-server/issues/1666)) |
+| `terraform` | 1.4.1 | L0 | L1 artifacts | same as `mongodb`; the image also declares no licence ([reported](https://github.com/hashicorp/terraform-mcp-server/issues/631)) |
 | `azure` | 3.0.0-beta.48 | L0 | L1 artifacts | NuGet is not supported; PyPI has no `3.0.0b48` |
-| `litellm` | 1.0.2 | L0 | L1 repository | the declared repository `BerriAI/litellm-agent-mcp` does not exist |
+| `litellm` | 1.0.2 | L0 | L1 repository | the declared repository `BerriAI/litellm-agent-mcp` does not exist ([reported](https://github.com/BerriAI/litellm/issues/49489)); with current dependencies the server also fails to start (`Server` has no `list_tools`) |
 | `notion` | 1.0.1 | L0 | L1 repository | the registry entry declares no source repository |
 | `stripe` | 0.2.4 | L0 | L1 repository | the GitHub organisation's website is `stripe.dev`, not the namespace domain `stripe.com` |
 | `mcp-atlassian` | 0.23.1 | L0 | L1 namespace | community listing outside the official registry; without credentials it lists no tools, and the image has 76 high/critical advisories |

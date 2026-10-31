@@ -3,13 +3,15 @@
 
 Steps for every pinned package (docs/VERIFIED_MCP.md, "Phase 2: L1 and L2 criteria"):
 1. L1 identity checks (scripts/verify_mcp_identity.py);
-2. fetch the exact artifact and compare its sha256 with the pin (npm tarball, OCI image by digest);
+2. fetch the exact artifact and compare its sha256 with the pin (npm tarball, PyPI wheel, MCP bundle, OCI image by
+   digest);
 3. start the server in a container without network, capabilities or credentials and read tools/list only;
 4. SBOM (syft), known vulnerabilities (osv-scanner), secrets in the artifact (gitleaks), declared licence.
 
 The evidence document is written to OUT/<id>/<version>.json together with the raw scanner reports. Nothing is
 committed: a maintainer reviews the evidence and raises the level in a pull request. npm dependencies are installed
-with --ignore-scripts, so no install script runs; the server process itself only runs inside the isolated container.
+with --ignore-scripts and PyPI dependencies as wheels only (--only-binary), so no install or build script runs; the
+server process itself only runs inside the isolated container.
 
   python3 scripts/mcp_l2_scan.py playwright --out "$RUNNER_TEMP/mcp-evidence"
 """
@@ -25,6 +27,7 @@ import sys
 import tarfile
 import tempfile
 import urllib.parse
+import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "cli"))
@@ -37,6 +40,8 @@ import verify_mcp_identity
 from import_mcp_registry import CATALOG
 
 NODE_IMAGE = "docker.io/library/node:22-slim@sha256:4b150b48b4116e2a22f2c39cc27025fbf4f153e2078fd3b14d159fdb5c7279da"
+# Same minor version as the workflow's setup-python, which installs the wheels the container then imports.
+PYTHON_IMAGE = "docker.io/library/python:3.12-slim@sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159"
 ISOLATION = ["--rm", "-i", "--network", "none", "--read-only", "--tmpfs", "/tmp:rw,size=256m", "--cap-drop", "ALL",
              "--security-opt", "no-new-privileges", "--pids-limit", "256", "--memory", "1g"]
 # OSI-approved licences seen in MCP servers; anything else fails and is reviewed by a person.
@@ -97,6 +102,74 @@ def npm_bin(package_json):
         short = package_json.get("name", "").rsplit("/", 1)[-1]
         return binary.get(short) or binary.get(package_json.get("name")) or sorted(binary.items())[0][1]
     raise ValueError("package.json has no bin entry")
+
+
+class NotScannable(Exception):
+    """The artifact is valid but this scanner cannot run it (for example a Python MCP bundle); no L2, identity stands."""
+
+
+def wheel_console_script(entry_points, preferred):
+    """`module:attr` of the console script in a wheel's entry_points.txt, preferring the given names."""
+    scripts, section = {}, None
+    for line in entry_points.splitlines():
+        line = line.strip()
+        if line.startswith("["):
+            section = line.strip("[]").strip()
+        elif section == "console_scripts" and "=" in line:
+            name, _, target = line.partition("=")
+            scripts[name.strip()] = target.split("[")[0].strip()
+    if not scripts:
+        raise ValueError("the wheel declares no console script")
+    for name in preferred:
+        if name in scripts:
+            return scripts[name]
+    return scripts[sorted(scripts)[0]]
+
+
+def python_launcher(target):
+    """`python -c` code that calls a console-script target such as `pkg.cli:main`."""
+    module, _, attr = target.partition(":")
+    if not all(part.isidentifier() for part in module.split(".") + (attr.split(".") if attr else [])):
+        raise ValueError(f"unexpected console script target {target!r}")
+    call = "".join(f".{part}" for part in attr.split(".")) if attr else ""
+    return f"import sys, importlib; sys.argv[0] = {module!r}; sys.exit(importlib.import_module({module!r}){call}())"
+
+
+PYPI_LICENCE_CLASSIFIERS = {"License :: OSI Approved :: MIT License": "MIT",
+                            "License :: OSI Approved :: Apache Software License": "Apache-2.0",
+                            "License :: OSI Approved :: ISC License (ISCL)": "ISC",
+                            "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)": "MPL-2.0"}
+
+
+def pypi_licence(info):
+    """SPDX licence of a PyPI release: License-Expression, else an SPDX License field, else a known classifier."""
+    for value in (info.get("license_expression"), info.get("license")):
+        if value and value.strip() in OSI_LICENCES:
+            return value.strip()
+    found = {PYPI_LICENCE_CLASSIFIERS[c] for c in info.get("classifiers", []) if c in PYPI_LICENCE_CLASSIFIERS}
+    return found.pop() if len(found) == 1 else (info.get("license_expression") or info.get("license"))
+
+
+def installed_requirements(site):
+    """`name==version` for every distribution installed into a --target directory (input for osv-scanner)."""
+    lines = []
+    for metadata in sorted(pathlib.Path(site).glob("*.dist-info/METADATA")):
+        fields = dict(line.split(": ", 1) for line in metadata.read_text(encoding="utf-8", errors="replace")
+                      .split("\n\n", 1)[0].splitlines() if ": " in line)
+        if fields.get("Name") and fields.get("Version"):
+            lines.append(f"{fields['Name']}=={fields['Version']}")
+    return "\n".join(lines) + "\n"
+
+
+def mcpb_entry_point(manifest):
+    """Entry point of a Node MCP bundle (manifest.json `server`), relative to the bundle root."""
+    server = manifest.get("server") or {}
+    if server.get("type") != "node":
+        raise NotScannable(f"MCP bundles of type {server.get('type')!r} are not supported by the L2 scanner yet")
+    entry_point = server.get("entry_point") or ""
+    if not entry_point or posixpath.isabs(entry_point) or ".." in entry_point.split("/"):
+        raise ValueError(f"unsafe or missing entry_point {entry_point!r}")
+    return entry_point
 
 
 def licence_result(declared, repository_spdx):
@@ -162,6 +235,23 @@ def safe_extract(archive, target):
         tar.extractall(target, **({"filter": "data"} if hasattr(tarfile, "data_filter") else {}))
 
 
+def safe_extract_zip(archive, target):
+    with zipfile.ZipFile(archive) as bundle:
+        for info in bundle.infolist():
+            path = (target / info.filename).resolve()
+            mode = info.external_attr >> 16
+            if not path.is_relative_to(target.resolve()) or (mode & 0o170000) == 0o120000:
+                raise ValueError(f"unsafe path in archive: {info.filename}")
+        bundle.extractall(target)
+
+
+def node_command(entry, package, script, extra):
+    env = [x for k, v in placeholder_env(entry).items() for x in ("-e", f"{k}={v}")]
+    # nobody (65534) has no home directory; servers that write a config or cache there get the writable /tmp.
+    return ["docker", "run", *ISOLATION, "--user", "65534:65534", "-e", "HOME=/tmp", "-v", f"{package}:/app:ro",
+            "-w", "/app", *env, NODE_IMAGE, "node", f"/app/{script}", *extra]
+
+
 def prepare_npm(artifact, entry, work, http, extra):
     meta = http.json(f"https://registry.npmjs.org/{urllib.parse.quote(artifact['identifier'], safe='@')}/"
                      f"{urllib.parse.quote(artifact['version'], safe='')}")
@@ -177,13 +267,57 @@ def prepare_npm(artifact, entry, work, http, extra):
     install_json = {k: v for k, v in package_json.items() if k != "devDependencies"}
     (package / "package.json").write_text(json.dumps(install_json, indent=2), encoding="utf-8")
     run(["npm", "install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund", "--package-lock"], cwd=package)
-    binary = npm_bin(package_json)
-    env = [x for k, v in placeholder_env(entry).items() for x in ("-e", f"{k}={v}")]
-    # nobody (65534) has no home directory; servers that write a config or cache there get the writable /tmp.
-    command = ["docker", "run", *ISOLATION, "--user", "65534:65534", "-e", "HOME=/tmp", "-v", f"{package}:/app:ro",
-               "-w", "/app", *env, NODE_IMAGE, "node", f"/app/{binary}", *extra]
+    command = node_command(entry, package, npm_bin(package_json), extra)
     return {"command": command, "sbom": f"dir:{package}", "osv": ["scan", "source", "--lockfile", str(package / "package-lock.json")],
             "secrets_dir": package, "secrets_exclude": ["node_modules"], "licence": package_json.get("license")}
+
+
+def prepare_pypi(artifact, entry, work, http, extra):
+    meta = http.json(f"https://pypi.org/pypi/{urllib.parse.quote(artifact['identifier'])}/"
+                     f"{urllib.parse.quote(artifact['version'], safe='')}/json")
+    file = next((f for f in meta["urls"] if f["digests"]["sha256"] == artifact["sha256"]), None)
+    if file is None:
+        raise ValueError("no PyPI file matches the pinned sha256")
+    if file["packagetype"] != "bdist_wheel":
+        raise NotScannable("only wheels are scanned; an sdist would run its build code")
+    data, _ = http.get(file["url"], limit=verify_mcp_identity.MAX_BYTES)
+    if hashlib.sha256(data).hexdigest() != artifact["sha256"]:
+        raise ValueError("PyPI file does not match the pinned sha256")
+    wheel = work / file["filename"]
+    wheel.write_bytes(data)
+    unpacked, site = work / "wheel", work / "site"
+    unpacked.mkdir()
+    safe_extract_zip(wheel, unpacked)
+    # Dependencies as wheels only: installing a wheel copies files, no build or install script runs.
+    run([sys.executable, "-m", "pip", "install", "--quiet", "--disable-pip-version-check", "--no-compile",
+         "--only-binary=:all:", "--target", str(site), str(wheel)])
+    entry_points = next(unpacked.glob("*.dist-info/entry_points.txt"), None)
+    if entry_points is None:
+        raise ValueError("the wheel declares no console script")
+    names = [artifact["identifier"], artifact["identifier"].replace("_", "-")]
+    code = python_launcher(wheel_console_script(entry_points.read_text(encoding="utf-8"), names))
+    (work / "requirements.txt").write_text(installed_requirements(site), encoding="utf-8")
+    env = [x for k, v in placeholder_env(entry).items() for x in ("-e", f"{k}={v}")]
+    command = ["docker", "run", *ISOLATION, "--user", "65534:65534", "-e", "HOME=/tmp", "-e", "PYTHONPATH=/app",
+               "-e", "PYTHONDONTWRITEBYTECODE=1", "-v", f"{site}:/app:ro", "-w", "/tmp", *env, PYTHON_IMAGE,
+               "python", "-c", code, *extra]
+    return {"command": command, "sbom": f"dir:{site}", "osv": ["scan", "source", "--lockfile", str(work / "requirements.txt")],
+            "secrets_dir": unpacked, "secrets_exclude": [], "licence": pypi_licence(meta["info"])}
+
+
+def prepare_mcpb(artifact, entry, work, http, extra):
+    data, _ = http.get(artifact["identifier"], limit=verify_mcp_identity.MAX_BYTES)
+    if hashlib.sha256(data).hexdigest() != artifact["sha256"]:
+        raise ValueError("MCP bundle does not match the pinned sha256")
+    archive, bundle = work / "bundle.mcpb", work / "bundle"
+    archive.write_bytes(data)
+    bundle.mkdir()
+    safe_extract_zip(archive, bundle)
+    manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+    command = node_command(entry, bundle, mcpb_entry_point(manifest), extra)
+    # A bundle ships its dependencies inside; osv-scanner reads them from the SBOM syft builds of the bundle.
+    return {"command": command, "sbom": f"dir:{bundle}", "osv": None, "secrets_dir": bundle,
+            "secrets_exclude": ["node_modules"], "licence": manifest.get("license")}
 
 
 def prepare_oci(artifact, entry, work, extra):
@@ -217,18 +351,20 @@ def repository_spdx(entry, http):
     return (repo.get("license") or {}).get("spdx_id")
 
 
-SCANNED = ("npm", "oci")
+SCANNED = ("npm", "oci", "pypi", "mcpb")
 
 
 def scan_package(artifact, entry, work, reports, http, record=None):
     package_record = next((p for p in ((record or {}).get("server") or {}).get("packages", [])
                            if p.get("registryType") == artifact["registry"] and p.get("identifier") == artifact["identifier"]), None)
     extra = server_args(entry, package_record)
-    prepared = (prepare_npm(artifact, entry, work, http, extra) if artifact["registry"] == "npm"
-                else prepare_oci(artifact, entry, work, extra) if artifact["registry"] == "oci"
-                else None)
-    if prepared is None:
-        raise ValueError(f"{artifact['registry']} packages are not supported by the L2 scanner yet")
+    preparers = {"npm": lambda: prepare_npm(artifact, entry, work, http, extra),
+                 "pypi": lambda: prepare_pypi(artifact, entry, work, http, extra),
+                 "mcpb": lambda: prepare_mcpb(artifact, entry, work, http, extra),
+                 "oci": lambda: prepare_oci(artifact, entry, work, extra)}
+    if artifact["registry"] not in preparers:
+        raise NotScannable(f"{artifact['registry']} packages are not supported by the L2 scanner yet")
+    prepared = preparers[artifact["registry"]]()
     stem = f"{artifact['registry']}-{hashlib.sha256(artifact['identifier'].encode()).hexdigest()[:8]}"
     listing = mcp_tools_list.list_tools(prepared["command"], timeout=120)
     (reports / f"{stem}-tools.json").write_text(json.dumps(listing, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -236,9 +372,12 @@ def scan_package(artifact, entry, work, reports, http, record=None):
     sbom_path = reports / f"{stem}-sbom.cdx.json"
     run(["syft", "scan", prepared["sbom"], "--quiet", "-o", f"cyclonedx-json={sbom_path}"])
     osv_path = reports / f"{stem}-osv.json"
-    osv = subprocess.run(["osv-scanner", *prepared["osv"], "--format", "json", "--output", str(osv_path)],
+    osv_args = prepared["osv"] or ["scan", "source", "--lockfile", str(sbom_path)]
+    osv = subprocess.run(["osv-scanner", *osv_args, "--format", "json", "--output-file", str(osv_path)],
                          capture_output=True, text=True, timeout=900)
-    if osv.returncode not in (0, 1):  # 1 = vulnerabilities found
+    # 1 = vulnerabilities found; 128 with no packages = nothing to audit (for example a single bundled file).
+    nothing_to_audit = osv.returncode == 128 and "found 0 packages" in osv.stderr + osv.stdout
+    if osv.returncode not in (0, 1) and not nothing_to_audit:
         raise RuntimeError(f"osv-scanner exited {osv.returncode}: {osv.stderr[-500:]}")
     secrets_path = reports / f"{stem}-gitleaks.json"
     with tempfile.TemporaryDirectory() as config_dir:
@@ -254,7 +393,8 @@ def scan_package(artifact, entry, work, reports, http, record=None):
         "args": extra,
         "tools": listing["tools"],
         "sbom": sbom_result(json.loads(sbom_path.read_text(encoding="utf-8"))),
-        "dependencies": osv_result(json.loads(osv_path.read_text(encoding="utf-8") or "{}")),
+        "dependencies": ({"result": "fail", "details": "no dependencies identified in the artifact; bundled code cannot be audited"}
+                         if nothing_to_audit else osv_result(json.loads(osv_path.read_text(encoding="utf-8") or "{}"))),
         "secrets": gitleaks_result(json.loads(secrets_path.read_text(encoding="utf-8") or "[]"), str(prepared["secrets_dir"])),
         "licence": licence_result(prepared["licence"], repository_spdx(entry, http)),
     }
@@ -322,7 +462,7 @@ def main(argv=None):
             with tempfile.TemporaryDirectory() as tmp:
                 try:
                     per_package.append(scan_package(artifact, entry, pathlib.Path(tmp), reports, http, record))
-                except mcp_tools_list.McpError as error:
+                except (mcp_tools_list.McpError, NotScannable) as error:
                     # The server did not list its tools offline: no L2, but the identity evidence still stands.
                     problems.append(f"{artifact['identifier']}: {error}")
                 except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as error:

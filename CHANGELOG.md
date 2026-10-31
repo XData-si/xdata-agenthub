@@ -5,6 +5,7 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 ## [Unreleased]
 
 ### Added
+- MCP L2 scan covers PyPI packages (wheels, dependencies installed wheel-only) and Node MCP bundles (`mcpb`).
 - Verified MCP: 13 more vendor servers (22 in total) and `mcp-atlassian` as the first `community` listing (Jira and
   Confluence Server/Data Center); the identity check accepts MCP bundles (`mcpb`) published as GitHub release assets.
 - Verified MCP phase 1 (#84): `registry/mcp-servers.json` lists MCP servers with metadata imported from the official
