@@ -66,12 +66,14 @@ def server_args(entry, package_record):
     """Arguments after the image or executable: registry packageArguments plus reviewed extra arguments."""
     args = []
     for arg in (package_record or {}).get("packageArguments", []):
-        value = arg.get("value") or arg.get("default")
-        if value and "{" in value:
-            continue  # needs user input; never guessed
+        # A fixed value is passed as declared; a required argument also with its default. An optional argument
+        # without a value is an option the user may set (some servers list every option), so it is left out.
+        value = arg.get("value") or (arg.get("default") if arg.get("isRequired") else None)
+        if not value or "{" in value:
+            continue  # absent, or needs user input; never guessed
         if arg.get("type") == "named":
-            args += [arg["name"]] + ([value] if value else [])
-        elif value:
+            args += [arg["name"], value]
+        else:
             args.append(value)
     return args + EXTRA_ARGS.get(entry["id"], {}).get("args", [])
 
@@ -310,7 +312,7 @@ def main(argv=None):
     reports.mkdir(parents=True, exist_ok=True)
     versions = {"syft": tool_version(["syft", "version"]).replace("Application:", "syft").strip(),
                 "osv": tool_version(["osv-scanner", "--version"]), "gitleaks": "gitleaks " + tool_version(["gitleaks", "version"])}
-    per_package, problems = [], []
+    per_package, problems, blocking = [], [], False
     packages = [a for a in entry["artifacts"] if a["kind"] == "package"]
     # L2 needs every package scanned; with an unsupported one the entry keeps what its identity evidence supports.
     unsupported = sorted({a["registry"] for a in packages if a["registry"] not in SCANNED})
@@ -319,11 +321,15 @@ def main(argv=None):
             with tempfile.TemporaryDirectory() as tmp:
                 try:
                     per_package.append(scan_package(artifact, entry, pathlib.Path(tmp), reports, http, record))
-                except (OSError, RuntimeError, ValueError, mcp_tools_list.McpError, subprocess.TimeoutExpired) as error:
+                except mcp_tools_list.McpError as error:
+                    # The server did not list its tools offline: no L2, but the identity evidence still stands.
                     problems.append(f"{artifact['identifier']}: {error}")
+                except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as error:
+                    problems.append(f"{artifact['identifier']}: {error}")
+                    blocking = True
     if packages and len(per_package) == len(packages):
         evidence, level = assemble(evidence, entry, per_package, versions)
-    elif problems or len(pins) != len(packages):
+    elif blocking or len(pins) != len(packages):
         level = "L0"
     else:
         level = mcp_evidence.validate_evidence(evidence, entry)

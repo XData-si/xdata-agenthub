@@ -141,7 +141,9 @@ none`, a read-only file system, no capabilities and placeholder values for requi
 osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by version
 and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as a
 workflow artifact; the workflow writes nothing to the repository. PyPI, NuGet and `mcpb` packages are not scanned yet;
-an entry with one stays at the level its identity evidence supports.
+an entry with one stays at the level its identity evidence supports. So does a server that does not answer
+`tools/list` without network access. Only fixed `packageArguments` from the registry (and required ones with their
+default) are passed; options without a value are left out.
 
 **Evidence** — `reports/mcp/<id>/<version>.json` (validated by `cli/mcp_evidence.py`, schema version 1): server id,
 name and version; `artifacts` with sha256 (must equal the pinned packages in the catalog); `identity` with the three
