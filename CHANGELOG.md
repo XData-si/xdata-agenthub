@@ -5,6 +5,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 ## [Unreleased]
 
 ### Added
+- Verified MCP: 13 more vendor servers (22 in total) and `mcp-atlassian` as the first `community` listing (Jira and
+  Confluence Server/Data Center); the identity check accepts MCP bundles (`mcpb`) published as GitHub release assets.
 - Verified MCP phase 1 (#84): `registry/mcp-servers.json` lists MCP servers with metadata imported from the official
   MCP Registry, pinned to one version and marked L0 (listed only, not verified). `scripts/import_mcp_registry.py`
   refreshes listed servers idempotently and resets an entry to L0 when its upstream version changes.
@@ -26,6 +28,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   and MCP search, rendered by the manual `Recordings` workflow as a downloadable artifact.
 
 ### Changed
+- MCP L2 scan: only fixed registry arguments are passed to the server, `HOME` is writable for the unprivileged user,
+  and a server that cannot list its tools offline keeps its L1 identity result.
 - Repository security: secret scanning with push protection, Dependabot security updates and CodeQL (Python,
   Actions) are enabled; pull requests run dependency review, and OpenSSF Scorecard runs weekly (badge in README).
 - Catalog site loads self-hosted Umami analytics (`analytics2.xdata.si`, cookieless) and its session recorder.

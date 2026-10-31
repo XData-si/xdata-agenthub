@@ -86,6 +86,7 @@ evidence. Reports are reproducible: anyone can re-run the published test plan.
 | `registry` | upstream status and publish/update timestamps |
 | `level` | `L0`–`L4`; anything above L0 requires `evidence` and a `sha256` for every package, L3+ also a `permissions` profile |
 | `permissions`, `evidence` | permission profile (values from the table above) and a repository path to the evidence report |
+| `listing` | `community` for a server added on request that its vendor did not publish; with `registry.status` `unlisted` it is not in the official registry at all, so it has no namespace proof and stays L0 |
 
 Import: `python3 scripts/import_mcp_registry.py --add <registry name> --id <slug>` starts listing a server;
 `python3 scripts/import_mcp_registry.py` refreshes all listed servers from the registry's `versions/latest` endpoint
@@ -105,6 +106,10 @@ Decisions for phase 2: the initial set contains only servers published by the ve
 code cannot be scanned; the verifier starts a packaged server only to read `tools/list` (isolated container, no
 network, no credentials, no tool calls — exercising tools is L3); heavier scanners run in CI, never in `xah`.
 
+Exception: `mcp-atlassian` (sooperset) is listed as `community` because Atlassian publishes no MCP server for Jira and
+Confluence Server/Data Center (self-hosted); Atlassian's own server covers Cloud only. It is not in the official
+registry, so the weekly registry check skips it and it stays L0; its OCI image is still scanned for the record.
+
 **L1 (identity)** — all three must pass:
 - *namespace*: the official registry lists the server as active under this name (its namespace proof is the
   registry's GitHub or DNS/HTTP verification);
@@ -114,10 +119,11 @@ network, no credentials, no tool calls — exercising tools is L3); heavier scan
 
 `scripts/verify_mcp_identity.py <id>…` (or `--all`) runs the three L1 checks with the registry, GitHub/GitLab and
 package registry APIs (npm tarball checked against its sha512 integrity, PyPI file against its published sha256, OCI
-manifest against its digest, plus the package's link back to the repository). Nothing is installed or run. `--write`
-pins the sha256 values in the catalog and writes the evidence document; it never changes `level`. A domain namespace
-passes only when the repository is on that domain or its GitHub organisation's website is; anything else (for example
-an organisation website on a different domain) fails and stays L0 rather than being guessed.
+manifest against its digest, an MCP bundle (`mcpb`, GitHub release assets only) against the registry's `fileSha256`,
+plus the package's link back to the repository). Nothing is installed or run. `--write` pins the sha256 values in the
+catalog and writes the evidence document; it never changes `level`. A domain namespace passes only when the repository
+is on that domain or its GitHub organisation's website is; anything else (for example an organisation website on a
+different domain) fails and stays L0 rather than being guessed.
 
 **L2 (security scan)** — L1 plus five passing scans of the same artifact:
 - *tools*: the `tools/list` snapshot has no errors from `cli/mcp_tool_scan.py`. Description rules: hidden or
@@ -133,13 +139,16 @@ an organisation website on a different domain) fails and stays L0 rather than be
 
 The patterns detect known techniques. A clean scan is not proof that descriptions are harmless.
 
-The `MCP verify` workflow (manual, or on pull requests that change the verifier) runs
-`scripts/mcp_l2_scan.py <id>` for every entry with a package: identity checks, the artifact fetched and compared with
-its sha256 (npm tarball, OCI image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a
-container with `--network none`, a read-only file system, no capabilities and placeholder values for required
-variables, then syft (SBOM), osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by
-version and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as
-a workflow artifact; the workflow writes nothing to the repository. PyPI packages are not scanned yet.
+The `MCP verify` workflow (manual, or on pull requests that change the verifier) runs `scripts/mcp_l2_scan.py <id>`
+for every entry with a package: identity checks, the artifact fetched and compared with its sha256 (npm tarball, OCI
+image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a container with `--network
+none`, a read-only file system, no capabilities and placeholder values for required variables, then syft (SBOM),
+osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by version
+and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as a
+workflow artifact; the workflow writes nothing to the repository. PyPI, NuGet and `mcpb` packages are not scanned yet;
+an entry with one stays at the level its identity evidence supports. So does a server that does not answer
+`tools/list` without network access. Only fixed `packageArguments` from the registry (and required ones with their
+default) are passed; options without a value are left out.
 
 **Evidence** — `reports/mcp/<id>/<version>.json` (validated by `cli/mcp_evidence.py`, schema version 1): server id,
 name and version; `artifacts` with sha256 (must equal the pinned packages in the catalog); `identity` with the three
@@ -148,18 +157,29 @@ L1 results; `scans` with the five L2 results and the tool names and versions use
 snapshot contradicts, and rejects a catalog level the evidence does not support. Raising a level is a reviewed pull
 request that adds the evidence file and changes `level` in the same commit.
 
-### First run: servers that did not pass (2026-10-30)
+### Results of the phase 2 set (2026-10-31)
 
-| Server | Version | Supported level | Failed | Why |
+`playwright` 0.0.82 reached L2. `atlassian`, `cloudflare`, `exa`, `figma`, `gitlab` and `microsoft-learn` are
+remote-only and stop at L1 by design. The others did not pass every check:
+
+| Server | Version | Level | Failed | Why |
 |---|---|---|---|---|
 | `github` | 2.0.3 | L1 | L2 dependencies | 13 high/critical advisories in the Debian base image (glibc) |
 | `grafana` | v2.1.1 | L1 | L2 dependencies | 90 high/critical advisories in the base image (util-linux and others) |
-| `sentry` | 0.42.0 | L1 | L2 dependencies, secrets, licence | `@modelcontextprotocol/sdk` 1.30.0 (4 high advisories); 4 `sentry-access-token` matches in `dist/`; FSL-1.1-ALv2 is not OSI-approved |
+| `sentry` | 0.42.0 | L1 | L2 dependencies, secrets, licence | `@modelcontextprotocol/sdk` 1.30.0; 4 `sentry-access-token` matches in `dist/`; FSL-1.1-ALv2 is not OSI-approved |
+| `brave-search` | 2.1.3 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.30.0 (5 high advisories) |
+| `tavily` | 0.2.15 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.25.2 (5 high advisories) |
+| `firecrawl` | 3.36.0 | L1 | L2 dependencies | `zod` 3.25.76 (GHSA-mrhx-c7xc-m3w5, 8.2) |
+| `supabase` | 0.14.0 | L1 | L2 tools | `tools/list` needs network access, so it cannot be read in the isolated container |
+| `context7` | 4.4.4 | L1 | L2 not run | the `mcpb` bundle cannot be scanned yet |
+| `clickhouse` | 0.7.0 | L1 | L2 not run | the PyPI package cannot be scanned yet |
+| `mongodb` | 3.2.1 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository |
+| `terraform` | 1.4.1 | L0 | L1 artifacts | same as `mongodb`; the image also declares no licence |
+| `azure` | 3.0.0-beta.48 | L0 | L1 artifacts | NuGet is not supported; PyPI has no `3.0.0b48` |
+| `litellm` | 1.0.2 | L0 | L1 repository | the declared repository `BerriAI/litellm-agent-mcp` does not exist |
 | `notion` | 1.0.1 | L0 | L1 repository | the registry entry declares no source repository |
 | `stripe` | 0.2.4 | L0 | L1 repository | the GitHub organisation's website is `stripe.dev`, not the namespace domain `stripe.com` |
-
-`playwright` 0.0.82 passed L2. `atlassian`, `cloudflare` and `gitlab` passed L1 and are remote-only, so L1 is their
-maximum.
+| `mcp-atlassian` | 0.23.1 | L0 | L1 namespace | community listing outside the official registry; without credentials it lists no tools, and the image has 76 high/critical advisories |
 
 ## Phases
 | Phase | Scope | Priority |

@@ -71,10 +71,12 @@ class ResultTests(unittest.TestCase):
 
     def test_server_args(self):
         record = {"packageArguments": [{"type": "positional", "value": "stdio"},
-                                       {"type": "named", "name": "--read-only"},
+                                       {"type": "named", "name": "--read-only", "format": "boolean"},
+                                       {"type": "named", "name": "--telemetry", "default": "enabled"},
                                        {"type": "named", "name": "--toolsets", "value": "repos"},
+                                       {"type": "named", "name": "--mode", "default": "local", "isRequired": True},
                                        {"type": "named", "name": "--token", "value": "{token}"}]}
-        self.assertEqual(scanner.server_args(entry(), record), ["stdio", "--read-only", "--toolsets", "repos"])
+        self.assertEqual(scanner.server_args(entry(), record), ["stdio", "--toolsets", "repos", "--mode", "local"])
         self.assertEqual(scanner.server_args(entry(id="grafana"), None), ["-t", "stdio"])
 
     def test_unsafe_archive_is_rejected(self):

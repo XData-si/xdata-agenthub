@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "cloudflare",
+    "name": "com.cloudflare.mcp/mcp",
+    "version": "1.0.0"
+  },
+  "artifacts": [],
+  "generated_at": "2026-10-31T10:41:46Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists com.cloudflare.mcp/mcp 1.0.0 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace domain cloudflare.com, GitHub organisation cloudflare website https://www.cloudflare.com"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "remote endpoints only; nothing to pin"
+    }
+  }
+}

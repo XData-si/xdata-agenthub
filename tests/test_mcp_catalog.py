@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "cli"))
 sys.path.insert(0, str(ROOT / "scripts"))
 import build_site
 import import_mcp_registry as importer
+import mcp_evidence
 from mcp_catalog import filter_servers, validate_entry, validate_mcp_catalog
 
 SHA = "a" * 64
@@ -43,7 +44,8 @@ class ValidationTests(unittest.TestCase):
     def test_committed_catalog_is_valid_and_lists_only(self):
         servers = validate_mcp_catalog(json.loads((ROOT / "registry/mcp-servers.json").read_text(encoding="utf-8")))
         self.assertTrue(servers)
-        self.assertEqual({s["level"] for s in servers}, {"L0"})
+        # Every level above L0 is backed by a committed evidence file that supports it.
+        self.assertEqual(mcp_evidence.check_catalog_evidence(servers, ROOT), sum(s["level"] != "L0" for s in servers))
         self.assertEqual([s["id"] for s in servers], sorted(s["id"] for s in servers))
 
     def test_registry_record_is_mapped_to_a_pinned_l0_entry(self):
@@ -90,6 +92,18 @@ class ValidationTests(unittest.TestCase):
             validate_mcp_catalog(catalog(self.entry, dict(self.entry, id="files-2")))
         with self.assertRaises(ValueError):
             validate_mcp_catalog(dict(catalog(), schema_version=2))
+
+    def test_community_listing_outside_the_registry_stays_l0(self):
+        community = dict(copy.deepcopy(self.entry), listing="community",
+                         registry={"status": "unlisted", "published_at": "2026-09-01T10:00:00Z",
+                                   "updated_at": "2026-09-01T10:00:00Z"})
+        validate_entry(copy.deepcopy(community))
+        for change in ({"listing": "partner"}, {"level": "L1", "evidence": "reports/mcp/files/1.2.0.json"}):
+            with self.assertRaises(ValueError):
+                validate_entry(dict(copy.deepcopy(community), **change))
+        unlisted_vendor = copy.deepcopy(community); del unlisted_vendor["listing"]
+        with self.assertRaises(ValueError):
+            validate_entry(unlisted_vendor)
 
     def test_search_filters(self):
         other = importer.to_entry(record(name="io.github.example/remote-only", packages=[]), "remote-only")
@@ -157,6 +171,14 @@ class ImportTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.run_refresh(catalog(), {}, add=("io.github.example/files", "files"))
 
+    def test_unlisted_community_entries_are_not_fetched(self):
+        community = dict(importer.to_entry(record(name="io.github.other/tool"), "tool"), listing="community",
+                         registry={"status": "unlisted", "published_at": "2026-09-01T10:00:00Z",
+                                   "updated_at": "2026-09-01T10:00:00Z"})
+        fetched = []
+        result = importer.refresh(catalog(community), fetch=lambda name: fetched.append(name), log=lambda _: None)
+        self.assertEqual((fetched, result["servers"]), ([], [community]))
+
     def test_check_mode_does_not_write(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = pathlib.Path(tmp) / "mcp.json"
@@ -187,9 +209,14 @@ class CliAndSiteTests(unittest.TestCase):
         found = self.run_cli("search", servers[0]["id"], "--json")
         self.assertEqual(found.returncode, 0, found.stderr)
         self.assertIn(servers[0]["id"], [s["id"] for s in json.loads(found.stdout)])
-        shown = self.run_cli("inspect", servers[0]["id"])
+        listed_only = next(s for s in servers if s["level"] == "L0")
+        shown = self.run_cli("inspect", listed_only["id"])
         self.assertEqual(shown.returncode, 0, shown.stderr)
         self.assertIn("Listed only", shown.stdout)
+        verified = next(s for s in servers if s["level"] != "L0")
+        shown = self.run_cli("inspect", verified["id"])
+        self.assertIn(f'Evidence: {verified["evidence"]}', shown.stdout)
+        self.assertNotIn("Listed only", shown.stdout)
         missing = self.run_cli("inspect", "no-such-server")
         self.assertNotEqual(missing.returncode, 0)
 
@@ -200,7 +227,8 @@ class CliAndSiteTests(unittest.TestCase):
             page = (pathlib.Path(tmp) / "index.html").read_text(encoding="utf-8")
         self.assertIn('id="mcp"', page)
         self.assertIn("L0 means listed only", page)
-        self.assertEqual(page.count('class="seal seal-mcp-l0"'), len(servers))
+        for level in {s["level"] for s in servers}:
+            self.assertEqual(page.count(f'class="seal seal-mcp-{level.lower()}"'), sum(s["level"] == level for s in servers))
 
 
 if __name__ == "__main__":

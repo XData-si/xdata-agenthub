@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "gitlab",
+    "name": "com.gitlab/mcp",
+    "version": "0.0.1"
+  },
+  "artifacts": [],
+  "generated_at": "2026-10-31T10:41:47Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists com.gitlab/mcp 0.0.1 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "repository hosted on the namespace domain gitlab.com"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "remote endpoints only; nothing to pin"
+    }
+  }
+}

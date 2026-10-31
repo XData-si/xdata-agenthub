@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "clickhouse",
+    "name": "io.github.ClickHouse/mcp-clickhouse",
+    "version": "0.7.0"
+  },
+  "artifacts": [
+    {
+      "registry": "pypi",
+      "identifier": "mcp-clickhouse",
+      "version": "0.7.0",
+      "sha256": "45781660fa84662b5b8f0bfaf815180d134d50353f17e6ab1d99ff8354444aaf"
+    },
+    {
+      "registry": "oci",
+      "identifier": "ghcr.io/clickhouse/mcp-clickhouse:0.7.0",
+      "version": "0.7.0",
+      "sha256": "4102cb2db1431646b692fe281ac2925291df4a843d2954e9ac980677c9585c31"
+    }
+  ],
+  "generated_at": "2026-10-31T10:38:45Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists io.github.ClickHouse/mcp-clickhouse 0.7.0 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace io.github.ClickHouse, repository owner ClickHouse"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "pinned: mcp-clickhouse sha256:45781660fa84…, ghcr.io/clickhouse/mcp-clickhouse:0.7.0 sha256:4102cb2db143…"
+    }
+  },
+  "run": "https://github.com/XData-si/xdata-agenthub/actions/runs/41193573752"
+}

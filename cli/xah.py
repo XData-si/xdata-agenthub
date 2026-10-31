@@ -249,8 +249,11 @@ def main():
                     print(f'Registry name: {server["name"]}')
                     print(f'Version: {server["version"]} (registry status: {server["registry"]["status"]})')
                     print(f'Level: {server["level"]} {mcp_catalog.LEVEL_LABELS[server["level"]]}')
+                    if server.get("listing") == "community":
+                        print("  Community server: listed on request, not published by the vendor"
+                              + (" and not in the official MCP Registry." if server["registry"]["status"] == "unlisted" else "."))
                     if server["level"] == "L0":
-                        print("  Listed only: metadata from the official MCP Registry; not reviewed, scanned or tested.")
+                        print("  Listed only: not reviewed, scanned or tested.")
                     print(f'Description (declared): {server["description"]}')
                     if "repository" in server:
                         print(f'Repository: {server["repository"]}')

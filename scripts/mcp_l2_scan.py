@@ -66,12 +66,14 @@ def server_args(entry, package_record):
     """Arguments after the image or executable: registry packageArguments plus reviewed extra arguments."""
     args = []
     for arg in (package_record or {}).get("packageArguments", []):
-        value = arg.get("value") or arg.get("default")
-        if value and "{" in value:
-            continue  # needs user input; never guessed
+        # A fixed value is passed as declared; a required argument also with its default. An optional argument
+        # without a value is an option the user may set (some servers list every option), so it is left out.
+        value = arg.get("value") or (arg.get("default") if arg.get("isRequired") else None)
+        if not value or "{" in value:
+            continue  # absent, or needs user input; never guessed
         if arg.get("type") == "named":
-            args += [arg["name"]] + ([value] if value else [])
-        elif value:
+            args += [arg["name"], value]
+        else:
             args.append(value)
     return args + EXTRA_ARGS.get(entry["id"], {}).get("args", [])
 
@@ -177,8 +179,9 @@ def prepare_npm(artifact, entry, work, http, extra):
     run(["npm", "install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund", "--package-lock"], cwd=package)
     binary = npm_bin(package_json)
     env = [x for k, v in placeholder_env(entry).items() for x in ("-e", f"{k}={v}")]
-    command = ["docker", "run", *ISOLATION, "--user", "65534:65534", "-v", f"{package}:/app:ro", "-w", "/app", *env,
-               NODE_IMAGE, "node", f"/app/{binary}", *extra]
+    # nobody (65534) has no home directory; servers that write a config or cache there get the writable /tmp.
+    command = ["docker", "run", *ISOLATION, "--user", "65534:65534", "-e", "HOME=/tmp", "-v", f"{package}:/app:ro",
+               "-w", "/app", *env, NODE_IMAGE, "node", f"/app/{binary}", *extra]
     return {"command": command, "sbom": f"dir:{package}", "osv": ["scan", "source", "--lockfile", str(package / "package-lock.json")],
             "secrets_dir": package, "secrets_exclude": ["node_modules"], "licence": package_json.get("license")}
 
@@ -212,6 +215,9 @@ def repository_spdx(entry, http):
         return None
     repo = http.json(f"https://api.github.com/repos/{path[1]}/{path[2]}", verify_mcp_identity._github_headers())
     return (repo.get("license") or {}).get("spdx_id")
+
+
+SCANNED = ("npm", "oci")
 
 
 def scan_package(artifact, entry, work, reports, http, record=None):
@@ -307,31 +313,40 @@ def main(argv=None):
     reports.mkdir(parents=True, exist_ok=True)
     versions = {"syft": tool_version(["syft", "version"]).replace("Application:", "syft").strip(),
                 "osv": tool_version(["osv-scanner", "--version"]), "gitleaks": "gitleaks " + tool_version(["gitleaks", "version"])}
-    per_package, problems = [], []
+    per_package, problems, blocking = [], [], False
     packages = [a for a in entry["artifacts"] if a["kind"] == "package"]
-    if len(pins) == len(packages):
+    # L2 needs every package scanned; with an unsupported one the entry keeps what its identity evidence supports.
+    unsupported = sorted({a["registry"] for a in packages if a["registry"] not in SCANNED})
+    if len(pins) == len(packages) and not unsupported:
         for artifact in packages:
             with tempfile.TemporaryDirectory() as tmp:
                 try:
                     per_package.append(scan_package(artifact, entry, pathlib.Path(tmp), reports, http, record))
-                except (OSError, RuntimeError, ValueError, mcp_tools_list.McpError, subprocess.TimeoutExpired) as error:
+                except mcp_tools_list.McpError as error:
+                    # The server did not list its tools offline: no L2, but the identity evidence still stands.
                     problems.append(f"{artifact['identifier']}: {error}")
+                except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as error:
+                    problems.append(f"{artifact['identifier']}: {error}")
+                    blocking = True
     if packages and len(per_package) == len(packages):
         evidence, level = assemble(evidence, entry, per_package, versions)
-    elif problems or len(pins) != len(packages):
+    elif blocking or len(pins) != len(packages):
         level = "L0"
     else:
         level = mcp_evidence.validate_evidence(evidence, entry)
     path = out / f"{entry['version']}.json"
     path.write_text(json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{entry['id']} {entry['version']}: evidence supports {level}")
+    if unsupported:
+        print(f"  not scanned: {', '.join(unsupported)} packages are not supported by the L2 scanner yet")
     for check in mcp_evidence.IDENTITY_CHECKS:
         print(f"  identity.{check}: {evidence['identity'][check]['result']} - {evidence['identity'][check]['details']}")
     for scan, result in evidence.get("scans", {}).items():
         print(f"  {scan}: {result['result']} - {result['details'][:300]}")
     for problem in problems:
         print(f"  error: {problem}"[:600])
-    return 0 if not problems else 1
+    # Exit 1 only when the evidence had to drop to L0; a server that cannot list its tools offline is reported above.
+    return 1 if blocking else 0
 
 
 if __name__ == "__main__":

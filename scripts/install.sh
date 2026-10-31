@@ -37,18 +37,18 @@ STAGE="$(mktemp -d "$PREFIX/.xah-stage.XXXXXXXX")"
 BACKUP=""
 cleanup() { if [ -d "$STAGE" ]; then rm -rf -- "$STAGE"; fi; }
 trap cleanup EXIT
-for name in cli registry skills agents instructions workflows; do
+for name in cli registry reports skills agents instructions workflows; do
   [ ! -d "$ROOT/$name" ] || cp -R "$ROOT/$name" "$STAGE/$name"
 done
 python3 "$STAGE/cli/xah.py" doctor
-for name in cli registry skills agents instructions workflows; do
+for name in cli registry reports skills agents instructions workflows; do
   if [ -L "$PREFIX/$name" ]; then
     echo "Refusing symlinked existing component: $PREFIX/$name" >&2; exit 1
   fi
 done
 # Unique backup folder preserves the previous installation across repeated upgrades.
 BACKUP="$(mktemp -d "$PREFIX/.xah-backup.XXXXXXXX")"
-for name in cli registry skills agents instructions workflows; do
+for name in cli registry reports skills agents instructions workflows; do
   if [ -e "$PREFIX/$name" ]; then mv "$PREFIX/$name" "$BACKUP/$name"; fi
   if [ -d "$STAGE/$name" ]; then mv "$STAGE/$name" "$PREFIX/$name"; fi
 done
