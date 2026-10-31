@@ -104,6 +104,14 @@ bash scripts/install.sh
 xah --help
 ```
 
+## v0.4.0 (2026-10-31)
+
+v0.4.0 adds **Verified MCP**: 23 MCP servers, 16 of them verified above L0 with evidence in `reports/mcp/`
+(`playwright` L2, 15 servers L1). L1 checks identity (registry namespace, repository owner, pinned sha256), L2 scans the
+same artifact (tool poisoning, schemas, SBOM, vulnerabilities, secrets, licence) with the server isolated and no tool
+called. `xah mcp list|search|inspect`; criteria and results in [VERIFIED_MCP.md](docs/VERIFIED_MCP.md); release notes
+in [RELEASE_NOTES_v0.4.0.md](docs/RELEASE_NOTES_v0.4.0.md).
+
 ## v0.3.0 (2026-10-29)
 
 v0.3.0 is the first signed release: the archives, the catalog and `SHA256SUMS` are signed with Sigstore and carry

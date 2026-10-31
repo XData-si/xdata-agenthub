@@ -42,7 +42,7 @@ Verify a download. You need [cosign](https://docs.sigstore.dev/cosign/system_con
 [GitHub CLI](https://cli.github.com/) (macOS: `brew install cosign gh`, then `gh auth login` once):
 
 ```bash
-VERSION=v0.3.0
+VERSION=v0.4.0
 mkdir agenthub-$VERSION && cd agenthub-$VERSION
 gh release download $VERSION --repo XData-si/xdata-agenthub   # or download the assets from the release page
 cosign verify-blob --bundle SHA256SUMS.sigstore.json \
@@ -63,7 +63,7 @@ The same workflow attests SLSA build provenance for the archives and the catalog
 gh attestation verify xdata-agenthub-$VERSION.tar.gz --repo XData-si/xdata-agenthub
 ```
 
-From the next release on, the same attestation is also attached as `xdata-agenthub-$VERSION.intoto.jsonl`, so it can
+From v0.4.0 on, the same attestation is also attached as `xdata-agenthub-$VERSION.intoto.jsonl`, so it can
 be checked offline against the downloaded archive:
 
 ```bash
