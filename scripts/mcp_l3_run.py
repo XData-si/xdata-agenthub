@@ -57,7 +57,7 @@ def load_plan(entry):
 # Lines look like: I1031 10:00:00.000001  1 strace.go:614] [  12:  12] node X openat(AT_FDCWD /app, 0x7f.. /app/cli.js,
 # O_RDONLY|O_CLOEXEC, 0o0) = 21 (0x15) (8.1µs). Only exit (X) lines are used, so the result is known.
 LINE = re.compile(r"\]\s+\[\s*\d+:\s*\d+\]\s+(?P<comm>\S+)\s+X\s+(?P<call>[a-z0-9_]+)\((?P<args>.*)\)\s+=\s+(?P<ret>\S+)")
-PATH = re.compile(r"0x[0-9a-f]+ (/[^,\s)]*)")
+PATH = re.compile(r"0x[0-9a-f]+ (/[^,\s)}]*)")
 INET = re.compile(r"Family: AF_INET6?, Addr: \[?([0-9a-fA-F.:]*)\]?, Port: (\d+)")
 
 
