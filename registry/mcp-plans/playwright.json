@@ -32,14 +32,14 @@
         "url": "http://fixture:8000/"
       },
       "expect": "success",
-      "expect_text": "fixture-page-7f3a"
+      "expect_text": "Page Title: AgentHub L3 fixture"
     },
     {
       "name": "read the page",
       "tool": "browser_snapshot",
       "arguments": {},
       "expect": "success",
-      "expect_text": "Second page"
+      "expect_text": "fixture-page-7f3a"
     },
     {
       "name": "follow a link on the allowed host",
@@ -48,7 +48,7 @@
         "url": "http://fixture:8000/second.html"
       },
       "expect": "success",
-      "expect_text": "fixture-second-91c2"
+      "expect_text": "Page Title: Second"
     },
     {
       "name": "host outside the allowlist is unreachable",
