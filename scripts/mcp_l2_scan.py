@@ -214,6 +214,9 @@ def repository_spdx(entry, http):
     return (repo.get("license") or {}).get("spdx_id")
 
 
+SCANNED = ("npm", "oci")
+
+
 def scan_package(artifact, entry, work, reports, http, record=None):
     package_record = next((p for p in ((record or {}).get("server") or {}).get("packages", [])
                            if p.get("registryType") == artifact["registry"] and p.get("identifier") == artifact["identifier"]), None)
@@ -309,7 +312,9 @@ def main(argv=None):
                 "osv": tool_version(["osv-scanner", "--version"]), "gitleaks": "gitleaks " + tool_version(["gitleaks", "version"])}
     per_package, problems = [], []
     packages = [a for a in entry["artifacts"] if a["kind"] == "package"]
-    if len(pins) == len(packages):
+    # L2 needs every package scanned; with an unsupported one the entry keeps what its identity evidence supports.
+    unsupported = sorted({a["registry"] for a in packages if a["registry"] not in SCANNED})
+    if len(pins) == len(packages) and not unsupported:
         for artifact in packages:
             with tempfile.TemporaryDirectory() as tmp:
                 try:
@@ -325,6 +330,8 @@ def main(argv=None):
     path = out / f"{entry['version']}.json"
     path.write_text(json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{entry['id']} {entry['version']}: evidence supports {level}")
+    if unsupported:
+        print(f"  not scanned: {', '.join(unsupported)} packages are not supported by the L2 scanner yet")
     for check in mcp_evidence.IDENTITY_CHECKS:
         print(f"  identity.{check}: {evidence['identity'][check]['result']} - {evidence['identity'][check]['details']}")
     for scan, result in evidence.get("scans", {}).items():

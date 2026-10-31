@@ -181,7 +181,20 @@ def _oci(artifact, http):
     return digest.removeprefix("sha256:"), [source]
 
 
-RESOLVERS = {"npm": _npm, "pypi": _pypi, "oci": _oci}
+def _mcpb(artifact, http):
+    # An MCP bundle is a file at an https URL; only GitHub release assets are accepted, so the release names its
+    # repository. Its sha256 must equal the registry's fileSha256, which the import pins in the catalog.
+    url = artifact["identifier"]
+    match = re.fullmatch(r"https://github\.com/([^/]+)/([^/]+)/releases/download/[^?#]+", url)
+    if not match:
+        raise ValueError("mcpb bundles are accepted only as GitHub release assets")
+    if not artifact.get("sha256"):
+        raise ValueError("the registry declares no fileSha256 for this bundle")
+    data, _ = http.get(url, limit=MAX_BYTES)
+    return hashlib.sha256(data).hexdigest(), [f"https://github.com/{match.group(1)}/{match.group(2)}"]
+
+
+RESOLVERS = {"npm": _npm, "pypi": _pypi, "oci": _oci, "mcpb": _mcpb}
 
 
 def check_artifacts(entry, http):

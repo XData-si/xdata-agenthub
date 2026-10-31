@@ -114,10 +114,11 @@ network, no credentials, no tool calls — exercising tools is L3); heavier scan
 
 `scripts/verify_mcp_identity.py <id>…` (or `--all`) runs the three L1 checks with the registry, GitHub/GitLab and
 package registry APIs (npm tarball checked against its sha512 integrity, PyPI file against its published sha256, OCI
-manifest against its digest, plus the package's link back to the repository). Nothing is installed or run. `--write`
-pins the sha256 values in the catalog and writes the evidence document; it never changes `level`. A domain namespace
-passes only when the repository is on that domain or its GitHub organisation's website is; anything else (for example
-an organisation website on a different domain) fails and stays L0 rather than being guessed.
+manifest against its digest, an MCP bundle (`mcpb`, GitHub release assets only) against the registry's `fileSha256`,
+plus the package's link back to the repository). Nothing is installed or run. `--write` pins the sha256 values in the
+catalog and writes the evidence document; it never changes `level`. A domain namespace passes only when the repository
+is on that domain or its GitHub organisation's website is; anything else (for example an organisation website on a
+different domain) fails and stays L0 rather than being guessed.
 
 **L2 (security scan)** — L1 plus five passing scans of the same artifact:
 - *tools*: the `tools/list` snapshot has no errors from `cli/mcp_tool_scan.py`. Description rules: hidden or
@@ -133,13 +134,14 @@ an organisation website on a different domain) fails and stays L0 rather than be
 
 The patterns detect known techniques. A clean scan is not proof that descriptions are harmless.
 
-The `MCP verify` workflow (manual, or on pull requests that change the verifier) runs
-`scripts/mcp_l2_scan.py <id>` for every entry with a package: identity checks, the artifact fetched and compared with
-its sha256 (npm tarball, OCI image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a
-container with `--network none`, a read-only file system, no capabilities and placeholder values for required
-variables, then syft (SBOM), osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by
-version and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as
-a workflow artifact; the workflow writes nothing to the repository. PyPI packages are not scanned yet.
+The `MCP verify` workflow (manual, or on pull requests that change the verifier) runs `scripts/mcp_l2_scan.py <id>`
+for every entry with a package: identity checks, the artifact fetched and compared with its sha256 (npm tarball, OCI
+image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a container with `--network
+none`, a read-only file system, no capabilities and placeholder values for required variables, then syft (SBOM),
+osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by version
+and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as a
+workflow artifact; the workflow writes nothing to the repository. PyPI, NuGet and `mcpb` packages are not scanned yet;
+an entry with one stays at the level its identity evidence supports.
 
 **Evidence** — `reports/mcp/<id>/<version>.json` (validated by `cli/mcp_evidence.py`, schema version 1): server id,
 name and version; `artifacts` with sha256 (must equal the pinned packages in the catalog); `identity` with the three
