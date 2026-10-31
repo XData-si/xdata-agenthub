@@ -30,6 +30,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 ### Changed
 - MCP L2 scan: only fixed registry arguments are passed to the server, `HOME` is writable for the unprivileged user,
   and a server that cannot list its tools offline keeps its L1 identity result.
+- Repository security: secret scanning with push protection, Dependabot security updates and CodeQL (Python,
+  Actions) are enabled; pull requests run dependency review, and OpenSSF Scorecard runs weekly (badge in README).
 - Catalog site loads self-hosted Umami analytics (`analytics2.xdata.si`, cookieless) and its session recorder.
 - `Release validation` runs on every pull request. Its jobs are required for `main`, and the previous path
   filter left pull requests that touched only other files (for example `demos/`) without required checks.

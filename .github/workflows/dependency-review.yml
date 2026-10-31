@@ -1,0 +1,15 @@
+name: Dependency review
+# Fails a pull request that adds a dependency (including a GitHub Action) with a known vulnerability of moderate
+# severity or higher. Uses the repository dependency graph; nothing is installed.
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: moderate

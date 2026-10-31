@@ -345,7 +345,8 @@ def main(argv=None):
         print(f"  {scan}: {result['result']} - {result['details'][:300]}")
     for problem in problems:
         print(f"  error: {problem}"[:600])
-    return 0 if not problems else 1
+    # Exit 1 only when the evidence had to drop to L0; a server that cannot list its tools offline is reported above.
+    return 1 if blocking else 0
 
 
 if __name__ == "__main__":
