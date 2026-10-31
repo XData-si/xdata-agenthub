@@ -39,7 +39,9 @@ out of band, no redirects, explicit `--approve`.
 - `xah list/search/browse` show the source catalog of each item; `xah trust` reports declared provenance only.
 - Installing an item from a community catalog prints the catalog ID, version and item digest; `xah verify --target`
   later confirms the installed files still match.
-- Operators can keep an allowlist of catalog IDs and certificate identities in their own configuration management.
+- Operators can keep an allowlist of catalog IDs and certificate identities in their own configuration management;
+  `xah` enforces allowed refresh URLs and catalog directories through a trusted sources policy
+  ([TRUSTED_CATALOG_REFRESH.md](TRUSTED_CATALOG_REFRESH.md#trusted-sources-policy-xah-303)).
 
 ## Failure modes
 | Failure | Behaviour |
