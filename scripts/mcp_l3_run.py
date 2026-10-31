@@ -57,18 +57,33 @@ def load_plan(entry):
 # Lines look like: I1031 10:00:00.000001  1 strace.go:614] [  12:  12] node X openat(AT_FDCWD /app, 0x7f.. /app/cli.js,
 # O_RDONLY|O_CLOEXEC, 0o0) = 21 (0x15) (8.1µs). Only exit (X) lines are used, so the result is known.
 LINE = re.compile(r"\]\s+\[\s*\d+:\s*\d+\]\s+(?P<comm>\S+)\s+X\s+(?P<call>[a-z0-9_]+)\((?P<args>.*)\)\s+=\s+(?P<ret>\S+)")
-PATH = re.compile(r"0x[0-9a-f]+ (/[^,\s)}]*)")
+# Paths may contain spaces ("Crash Reports"); they end at the next argument separator.
+PATH = re.compile(r"0x[0-9a-f]+ (/[^,)}]*?)(?=, |\)|}|$)")
+UNIX = re.compile(r'Family: AF_UNIX, Addr: "([^"]*)"')
 INET = re.compile(r"Family: AF_INET6?, Addr: \[?([0-9a-fA-F.:]*)\]?, Port: (\d+)")
 
 
 def parse_strace(lines):
     """File writes and reads, network connections and executed programs from gVisor strace exit lines."""
-    activity = {"writes": set(), "reads": set(), "connects": set(), "execs": set(), "unix": set()}
+    activity = {"writes": set(), "reads": set(), "connects": set(), "blocked": set(), "execs": set(), "unix": set()}
     for line in lines:
         match = LINE.search(line)
-        if not match or match["ret"].startswith("-") or "errno=" in line[match.end("ret"):]:
-            continue  # failed calls changed nothing
+        if not match:
+            continue
         call, args = match["call"], match["args"]
+        failed = match["ret"].startswith("-") or "errno=" in line[match.end("ret"):]
+        if call == "connect":
+            inet = INET.search(args)
+            # A non-blocking connect returns EINPROGRESS (115) and then completes; any other error means the
+            # connection never happened (the sandbox has no route), which is still reported as an attempt.
+            if inet:
+                target = f"{inet[1]}:{inet[2]}"
+                activity["blocked" if failed and "errno=115 " not in line else "connects"].add(target)
+            elif "AF_UNIX" in args and not failed:
+                activity["unix"].add((UNIX.findall(args) or ["(abstract)"])[-1])
+            continue
+        if failed:
+            continue  # failed calls changed nothing
         paths = PATH.findall(args)
         if call in ("openat", "open", "creat"):
             if paths and not paths[-1].startswith(NOISE):
@@ -76,12 +91,6 @@ def parse_strace(lines):
                 activity[kind].add(paths[-1])
         elif call in ("unlinkat", "unlink", "renameat", "renameat2", "rename", "mkdirat", "mkdir"):
             activity["writes"].update(p for p in paths if not p.startswith(NOISE))
-        elif call == "connect":
-            inet = INET.search(args)
-            if inet:
-                activity["connects"].add(f"{inet[1]}:{inet[2]}")
-            elif "AF_UNIX" in args:
-                activity["unix"].add((PATH.findall(args) or ["(abstract)"])[-1])
         elif call in ("execve", "execveat") and paths:
             activity["execs"].add(paths[0])
     return {k: sorted(v) for k, v in activity.items()}
@@ -208,7 +217,7 @@ def main(argv=None):
         print(f"  call {call['result']}: {call['name']} ({call['tool']}, expect {call['expect']})")
         if call["result"] == "fail":
             print(f"    {call['excerpt'][:200]!r}")
-    for kind in ("writes", "connects", "execs", "unix"):
+    for kind in ("writes", "connects", "blocked", "execs", "unix"):
         print(f"  {kind}: {', '.join(report['activity'][kind][:20]) or 'none'}")
     for mismatch in report["mismatches"]:
         print(f"  mismatch: {mismatch}")

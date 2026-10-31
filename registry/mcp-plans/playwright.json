@@ -21,7 +21,7 @@
       "host": "fixture",
       "kind": "http",
       "port": 8000,
-      "root": "tests/fixtures/mcp/l3/site"
+      "root": "tests/fixtures/mcp/l3/web"
     }
   ],
   "calls": [

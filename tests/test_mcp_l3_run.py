@@ -16,7 +16,9 @@ LINES = [
     PREFIX + "connect(0x19 socket:[7], 0x7f10 {Family: AF_INET, Addr: 172.18.0.2, Port: 8000}, 0x10) = 0 (0x0) (40µs)",
     PREFIX + "connect(0x1a socket:[8], 0x7f10 {Family: AF_INET, Addr: 93.184.215.14, Port: 443}, 0x10) = 0 (0x0) (40µs)",
     PREFIX + "connect(0x1b socket:[9], 0x7f10 {Family: AF_INET, Addr: 8.8.8.8, Port: 53}, 0x10) = -1 errno=101 (network is unreachable) (1µs)",
-    PREFIX + "connect(0x1c socket:[10], 0x7f10 {Family: AF_UNIX, Addr: 0x7f20 /tmp/.X11-unix/X0}, 0x10) = 0 (0x0) (3µs)",
+    PREFIX + "connect(0x1c socket:[10], 0x7f10 {Family: AF_UNIX, Addr: \"/tmp/.X11-unix/X0\"}, 0x10) = 0 (0x0) (3µs)",
+    PREFIX + "connect(0x1d socket:[11], 0x7f10 {Family: AF_INET, Addr: 172.18.0.2, Port: 8001}, 0x10) = -1 errno=115 (operation now in progress) (66µs)",
+    PREFIX + "openat(AT_FDCWD /tmp, 0x3ac0 /tmp/.config/chrome/Crash Reports/settings.dat, O_RDWR|O_CREAT|O_EXCL, 0o600) = 6 (0x6) (16µs)",
     PREFIX + "execve(0x7f30 /ms-playwright/chromium-1200/chrome-linux/chrome, 0x7f40 [...], 0x7f50 [...]) = 0 (0x0) (1ms)",
     PREFIX + "execve(0x7f30 /bin/sh, 0x7f40 [...], 0x7f50 [...]) = 0 (0x0) (1ms)",
     "I1031 10:00:00.000002       1 strace.go:570] [  12:  12] node E openat(AT_FDCWD /, 0x7f00 /entry/only, O_WRONLY, 0o0)",
@@ -27,8 +29,10 @@ class StraceTests(unittest.TestCase):
     def test_parse_keeps_successful_calls_and_classifies_them(self):
         activity = l3.parse_strace(LINES)
         self.assertEqual(activity["reads"], ["/app/cli.js"])
-        self.assertEqual(activity["writes"], ["/etc/passwd", "/tmp/playwright-output/page.yml"])
-        self.assertEqual(activity["connects"], ["172.18.0.2:8000", "93.184.215.14:443"])
+        self.assertEqual(activity["writes"], ["/etc/passwd", "/tmp/.config/chrome/Crash Reports/settings.dat",
+                                              "/tmp/playwright-output/page.yml"])
+        self.assertEqual(activity["connects"], ["172.18.0.2:8000", "172.18.0.2:8001", "93.184.215.14:443"])
+        self.assertEqual(activity["blocked"], ["8.8.8.8:53"])
         self.assertEqual(activity["unix"], ["/tmp/.X11-unix/X0"])
         self.assertEqual(activity["execs"], ["/bin/sh", "/ms-playwright/chromium-1200/chrome-linux/chrome"])
 
@@ -38,7 +42,7 @@ class StraceTests(unittest.TestCase):
         self.assertEqual(mismatches, ["write outside allowed paths: /etc/passwd",
                                       "connection to a host outside the allowlist: 93.184.215.14:443",
                                       "executed a program outside the allowlist: /bin/sh"])
-        clean = {"writes": ["/tmp/x"], "reads": [], "connects": ["127.0.0.1:9222", "172.18.0.2:8000"],
+        clean = {"writes": ["/tmp/x"], "reads": [], "connects": ["127.0.0.1:9222", "172.18.0.2:8000"], "blocked": [],
                  "execs": ["/usr/bin/node", "/proc/self/exe"], "unix": []}
         self.assertEqual(l3.compare(clean, allowed, ["172.18.0.2"]), [])
         self.assertEqual(l3.compare({**clean, "writes": ["/tmpfoo/x"]}, allowed, []),
