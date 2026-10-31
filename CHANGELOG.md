@@ -26,6 +26,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   and MCP search, rendered by the manual `Recordings` workflow as a downloadable artifact.
 
 ### Changed
+- Repository security: secret scanning with push protection, Dependabot security updates and CodeQL (Python,
+  Actions) are enabled; pull requests run dependency review, and OpenSSF Scorecard runs weekly (badge in README).
 - Catalog site loads self-hosted Umami analytics (`analytics2.xdata.si`, cookieless) and its session recorder.
 - `Release validation` runs on every pull request. Its jobs are required for `main`, and the previous path
   filter left pull requests that touched only other files (for example `demos/`) without required checks.
