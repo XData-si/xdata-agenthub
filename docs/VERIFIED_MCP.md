@@ -148,6 +148,19 @@ L1 results; `scans` with the five L2 results and the tool names and versions use
 snapshot contradicts, and rejects a catalog level the evidence does not support. Raising a level is a reviewed pull
 request that adds the evidence file and changes `level` in the same commit.
 
+### First run: servers that did not pass (2026-10-30)
+
+| Server | Version | Supported level | Failed | Why |
+|---|---|---|---|---|
+| `github` | 2.0.3 | L1 | L2 dependencies | 13 high/critical advisories in the Debian base image (glibc) |
+| `grafana` | v2.1.1 | L1 | L2 dependencies | 90 high/critical advisories in the base image (util-linux and others) |
+| `sentry` | 0.42.0 | L1 | L2 dependencies, secrets, licence | `@modelcontextprotocol/sdk` 1.30.0 (4 high advisories); 4 `sentry-access-token` matches in `dist/`; FSL-1.1-ALv2 is not OSI-approved |
+| `notion` | 1.0.1 | L0 | L1 repository | the registry entry declares no source repository |
+| `stripe` | 0.2.4 | L0 | L1 repository | the GitHub organisation's website is `stripe.dev`, not the namespace domain `stripe.com` |
+
+`playwright` 0.0.82 passed L2. `atlassian`, `cloudflare` and `gitlab` passed L1 and are remote-only, so L1 is their
+maximum.
+
 ## Phases
 | Phase | Scope | Priority |
 |---|---|---|
