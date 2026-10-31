@@ -61,7 +61,8 @@ jobs:
           exit $status
       - name: Collect gVisor logs
         if: always()
-        run: sudo cp -r /tmp/runsc "$RUNNER_TEMP/runtime/gvisor-logs" && sudo chmod -R a+rX "$RUNNER_TEMP/runtime" || true
+        # One archive: gVisor names some log directories "<unknown>", which artifact uploads reject.
+        run: mkdir -p "$RUNNER_TEMP/runtime" && sudo tar -czf "$RUNNER_TEMP/runtime/gvisor-logs.tgz" -C /tmp runsc && sudo chmod a+r "$RUNNER_TEMP/runtime/gvisor-logs.tgz" || true
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:

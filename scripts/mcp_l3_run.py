@@ -201,10 +201,14 @@ def main(argv=None):
     print(f"{entry['id']} {entry['version']}: runtime {report['result']} ({report['strace_lines']} strace lines)")
     for call in report["calls"]:
         print(f"  call {call['result']}: {call['name']} ({call['tool']}, expect {call['expect']})")
+        if call["result"] == "fail":
+            print(f"    {call['excerpt'][:200]!r}")
     for kind in ("writes", "connects", "execs", "unix"):
         print(f"  {kind}: {', '.join(report['activity'][kind][:20]) or 'none'}")
     for mismatch in report["mismatches"]:
         print(f"  mismatch: {mismatch}")
+    if report["result"] == "fail":
+        print("  server stderr: " + " | ".join(report["server_stderr"][-6:])[:800])
     return 0 if report["result"] == "pass" else 1
 
 
