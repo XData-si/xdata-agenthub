@@ -174,12 +174,12 @@ remote-only and stop at L1 by design. The others did not pass every check:
 | `tavily` | 0.2.15 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.25.2 (5 high advisories) |
 | `firecrawl` | 3.36.0 | L1 | L2 dependencies | `zod` 3.25.76 (GHSA-mrhx-c7xc-m3w5, 8.2) |
 | `supabase` | 0.14.0 | L1 | L2 tools | `tools/list` needs network access, so it cannot be read in the isolated container |
-| `context7` | 4.4.4 | L1 | L2 not run | the `mcpb` bundle cannot be scanned yet |
-| `clickhouse` | 0.7.0 | L1 | L2 not run | the PyPI package cannot be scanned yet |
-| `mongodb` | 3.2.1 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository |
-| `terraform` | 1.4.1 | L0 | L1 artifacts | same as `mongodb`; the image also declares no licence |
+| `context7` | 4.4.4 | L1 | L2 dependencies, sbom | the npm package passes; the `mcpb` bundle is one bundled file whose dependencies cannot be identified or audited |
+| `clickhouse` | 0.7.0 | L1 | L2 dependencies | the PyPI wheel passes (no high advisories); the OCI image has 124 high/critical advisories (authlib and others) |
+| `mongodb` | 3.2.1 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository ([reported](https://github.com/mongodb-js/mongodb-mcp-server/issues/1666)) |
+| `terraform` | 1.4.1 | L0 | L1 artifacts | same as `mongodb`; the image also declares no licence ([reported](https://github.com/hashicorp/terraform-mcp-server/issues/631)) |
 | `azure` | 3.0.0-beta.48 | L0 | L1 artifacts | NuGet is not supported; PyPI has no `3.0.0b48` |
-| `litellm` | 1.0.2 | L0 | L1 repository | the declared repository `BerriAI/litellm-agent-mcp` does not exist |
+| `litellm` | 1.0.2 | L0 | L1 repository | the declared repository `BerriAI/litellm-agent-mcp` does not exist ([reported](https://github.com/BerriAI/litellm/issues/49489)); with current dependencies the server also fails to start (`Server` has no `list_tools`) |
 | `notion` | 1.0.1 | L0 | L1 repository | the registry entry declares no source repository |
 | `stripe` | 0.2.4 | L0 | L1 repository | the GitHub organisation's website is `stripe.dev`, not the namespace domain `stripe.com` |
 | `mcp-atlassian` | 0.23.1 | L0 | L1 namespace | community listing outside the official registry; without credentials it lists no tools, and the image has 76 high/critical advisories |

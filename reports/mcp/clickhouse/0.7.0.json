@@ -19,7 +19,7 @@
       "sha256": "4102cb2db1431646b692fe281ac2925291df4a843d2954e9ac980677c9585c31"
     }
   ],
-  "generated_at": "2026-10-31T10:38:45Z",
+  "generated_at": "2026-10-31T20:49:50Z",
   "identity": {
     "result": "pass",
     "tool": "verify_mcp_identity.py",
@@ -36,5 +36,192 @@
       "details": "pinned: mcp-clickhouse sha256:45781660fa84…, ghcr.io/clickhouse/mcp-clickhouse:0.7.0 sha256:4102cb2db143…"
     }
   },
-  "run": "https://github.com/XData-si/xdata-agenthub/actions/runs/41193573752"
+  "run": "https://github.com/XData-si/xdata-agenthub/actions/runs/41240698625",
+  "scans": {
+    "tools": {
+      "result": "pass",
+      "tool": "mcp_tool_scan.py",
+      "details": "3 tools, 0 errors, 0 warnings",
+      "count": 3,
+      "digest": "2fbb7cab8308b1738b1b3b98a706bb2d9dc488a6601ef8878f1567ff5025e6db",
+      "errors": 0,
+      "warnings": 0
+    },
+    "dependencies": {
+      "result": "fail",
+      "details": "4 known vulnerabilities, 0 high/critical, 0 unscored | 312 known vulnerabilities, 124 high/critical, 6 unscored; high/critical: authlib@1.6.12 PYSEC-2026-4355,GHSA-7vr2-2fgp-9w7p (9.1); authlib@1.6.12 PYSEC-2026-4356,GHSA-8m4g-j4wp-wgcg (9.1); authlib@1.6.12 GHSA-6v38-4h7w-rj9h (9.1); authlib@1.6.12 GHSA-c73q-w75p-j82v (8.8); certifi@2026.2.25 PYSEC-2026-4320,GHSA-6q48-6c7w-9gw2 (9.1); dnspython@2.8.0 GHSA-45c3-73f7-pv4m (7.5); mcp@2.1.1 GHSA-84m7-p3x7-pcfv (7.5); pyjwt@2.13.0 PYSEC-2026-4143,GHSA-9j54-fg26-wv3r (7.4); pyjwt@2.13.0 PYSEC-2026-4144,GHSA-9v7f-9g4p-ffgj (7.4); pyjwt@2.13.0 PYSEC-2026-4145,GHSA-ffc3-869f-jxw9 (9.1); pyjwt@2.13.0 PYSEC-2026-4149,GHSA-p4g4-x82p-q773 (7.4); pyjwt@2.13.0 PYSEC-2026-4150,GHSA-r6x4-923q-g947 (7.4); pyjwt@2.13.0 PYSEC-2026-4151,GHSA-w2cx-738m-mc7w (7.4); pyjwt@2.13.0 PYSEC-2026-4183,GHSA-x33g-cr3x-6449 (8.2); pyjwt@2.13.0 GHSA-pxh4-856f-4h89 (7.4); unscored: glibc@2.36-9+deb12u14 DEBIAN-CVE-2010-4756; glibc@2.36-9+deb12u14 DEBIAN-CVE-2010-4756; gnutls28@3.7.9-2+deb12u7 DEBIAN-CVE-2011-3389; shadow@1:4.13+dfsg1-1+deb12u2 DEBIAN-CVE-2007-5686; shadow@1:4.13+dfsg1-1+deb12u2 DEBIAN-CVE-2007-5686; tar@1.34+dfsg-1.2+deb12u1 DEBIAN-CVE-2005-2541",
+      "tool": "osv-scanner version: 2.7.0"
+    },
+    "sbom": {
+      "result": "pass",
+      "details": "CycloneDX SBOM with 3998 components | CycloneDX SBOM with 3576 components",
+      "tool": "syft   syft"
+    },
+    "secrets": {
+      "result": "pass",
+      "details": "no secrets found | no secrets found",
+      "tool": "gitleaks 8.30.1"
+    },
+    "licence": {
+      "result": "pass",
+      "details": "Apache-2.0, matches repository | Apache-2.0, matches repository"
+    }
+  },
+  "tools": [
+    {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "List available ClickHouse databases",
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "additionalProperties": false
+      },
+      "name": "list_databases",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "title": "List Databases"
+    },
+    {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "List available ClickHouse tables in a database, including schema, comment,\nrow count, and column count.\n\nIntegers outside [-9007199254740991, 9007199254740991] in table metadata are\nreturned as decimal strings.\nPagination tokens are single-use and retained for up to one hour.",
+      "inputSchema": {
+        "properties": {
+          "database": {
+            "type": "string",
+            "description": "The database to list tables from"
+          },
+          "like": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional LIKE pattern to filter table names"
+          },
+          "not_like": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional NOT LIKE pattern to exclude table names"
+          },
+          "page_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Single-use token from a previous call, retained for up to one hour"
+          },
+          "page_size": {
+            "default": 50,
+            "exclusiveMinimum": 0,
+            "type": "integer",
+            "description": "Number of tables to return per page (default: 50, must be greater than 0)"
+          },
+          "include_detailed_columns": {
+            "default": true,
+            "type": "boolean",
+            "description": "Whether to include detailed column metadata (default: True).\nWhen False, the columns array will be empty but create_table_query still contains\nall column information. This reduces payload size for large schemas."
+          }
+        },
+        "required": [
+          "database"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "name": "list_tables",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "title": "List Tables"
+    },
+    {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
+      "description": "Execute SQL queries in ClickHouse. Queries run in read-only mode by default. Bind optional params by name with {name:Type} placeholders, such as {name:String} or {vector:Array(Float32)}. Values may be JSON scalars, nulls, or arrays. Pass exact large integers as decimal strings. JSON lists and objects cannot bind to Tuple and Map types. Python percent formatting and $name$ raw binary parameters are not supported. Parameter values stay out of the MCP server's normal SQL log lines, but may appear in errors and backend logs. Set CLICKHOUSE_ALLOW_WRITE_ACCESS=true to allow DDL and DML operations. Set CLICKHOUSE_ALLOW_DROP=true to additionally allow destructive operations (DROP, TRUNCATE, DELETE, UPDATE, REPLACE TABLE/PARTITION, CREATE OR REPLACE, CLEAR COLUMN/INDEX/PROJECTION, DETACH PERMANENTLY). That gate is a best-effort accident guard, not a security boundary. Integers outside [-9007199254740991, 9007199254740991] are returned as decimal strings. Two optional checks also run through this tool. Use DESCRIBE (<query>) when you need a query's output columns and types; it inspects the result schema and surfaces analysis errors such as an unknown column, but a query that describes cleanly can still fail at runtime. Consider EXPLAIN ESTIMATE <query> before a SELECT that could be expensive; it returns the estimated parts, rows and marks read from MergeTree family tables, which is not run time and not result size. Neither runs the query body, though analysis can execute scalar subqueries.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "params": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "name": "run_query",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "title": "Run Query"
+    }
+  ]
 }
