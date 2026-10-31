@@ -63,6 +63,14 @@ The same workflow attests SLSA build provenance for the archives and the catalog
 gh attestation verify xdata-agenthub-$VERSION.tar.gz --repo XData-si/xdata-agenthub
 ```
 
+From the next release on, the same attestation is also attached as `xdata-agenthub-$VERSION.intoto.jsonl`, so it can
+be checked offline against the downloaded archive:
+
+```bash
+gh attestation verify xdata-agenthub-$VERSION.tar.gz --repo XData-si/xdata-agenthub \
+  --bundle xdata-agenthub-$VERSION.intoto.jsonl
+```
+
 ## What this does and does not prove
 
 - It proves integrity (nothing changed) and origin (built by this repository's workflow from a tagged commit).
