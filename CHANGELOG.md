@@ -4,9 +4,16 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-31
+
+Verified MCP: 23 MCP servers in the catalog, 16 above L0 with committed evidence (`playwright` L2, 15 servers L1).
+Release notes: [docs/RELEASE_NOTES_v0.4.0.md](docs/RELEASE_NOTES_v0.4.0.md).
+
 ### Added
+- Evidence for the phase 2 set in `reports/mcp/` (`playwright` L2, 15 servers L1) and a results table with the reason
+  for every server that did not pass; the installer installs `reports/` with the catalog.
 - MCP L2 scan covers PyPI packages (wheels, dependencies installed wheel-only) and Node MCP bundles (`mcpb`).
-- Verified MCP: 13 more vendor servers (22 in total) and `mcp-atlassian` as the first `community` listing (Jira and
+- Verified MCP: 13 more vendor servers (22 in total) plus `mcp-atlassian` as the first `community` listing (Jira and
   Confluence Server/Data Center); the identity check accepts MCP bundles (`mcpb`) published as GitHub release assets.
 - Verified MCP phase 1 (#84): `registry/mcp-servers.json` lists MCP servers with metadata imported from the official
   MCP Registry, pinned to one version and marked L0 (listed only, not verified). `scripts/import_mcp_registry.py`
@@ -18,7 +25,7 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   (hidden characters, instruction tags, prompt injection, concealment, credential-file references) and for schemas that
   model providers reject (for example a top-level `oneOf`); `cli/mcp_evidence.py` validates L1/L2 evidence documents
   bound to the pinned version and sha256, and `xah doctor` rejects catalog levels the evidence does not support.
-  L1/L2 criteria are documented in `docs/VERIFIED_MCP.md`. No server is above L0 yet.
+  L1/L2 criteria are documented in `docs/VERIFIED_MCP.md`.
 - `scripts/verify_mcp_identity.py`: L1 checks for catalog entries (registry status of the exact version, repository
   owner against the namespace, package sha256 and its link back to the repository); `--write` pins digests and writes
   evidence without changing levels.

@@ -9,18 +9,18 @@ skills today, MCP servers next, and tested combinations of both. Fewer entries, 
 |---|---|---|
 | Alpha | Local curated templates and CLI (list, search, inspect, add, audit; offline; no overwrite) | done |
 | Beta | Agent compatibility: Claude Code, Codex, OpenCode adapters, user scope, runtime evidence | done for tested scenarios; more evidence ongoing |
-| Registry | Trusted catalog: provenance, package digests, `xah verify`, Sigstore-signed releases with SLSA provenance | done (first signed release pending) |
+| Registry | Trusted catalog: provenance, package digests, `xah verify`, Sigstore-signed releases with SLSA provenance | done (v0.3.0) |
 | Review | Security gate, AI review and maintainer review for every skill; seals bound to digests | done |
 | Hub | Searchable catalog site, Claude Code plugin marketplace with topic bundles | done |
 | Community | Contribution pipeline: every contribution security-reviewed before distribution | done; growing |
+| Verified MCP | MCP catalog from the official registry; identity (L1) and security scanning (L2) with evidence for 23 servers | done (v0.4.0) |
 
 ## Next
 
 | Priority | Item | Tracking |
 |---|---|---|
-| P0 | First signed release (v0.3.0) and verified installation paths | release workflow |
-| P0 | **Verified MCP** phase 1–2: MCP catalog imported from the official registry; identity (L1) and security scanning (L2) for 20–30 curated servers | [VERIFIED_MCP.md](docs/VERIFIED_MCP.md), label `verified-mcp` |
-| P1 | Sandbox runtime tests (L3), permission profiles, skill + MCP capability bundles | `verified-mcp` |
+| P0 | **Verified MCP** phase 3: sandbox runtime tests (L3) and permission profiles | [#86](https://github.com/XData-si/xdata-agenthub/issues/86), `verified-mcp` |
+| P1 | Skill + MCP capability bundles | [#87](https://github.com/XData-si/xdata-agenthub/issues/87), `verified-mcp` |
 | P1 | Public verification reports and badges for skill and MCP authors | `verified-mcp` |
 | P1 | "Before / after" demonstrations: the same task with and without a skill, with measured differences | `demo` |
 | P1 | More runtime-verified skills (Codex, OpenCode, Claude Code), starting with the most used | `verification` |
