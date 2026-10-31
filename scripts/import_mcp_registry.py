@@ -98,7 +98,7 @@ def refresh(catalog, fetch=None, add=None, log=print):
     """Return a new catalog with listed servers refreshed, or with only `add` = (name, id) imported."""
     fetch = fetch or fetch_latest
     servers = {s["id"]: s for s in validate_mcp_catalog(catalog)}
-    wanted = [(s["name"], s["id"]) for s in servers.values()]
+    wanted = [(s["name"], s["id"]) for s in servers.values() if s["registry"]["status"] != "unlisted"]
     if add:
         name, entry_id = add
         if entry_id in servers or name in [n for n, _ in wanted]:

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "microsoft-learn",
+    "name": "com.microsoft/microsoft-learn-mcp",
+    "version": "1.0.0"
+  },
+  "artifacts": [],
+  "generated_at": "2026-10-31T10:41:48Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists com.microsoft/microsoft-learn-mcp 1.0.0 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace domain microsoft.com, GitHub organisation MicrosoftDocs website https://learn.microsoft.com"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "remote endpoints only; nothing to pin"
+    }
+  }
+}

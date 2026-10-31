@@ -99,6 +99,25 @@ class IdentityTests(unittest.TestCase):
         pinned["artifacts"][0]["sha256"] = "c" * 64
         self.assertEqual(results(verifier.verify(pinned, FakeHttp()))["artifacts"], "fail")
 
+    def test_mcpb_bundle_must_be_a_release_asset_with_the_registry_sha256(self):
+        bundle, url = b"bundle", "https://github.com/example/files/releases/download/v1.2.0/files.mcpb"
+        def bundle_entry(**artifact):
+            data = {"kind": "package", "registry": "mcpb", "identifier": url, "version": "1.2.0", "transport": "stdio",
+                    "sha256": hashlib.sha256(bundle).hexdigest()}
+            return entry(artifacts=[dict(data, **artifact)])
+        http = FakeHttp(**{url: bundle})
+        self.assertEqual(results(verifier.verify(bundle_entry(), http))["artifacts"], "pass")
+        self.assertEqual(results(verifier.verify(bundle_entry(sha256="0" * 64), http))["artifacts"], "fail")
+        other = "https://example.com/files.mcpb"
+        self.assertEqual(results(verifier.verify(bundle_entry(identifier=other), FakeHttp(**{other: bundle})))["artifacts"], "fail")
+        unpinned = bundle_entry(); del unpinned["artifacts"][0]["sha256"]
+        self.assertEqual(results(verifier.verify(unpinned, http))["artifacts"], "fail")
+
+    def test_server_outside_the_registry_fails_namespace(self):
+        unlisted = entry(listing="community", registry={"status": "unlisted", "published_at": "2026-09-01T10:00:00Z",
+                                                        "updated_at": "2026-09-01T10:00:00Z"})
+        self.assertEqual(results(verifier.verify(unlisted, FakeHttp()))["namespace"], "fail")
+
     def test_remote_only_server_has_nothing_to_pin(self):
         remote = entry(artifacts=[{"kind": "remote", "transport": "streamable-http", "url": "https://files.example.com/mcp"}])
         evidence = verifier.verify(remote, FakeHttp())

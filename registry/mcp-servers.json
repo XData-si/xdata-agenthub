@@ -24,10 +24,244 @@
         "published_at": "2026-09-09T17:53:32.01107Z",
         "updated_at": "2026-09-09T17:53:32.01107Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "Atlassian Rovo MCP Server",
       "repository": "https://github.com/atlassian/atlassian-mcp-server",
-      "website": "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/"
+      "website": "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/",
+      "evidence": "reports/mcp/atlassian/2.0.0.json"
+    },
+    {
+      "id": "azure",
+      "name": "com.microsoft/azure",
+      "description": "All Azure MCP tools to create a seamless connection between AI agents and Azure services.",
+      "version": "3.0.0-beta.48",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "nuget",
+          "identifier": "Azure.Mcp",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio"
+        },
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "@azure/mcp",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio"
+        },
+        {
+          "kind": "package",
+          "registry": "pypi",
+          "identifier": "msmcp-azure",
+          "version": "3.0.0b48",
+          "transport": "stdio"
+        },
+        {
+          "kind": "package",
+          "registry": "mcpb",
+          "identifier": "https://github.com/microsoft/mcp/releases/download/Azure.Mcp.Server-3.0.0-beta.48/Azure.Mcp.Server-win-x64.mcpb",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio",
+          "sha256": "980b09575ce16a92e9cf96233d933446622f3e19f0d298beec9564121f438e5f"
+        },
+        {
+          "kind": "package",
+          "registry": "mcpb",
+          "identifier": "https://github.com/microsoft/mcp/releases/download/Azure.Mcp.Server-3.0.0-beta.48/Azure.Mcp.Server-win-arm64.mcpb",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio",
+          "sha256": "f52c99befe49bdd80eee49da2e7c9b420fd3423b5739750cf664ed46b7ddc232"
+        },
+        {
+          "kind": "package",
+          "registry": "mcpb",
+          "identifier": "https://github.com/microsoft/mcp/releases/download/Azure.Mcp.Server-3.0.0-beta.48/Azure.Mcp.Server-linux-x64.mcpb",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio",
+          "sha256": "21df704aabab188fb2e0c7c186359845b7a33a2875d837da32769ca9d4bdaf01"
+        },
+        {
+          "kind": "package",
+          "registry": "mcpb",
+          "identifier": "https://github.com/microsoft/mcp/releases/download/Azure.Mcp.Server-3.0.0-beta.48/Azure.Mcp.Server-linux-arm64.mcpb",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio",
+          "sha256": "8de45f3870442961456752413ba697c65a070d684fbf99535fa4ea0e99bf48dd"
+        },
+        {
+          "kind": "package",
+          "registry": "mcpb",
+          "identifier": "https://github.com/microsoft/mcp/releases/download/Azure.Mcp.Server-3.0.0-beta.48/Azure.Mcp.Server-osx-x64.mcpb",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio",
+          "sha256": "dc7e4b178e19fe7b24cad89b636623b9c61f4cf2aeee57747d7280c0c0abf4c2"
+        },
+        {
+          "kind": "package",
+          "registry": "mcpb",
+          "identifier": "https://github.com/microsoft/mcp/releases/download/Azure.Mcp.Server-3.0.0-beta.48/Azure.Mcp.Server-osx-arm64.mcpb",
+          "version": "3.0.0-beta.48",
+          "transport": "stdio",
+          "sha256": "f4737f574b57b374b9e59e2dd87e0b1f0859f92524d56af5cc9ce4a36b56a192"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-09-30T02:07:19.637605Z",
+        "updated_at": "2026-09-30T02:07:19.637605Z"
+      },
+      "level": "L0",
+      "title": "Azure MCP Server",
+      "repository": "https://github.com/microsoft/mcp",
+      "website": "https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server"
+    },
+    {
+      "id": "brave-search",
+      "name": "io.github.brave/brave-search-mcp-server",
+      "description": "Brave Search MCP Server: web results, images, videos, rich results, AI summaries, and more.",
+      "version": "2.1.3",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "@brave/brave-search-mcp-server",
+          "version": "2.1.3",
+          "transport": "stdio",
+          "sha256": "9dce3cd313a7f51f0cd4890e80a606fd1a39f6b868cbe5f1d9104ad7a5f70aac"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-08-20T16:12:11.244327Z",
+        "updated_at": "2026-08-20T16:12:11.244327Z"
+      },
+      "level": "L1",
+      "repository": "https://github.com/brave/brave-search-mcp-server",
+      "environment": [
+        {
+          "name": "BRAVE_API_KEY",
+          "required": true,
+          "secret": true
+        }
+      ],
+      "evidence": "reports/mcp/brave-search/2.1.3.json"
+    },
+    {
+      "id": "clickhouse",
+      "name": "io.github.ClickHouse/mcp-clickhouse",
+      "description": "Official ClickHouse MCP server for querying and exploring ClickHouse clusters and chDB.",
+      "version": "0.7.0",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "pypi",
+          "identifier": "mcp-clickhouse",
+          "version": "0.7.0",
+          "transport": "stdio",
+          "sha256": "45781660fa84662b5b8f0bfaf815180d134d50353f17e6ab1d99ff8354444aaf"
+        },
+        {
+          "kind": "package",
+          "registry": "oci",
+          "identifier": "ghcr.io/clickhouse/mcp-clickhouse:0.7.0",
+          "version": "0.7.0",
+          "transport": "stdio",
+          "sha256": "4102cb2db1431646b692fe281ac2925291df4a843d2954e9ac980677c9585c31"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-09-21T14:02:19.431473Z",
+        "updated_at": "2026-09-21T14:02:19.431473Z"
+      },
+      "level": "L1",
+      "title": "ClickHouse",
+      "repository": "https://github.com/ClickHouse/mcp-clickhouse",
+      "website": "https://clickhouse.com",
+      "environment": [
+        {
+          "name": "CLICKHOUSE_ALLOW_DROP",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_ALLOW_WRITE_ACCESS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_CA_CERT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_CLIENT_CERT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_CLIENT_CERT_KEY",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_DATABASE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_HOST",
+          "required": true,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_MCP_MAX_WORKERS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_MCP_QUERY_TIMEOUT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_PASSWORD",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "CLICKHOUSE_PORT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_ROLE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_SECURE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_TLS_MODE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_USER",
+          "required": true,
+          "secret": false
+        },
+        {
+          "name": "CLICKHOUSE_VERIFY",
+          "required": false,
+          "secret": false
+        }
+      ],
+      "evidence": "reports/mcp/clickhouse/0.7.0.json"
     },
     {
       "id": "cloudflare",
@@ -191,8 +425,135 @@
         "published_at": "2025-09-16T22:06:29.987729Z",
         "updated_at": "2025-09-16T22:06:29.987729Z"
       },
-      "level": "L0",
-      "repository": "https://github.com/cloudflare/mcp-server-cloudflare"
+      "level": "L1",
+      "repository": "https://github.com/cloudflare/mcp-server-cloudflare",
+      "evidence": "reports/mcp/cloudflare/1.0.0.json"
+    },
+    {
+      "id": "context7",
+      "name": "io.github.upstash/context7",
+      "description": "Up-to-date docs for AI agents",
+      "version": "4.4.4",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "@upstash/context7-mcp",
+          "version": "4.4.4",
+          "transport": "stdio",
+          "sha256": "2ae37c3a2b41ff4d591a275ff1dc56883cb60bfc71e34c399c14ebd38837bb38"
+        },
+        {
+          "kind": "package",
+          "registry": "mcpb",
+          "identifier": "https://github.com/upstash/context7/releases/download/mcpb-v4.4.4/context7.mcpb",
+          "version": "4.4.4",
+          "transport": "stdio",
+          "sha256": "25cabf3767cc61171e3435c4ce5427e03ffe7ab671cc0e2d5b89e04eef246949"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.context7.com/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-10-19T13:48:33.320442Z",
+        "updated_at": "2026-10-19T13:48:33.320442Z"
+      },
+      "level": "L1",
+      "title": "Context7",
+      "repository": "https://github.com/upstash/context7",
+      "website": "https://context7.com",
+      "environment": [
+        {
+          "name": "CONTEXT7_API_KEY",
+          "required": false,
+          "secret": true
+        }
+      ],
+      "evidence": "reports/mcp/context7/4.4.4.json"
+    },
+    {
+      "id": "exa",
+      "name": "ai.exa/exa",
+      "description": "Connect AI agents to Exa for web search, content fetching, and multi-step research.",
+      "version": "3.4.1",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.exa.ai/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-09-23T00:29:56.602357Z",
+        "updated_at": "2026-09-23T00:29:56.602357Z"
+      },
+      "level": "L1",
+      "repository": "https://github.com/exa-labs/exa-mcp-server",
+      "evidence": "reports/mcp/exa/3.4.1.json"
+    },
+    {
+      "id": "figma",
+      "name": "com.figma.mcp/mcp",
+      "description": "The Figma MCP server brings Figma design context directly into your AI workflow.",
+      "version": "1.0.3",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.figma.com/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2025-10-16T17:40:56.949472Z",
+        "updated_at": "2025-10-16T17:40:56.949472Z"
+      },
+      "level": "L1",
+      "title": "Figma MCP Server",
+      "repository": "https://github.com/figma/mcp-server-guide",
+      "evidence": "reports/mcp/figma/1.0.3.json"
+    },
+    {
+      "id": "firecrawl",
+      "name": "io.github.firecrawl/firecrawl-mcp-server",
+      "description": "Firecrawl, the context API for AI agents: search, scrape, interact with the web, plus paper search.",
+      "version": "3.36.0",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "firecrawl-mcp",
+          "version": "3.36.0",
+          "transport": "stdio",
+          "sha256": "300d46120ee53f550899e2ecab194ed706c9996af0a71d1ad5260a6241d771a5"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.firecrawl.dev/v2/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-10-27T23:06:39.322741Z",
+        "updated_at": "2026-10-27T23:06:39.322741Z"
+      },
+      "level": "L1",
+      "title": "Firecrawl MCP Server",
+      "repository": "https://github.com/firecrawl/firecrawl-mcp-server.git",
+      "environment": [
+        {
+          "name": "FIRECRAWL_API_KEY",
+          "required": false,
+          "secret": true
+        }
+      ],
+      "evidence": "reports/mcp/firecrawl/3.36.0.json"
     },
     {
       "id": "github",
@@ -205,7 +566,8 @@
           "registry": "oci",
           "identifier": "ghcr.io/github/github-mcp-server:2.0.3",
           "version": "2.0.3",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "250bc6ce70788207608ef74cef4397230ff2e8481218da74d6093e4bd9101132"
         },
         {
           "kind": "remote",
@@ -218,9 +580,10 @@
         "published_at": "2026-10-21T09:53:50.501608Z",
         "updated_at": "2026-10-21T09:53:50.501608Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "GitHub",
-      "repository": "https://github.com/github/github-mcp-server"
+      "repository": "https://github.com/github/github-mcp-server",
+      "evidence": "reports/mcp/github/2.0.3.json"
     },
     {
       "id": "gitlab",
@@ -239,8 +602,9 @@
         "published_at": "2025-10-02T04:59:37.530539Z",
         "updated_at": "2025-10-02T04:59:37.530539Z"
       },
-      "level": "L0",
-      "repository": "https://gitlab.com/gitlab-org/gitlab"
+      "level": "L1",
+      "repository": "https://gitlab.com/gitlab-org/gitlab",
+      "evidence": "reports/mcp/gitlab/0.0.1.json"
     },
     {
       "id": "grafana",
@@ -253,7 +617,8 @@
           "registry": "oci",
           "identifier": "docker.io/grafana/mcp-grafana:2.1.1",
           "version": "v2.1.1",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "71a3f4e6f412d253611314233df709ec2571fb50e39742d23fa2940f670646dc"
         },
         {
           "kind": "remote",
@@ -266,7 +631,7 @@
         "published_at": "2026-10-20T17:28:59.534981Z",
         "updated_at": "2026-10-20T17:28:59.534981Z"
       },
-      "level": "L0",
+      "level": "L1",
       "repository": "https://github.com/grafana/mcp-grafana",
       "environment": [
         {
@@ -303,6 +668,437 @@
           "name": "GRAFANA_USERNAME",
           "required": false,
           "secret": false
+        }
+      ],
+      "evidence": "reports/mcp/grafana/v2.1.1.json"
+    },
+    {
+      "id": "litellm",
+      "name": "io.github.BerriAI/litellm-mcp",
+      "description": "Access 100+ LLMs with one API: GPT-4, Claude, Gemini, Mistral, and more.",
+      "version": "1.0.2",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "pypi",
+          "identifier": "litellm-mcp",
+          "version": "1.0.2",
+          "transport": "stdio"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-02-07T19:24:13.098569Z",
+        "updated_at": "2026-02-07T19:24:13.098569Z"
+      },
+      "level": "L0",
+      "title": "LiteLLM Multi-Model API",
+      "repository": "https://github.com/BerriAI/litellm-agent-mcp",
+      "environment": [
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "LITELLM_API_BASE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "LITELLM_API_KEY",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "OPENAI_API_KEY",
+          "required": false,
+          "secret": true
+        }
+      ]
+    },
+    {
+      "id": "mcp-atlassian",
+      "name": "io.github.sooperset/mcp-atlassian",
+      "description": "Jira and Confluence for Cloud and Server/Data Center (self-hosted). Community server, not published by Atlassian.",
+      "version": "0.23.1",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "oci",
+          "identifier": "ghcr.io/sooperset/mcp-atlassian:0.23.1",
+          "version": "0.23.1",
+          "transport": "stdio"
+        }
+      ],
+      "registry": {
+        "status": "unlisted",
+        "published_at": "2026-08-19T00:38:15Z",
+        "updated_at": "2026-08-19T00:38:15Z"
+      },
+      "level": "L0",
+      "title": "MCP Atlassian (Jira/Confluence, Cloud and Data Center)",
+      "repository": "https://github.com/sooperset/mcp-atlassian",
+      "listing": "community",
+      "environment": [
+        {
+          "name": "ATLASSIAN_OAUTH_ENABLE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CONFLUENCE_API_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "CONFLUENCE_PERSONAL_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "CONFLUENCE_URL",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CONFLUENCE_USERNAME",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "JIRA_API_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "JIRA_PERSONAL_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "JIRA_URL",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "JIRA_USERNAME",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "READ_ONLY_MODE",
+          "required": false,
+          "secret": false
+        }
+      ]
+    },
+    {
+      "id": "microsoft-learn",
+      "name": "com.microsoft/microsoft-learn-mcp",
+      "description": "Official Microsoft Learn MCP Server – real-time, trusted docs & code samples for AI and LLMs.",
+      "version": "1.0.0",
+      "artifacts": [
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://learn.microsoft.com/api/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2025-11-21T06:16:59.721831Z",
+        "updated_at": "2025-11-21T06:16:59.721831Z"
+      },
+      "level": "L1",
+      "title": "Microsoft Learn MCP",
+      "repository": "https://github.com/MicrosoftDocs/mcp",
+      "website": "https://github.com/MicrosoftDocs/mcp",
+      "evidence": "reports/mcp/microsoft-learn/1.0.0.json"
+    },
+    {
+      "id": "mongodb",
+      "name": "io.github.mongodb-js/mongodb-mcp-server",
+      "description": "MongoDB Model Context Protocol Server",
+      "version": "3.2.1",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "mongodb-mcp-server",
+          "version": "3.2.1",
+          "transport": "stdio"
+        },
+        {
+          "kind": "package",
+          "registry": "oci",
+          "identifier": "docker.io/mongodb/mongodb-mcp-server:3.2.1",
+          "version": "3.2.1",
+          "transport": "stdio"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-10-28T16:05:19.604548Z",
+        "updated_at": "2026-10-28T16:05:19.604548Z"
+      },
+      "level": "L0",
+      "repository": "https://github.com/mongodb-js/mongodb-mcp-server",
+      "environment": [
+        {
+          "name": "MDB_MCP_AGGREGATION_COUNT_MAX_TIME_MS_CAP",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_AGGREGATION_COUNT_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_ALLOW_REQUEST_OVERRIDES",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_API_CLIENT_ID",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "MDB_MCP_API_CLIENT_SECRET",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "MDB_MCP_ASSISTANT_BASE_URL",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_ATLAS_TEMPORARY_DATABASE_USER_LIFETIME_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_CONFIRMATION_REQUIRED_TOOLS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_CONNECTION_IDLE_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_CONNECTION_SCOPE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_CONNECTION_STRING",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "MDB_MCP_DANGEROUS_HOST_BINDING",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_DISABLED_TOOLS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_DISABLE_SERVER_SIDE_JS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_DISABLE_UNTRUSTED_DATA_WARNING",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_DRY_RUN",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_ELICITATION_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_EVICTION_IDLE_GRACE_M_S",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_EXPORTS_PATH",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_EXPORT_CLEANUP_INTERVAL_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_EXPORT_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_EXTERNALLY_MANAGED_SESSIONS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_HEALTH_CHECK_HOST",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_HEALTH_CHECK_PORT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_HTTP_BODY_LIMIT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_HTTP_HEADERS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_HTTP_HOST",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_HTTP_PORT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_HTTP_RESPONSE_TYPE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_IDLE_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_INDEX_CHECK",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_LOGGERS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_LOG_PATH",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MAX_ACTIVE_CONNECTIONS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MAX_BYTES_PER_QUERY",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MAX_DOCUMENTS_PER_QUERY",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MAX_SESSIONS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MAX_TIME_M_S",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MCP_CLIENT_LOG_LEVEL",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MONITORING_SERVER_FEATURES",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MONITORING_SERVER_HOST",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_MONITORING_SERVER_PORT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_NOTIFICATION_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_PREVIEW_FEATURES",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_QUERY_COUNT_MAX_TIME_MS_CAP",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_QUERY_COUNT_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_READ_ONLY",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_TELEMETRY",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_TIMEOUT_MS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_TRANSPORT",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "MDB_MCP_VOYAGE_API_KEY",
+          "required": false,
+          "secret": true
         }
       ]
     },
@@ -341,7 +1137,8 @@
           "registry": "npm",
           "identifier": "@playwright/mcp",
           "version": "0.0.82",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "f668e5a4ebce36b8741af2785a9b6f82edc18e35132b2dc22a8b581c655d4ede"
         }
       ],
       "registry": {
@@ -349,8 +1146,9 @@
         "published_at": "2026-09-18T23:41:20.46032Z",
         "updated_at": "2026-09-18T23:41:20.46032Z"
       },
-      "level": "L0",
-      "repository": "https://github.com/microsoft/playwright-mcp"
+      "level": "L2",
+      "repository": "https://github.com/microsoft/playwright-mcp",
+      "evidence": "reports/mcp/playwright/0.0.82.json"
     },
     {
       "id": "sentry",
@@ -363,7 +1161,8 @@
           "registry": "npm",
           "identifier": "@sentry/mcp-server",
           "version": "0.42.0",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "edca513afe52b7cff5da482b647a05711e9282ca7cebdc312ce6cf3386cf0a8b"
         },
         {
           "kind": "remote",
@@ -376,7 +1175,7 @@
         "published_at": "2026-09-25T14:49:17.516259Z",
         "updated_at": "2026-09-25T14:49:17.516259Z"
       },
-      "level": "L0",
+      "level": "L1",
       "repository": "https://github.com/getsentry/sentry-mcp",
       "environment": [
         {
@@ -384,7 +1183,8 @@
           "required": true,
           "secret": true
         }
-      ]
+      ],
+      "evidence": "reports/mcp/sentry/0.42.0.json"
     },
     {
       "id": "stripe",
@@ -405,6 +1205,103 @@
       },
       "level": "L0",
       "repository": "https://github.com/stripe/agent-toolkit"
+    },
+    {
+      "id": "supabase",
+      "name": "com.supabase/mcp",
+      "description": "MCP server for interacting with the Supabase platform",
+      "version": "0.14.0",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "@supabase/mcp-server-supabase",
+          "version": "0.14.0",
+          "transport": "stdio",
+          "sha256": "24901d85f7585d4df8fe9e6b78d4bf002d913894ee44fcd6d9f4f41d5f8a5abb"
+        },
+        {
+          "kind": "remote",
+          "transport": "streamable-http",
+          "url": "https://mcp.supabase.com/mcp"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-10-14T15:34:03.096613Z",
+        "updated_at": "2026-10-14T15:34:03.096613Z"
+      },
+      "level": "L1",
+      "title": "Supabase",
+      "repository": "https://github.com/supabase/mcp",
+      "website": "https://supabase.com/mcp",
+      "environment": [
+        {
+          "name": "SUPABASE_ACCESS_TOKEN",
+          "required": true,
+          "secret": true
+        }
+      ],
+      "evidence": "reports/mcp/supabase/0.14.0.json"
+    },
+    {
+      "id": "tavily",
+      "name": "io.github.tavily-ai/tavily-mcp",
+      "description": "MCP server for advanced web search using Tavily",
+      "version": "0.2.15",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "npm",
+          "identifier": "tavily-mcp",
+          "version": "0.2.15",
+          "transport": "stdio",
+          "sha256": "6a12a765ea29a8c84200e79e70a32c7570541b6005e8be1d2a57627bb4a70d37"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-01-26T21:26:43.076Z",
+        "updated_at": "2026-01-26T21:26:43.076Z"
+      },
+      "level": "L1",
+      "repository": "https://github.com/tavily-ai/tavily-mcp",
+      "environment": [
+        {
+          "name": "DEFAULT_PARAMETERS",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "TAVILY_API_KEY",
+          "required": true,
+          "secret": true
+        }
+      ],
+      "evidence": "reports/mcp/tavily/0.2.15.json"
+    },
+    {
+      "id": "terraform",
+      "name": "io.github.hashicorp/terraform-mcp-server",
+      "description": "Generate more accurate Terraform and automate workflows for HCP Terraform and Terraform Enterprise",
+      "version": "1.4.1",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "oci",
+          "identifier": "docker.io/hashicorp/terraform-mcp-server:1.4.1",
+          "version": "1.4.1",
+          "transport": "stdio"
+        }
+      ],
+      "registry": {
+        "status": "active",
+        "published_at": "2026-10-23T22:40:19.182577Z",
+        "updated_at": "2026-10-23T22:40:19.182577Z"
+      },
+      "level": "L0",
+      "title": "Terraform",
+      "repository": "https://github.com/hashicorp/terraform-mcp-server"
     }
   ]
 }

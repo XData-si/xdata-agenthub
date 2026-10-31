@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "supabase",
+    "name": "com.supabase/mcp",
+    "version": "0.14.0"
+  },
+  "artifacts": [
+    {
+      "registry": "npm",
+      "identifier": "@supabase/mcp-server-supabase",
+      "version": "0.14.0",
+      "sha256": "24901d85f7585d4df8fe9e6b78d4bf002d913894ee44fcd6d9f4f41d5f8a5abb"
+    }
+  ],
+  "generated_at": "2026-10-31T10:38:48Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists com.supabase/mcp 0.14.0 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace domain supabase.com, GitHub organisation supabase website https://supabase.com"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "pinned: @supabase/mcp-server-supabase sha256:24901d85f758…"
+    }
+  },
+  "run": "https://github.com/XData-si/xdata-agenthub/actions/runs/41193573752"
+}
