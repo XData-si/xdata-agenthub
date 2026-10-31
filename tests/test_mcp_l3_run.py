@@ -39,7 +39,7 @@ class StraceTests(unittest.TestCase):
                                       "connection to a host outside the allowlist: 93.184.215.14:443",
                                       "executed a program outside the allowlist: /bin/sh"])
         clean = {"writes": ["/tmp/x"], "reads": [], "connects": ["127.0.0.1:9222", "172.18.0.2:8000"],
-                 "execs": ["/usr/bin/node"], "unix": []}
+                 "execs": ["/usr/bin/node", "/proc/self/exe"], "unix": []}
         self.assertEqual(l3.compare(clean, allowed, ["172.18.0.2"]), [])
         self.assertEqual(l3.compare({**clean, "writes": ["/tmpfoo/x"]}, allowed, []),
                          ["write outside allowed paths: /tmpfoo/x", "connection to a host outside the allowlist: 172.18.0.2:8000"])

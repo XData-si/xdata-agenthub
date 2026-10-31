@@ -101,7 +101,9 @@ def compare(activity, allowed, fixture_ips):
             mismatches.append(f"connection to a host outside the allowlist: {target}")
     executables = tuple(allowed.get("executables", []))
     for program in activity["execs"]:
-        if not program.startswith(executables):
+        # /proc/self/exe re-executes the calling program (Chromium starts its helpers this way); that program is
+        # itself an exec that was checked.
+        if program != "/proc/self/exe" and not program.startswith(executables):
             mismatches.append(f"executed a program outside the allowlist: {program}")
     return mismatches
 
@@ -140,7 +142,7 @@ def run_plan(entry, plan, work, runsc_logs, http):
     network, names = f"xah-l3-{tag}", []
     docker("network", "create", "--internal", network)
     try:
-        fixture_ips = []
+        fixture_ips, hosts = [], []
         for fixture in plan["fixtures"]:
             name = f"xah-l3-{fixture['host']}-{tag}"
             docker("run", "-d", "--rm", "--name", name, "--network", network, "--network-alias", fixture["host"],
@@ -149,8 +151,11 @@ def run_plan(entry, plan, work, runsc_logs, http):
                    "python", "-m", "http.server", str(fixture["port"]), "--directory", "/srv")
             names.append(name)
             fixture_ips.append(docker("inspect", "-f", "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}", name).strip())
+            # Docker's embedded DNS (127.0.0.11) relies on iptables inside the container, which gVisor's network
+            # stack does not use; the fixture name is written to /etc/hosts instead.
+            hosts += ["--add-host", f"{fixture['host']}:{fixture_ips[-1]}"]
         cidfile = work / "server.cid"
-        command = ["docker", "run", "--runtime", RUNTIME, "--cidfile", str(cidfile), "--network", network, *SANDBOX,
+        command = ["docker", "run", "--runtime", RUNTIME, "--cidfile", str(cidfile), "--network", network, *hosts, *SANDBOX,
                    "-v", f"{package}:/app:ro", "-w", "/tmp", plan["image"], "node", f"/app/{binary}", *plan["args"]]
         client = mcp_tools_list.StdioClient(command, timeout=120)
         try:
