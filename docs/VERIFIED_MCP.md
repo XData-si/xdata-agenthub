@@ -157,6 +157,30 @@ L1 results; `scans` with the five L2 results and the tool names and versions use
 snapshot contradicts, and rejects a catalog level the evidence does not support. Raising a level is a reviewed pull
 request that adds the evidence file and changes `level` in the same commit.
 
+### Results of the phase 2 set (2026-10-31)
+
+`playwright` 0.0.82 reached L2. `atlassian`, `cloudflare`, `exa`, `figma`, `gitlab` and `microsoft-learn` are
+remote-only and stop at L1 by design. The others did not pass every check:
+
+| Server | Version | Level | Failed | Why |
+|---|---|---|---|---|
+| `github` | 2.0.3 | L1 | L2 dependencies | 13 high/critical advisories in the Debian base image (glibc) |
+| `grafana` | v2.1.1 | L1 | L2 dependencies | 90 high/critical advisories in the base image (util-linux and others) |
+| `sentry` | 0.42.0 | L1 | L2 dependencies, secrets, licence | `@modelcontextprotocol/sdk` 1.30.0; 4 `sentry-access-token` matches in `dist/`; FSL-1.1-ALv2 is not OSI-approved |
+| `brave-search` | 2.1.3 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.30.0 (5 high advisories) |
+| `tavily` | 0.2.15 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.25.2 (5 high advisories) |
+| `firecrawl` | 3.36.0 | L1 | L2 dependencies | `zod` 3.25.76 (GHSA-mrhx-c7xc-m3w5, 8.2) |
+| `supabase` | 0.14.0 | L1 | L2 tools | `tools/list` needs network access, so it cannot be read in the isolated container |
+| `context7` | 4.4.4 | L1 | L2 not run | the `mcpb` bundle cannot be scanned yet |
+| `clickhouse` | 0.7.0 | L1 | L2 not run | the PyPI package cannot be scanned yet |
+| `mongodb` | 3.2.1 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository |
+| `terraform` | 1.4.1 | L0 | L1 artifacts | same as `mongodb`; the image also declares no licence |
+| `azure` | 3.0.0-beta.48 | L0 | L1 artifacts | NuGet is not supported; PyPI has no `3.0.0b48` |
+| `litellm` | 1.0.2 | L0 | L1 repository | the declared repository `BerriAI/litellm-agent-mcp` does not exist |
+| `notion` | 1.0.1 | L0 | L1 repository | the registry entry declares no source repository |
+| `stripe` | 0.2.4 | L0 | L1 repository | the GitHub organisation's website is `stripe.dev`, not the namespace domain `stripe.com` |
+| `mcp-atlassian` | 0.23.1 | L0 | L1 namespace | community listing outside the official registry; without credentials it lists no tools, and the image has 76 high/critical advisories |
+
 ## Phases
 | Phase | Scope | Priority |
 |---|---|---|

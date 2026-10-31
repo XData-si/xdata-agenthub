@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "context7",
+    "name": "io.github.upstash/context7",
+    "version": "4.4.4"
+  },
+  "artifacts": [
+    {
+      "registry": "npm",
+      "identifier": "@upstash/context7-mcp",
+      "version": "4.4.4",
+      "sha256": "2ae37c3a2b41ff4d591a275ff1dc56883cb60bfc71e34c399c14ebd38837bb38"
+    },
+    {
+      "registry": "mcpb",
+      "identifier": "https://github.com/upstash/context7/releases/download/mcpb-v4.4.4/context7.mcpb",
+      "version": "4.4.4",
+      "sha256": "25cabf3767cc61171e3435c4ce5427e03ffe7ab671cc0e2d5b89e04eef246949"
+    }
+  ],
+  "generated_at": "2026-10-31T10:38:43Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists io.github.upstash/context7 4.4.4 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace io.github.upstash, repository owner upstash"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "pinned: @upstash/context7-mcp sha256:2ae37c3a2b41…, https://github.com/upstash/context7/releases/download/mcpb-v4.4.4/context7.mcpb sha256:25cabf3767cc…"
+    }
+  },
+  "run": "https://github.com/XData-si/xdata-agenthub/actions/runs/41193573752"
+}

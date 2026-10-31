@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "atlassian",
+    "name": "com.atlassian/atlassian-mcp-server",
+    "version": "2.0.0"
+  },
+  "artifacts": [],
+  "generated_at": "2026-10-31T10:41:45Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists com.atlassian/atlassian-mcp-server 2.0.0 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace domain atlassian.com, GitHub organisation atlassian website https://atlassian.com/"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "remote endpoints only; nothing to pin"
+    }
+  }
+}

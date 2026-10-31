@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "figma",
+    "name": "com.figma.mcp/mcp",
+    "version": "1.0.3"
+  },
+  "artifacts": [],
+  "generated_at": "2026-10-31T10:41:51Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists com.figma.mcp/mcp 1.0.3 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace domain figma.com, GitHub organisation figma website https://www.figma.com"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "remote endpoints only; nothing to pin"
+    }
+  }
+}

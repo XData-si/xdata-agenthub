@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "server": {
+    "id": "exa",
+    "name": "ai.exa/exa",
+    "version": "3.4.1"
+  },
+  "artifacts": [],
+  "generated_at": "2026-10-31T10:41:50Z",
+  "identity": {
+    "result": "pass",
+    "tool": "verify_mcp_identity.py",
+    "namespace": {
+      "result": "pass",
+      "details": "official registry lists ai.exa/exa 3.4.1 as active"
+    },
+    "repository": {
+      "result": "pass",
+      "details": "namespace domain exa.ai, GitHub organisation exa-labs website https://exa.ai"
+    },
+    "artifacts": {
+      "result": "pass",
+      "details": "remote endpoints only; nothing to pin"
+    }
+  }
+}

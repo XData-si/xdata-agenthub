@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "cli"))
 sys.path.insert(0, str(ROOT / "scripts"))
 import build_site
 import import_mcp_registry as importer
+import mcp_evidence
 from mcp_catalog import filter_servers, validate_entry, validate_mcp_catalog
 
 SHA = "a" * 64
@@ -43,7 +44,8 @@ class ValidationTests(unittest.TestCase):
     def test_committed_catalog_is_valid_and_lists_only(self):
         servers = validate_mcp_catalog(json.loads((ROOT / "registry/mcp-servers.json").read_text(encoding="utf-8")))
         self.assertTrue(servers)
-        self.assertEqual({s["level"] for s in servers}, {"L0"})
+        # Every level above L0 is backed by a committed evidence file that supports it.
+        self.assertEqual(mcp_evidence.check_catalog_evidence(servers, ROOT), sum(s["level"] != "L0" for s in servers))
         self.assertEqual([s["id"] for s in servers], sorted(s["id"] for s in servers))
 
     def test_registry_record_is_mapped_to_a_pinned_l0_entry(self):
@@ -207,9 +209,14 @@ class CliAndSiteTests(unittest.TestCase):
         found = self.run_cli("search", servers[0]["id"], "--json")
         self.assertEqual(found.returncode, 0, found.stderr)
         self.assertIn(servers[0]["id"], [s["id"] for s in json.loads(found.stdout)])
-        shown = self.run_cli("inspect", servers[0]["id"])
+        listed_only = next(s for s in servers if s["level"] == "L0")
+        shown = self.run_cli("inspect", listed_only["id"])
         self.assertEqual(shown.returncode, 0, shown.stderr)
         self.assertIn("Listed only", shown.stdout)
+        verified = next(s for s in servers if s["level"] != "L0")
+        shown = self.run_cli("inspect", verified["id"])
+        self.assertIn(f'Evidence: {verified["evidence"]}', shown.stdout)
+        self.assertNotIn("Listed only", shown.stdout)
         missing = self.run_cli("inspect", "no-such-server")
         self.assertNotEqual(missing.returncode, 0)
 
@@ -220,7 +227,8 @@ class CliAndSiteTests(unittest.TestCase):
             page = (pathlib.Path(tmp) / "index.html").read_text(encoding="utf-8")
         self.assertIn('id="mcp"', page)
         self.assertIn("L0 means listed only", page)
-        self.assertEqual(page.count('class="seal seal-mcp-l0"'), len(servers))
+        for level in {s["level"] for s in servers}:
+            self.assertEqual(page.count(f'class="seal seal-mcp-{level.lower()}"'), sum(s["level"] == level for s in servers))
 
 
 if __name__ == "__main__":

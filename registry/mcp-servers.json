@@ -24,10 +24,11 @@
         "published_at": "2026-09-09T17:53:32.01107Z",
         "updated_at": "2026-09-09T17:53:32.01107Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "Atlassian Rovo MCP Server",
       "repository": "https://github.com/atlassian/atlassian-mcp-server",
-      "website": "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/"
+      "website": "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/",
+      "evidence": "reports/mcp/atlassian/2.0.0.json"
     },
     {
       "id": "azure",
@@ -126,7 +127,8 @@
           "registry": "npm",
           "identifier": "@brave/brave-search-mcp-server",
           "version": "2.1.3",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "9dce3cd313a7f51f0cd4890e80a606fd1a39f6b868cbe5f1d9104ad7a5f70aac"
         }
       ],
       "registry": {
@@ -134,7 +136,7 @@
         "published_at": "2026-08-20T16:12:11.244327Z",
         "updated_at": "2026-08-20T16:12:11.244327Z"
       },
-      "level": "L0",
+      "level": "L1",
       "repository": "https://github.com/brave/brave-search-mcp-server",
       "environment": [
         {
@@ -142,7 +144,8 @@
           "required": true,
           "secret": true
         }
-      ]
+      ],
+      "evidence": "reports/mcp/brave-search/2.1.3.json"
     },
     {
       "id": "clickhouse",
@@ -155,14 +158,16 @@
           "registry": "pypi",
           "identifier": "mcp-clickhouse",
           "version": "0.7.0",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "45781660fa84662b5b8f0bfaf815180d134d50353f17e6ab1d99ff8354444aaf"
         },
         {
           "kind": "package",
           "registry": "oci",
           "identifier": "ghcr.io/clickhouse/mcp-clickhouse:0.7.0",
           "version": "0.7.0",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "4102cb2db1431646b692fe281ac2925291df4a843d2954e9ac980677c9585c31"
         }
       ],
       "registry": {
@@ -170,7 +175,7 @@
         "published_at": "2026-09-21T14:02:19.431473Z",
         "updated_at": "2026-09-21T14:02:19.431473Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "ClickHouse",
       "repository": "https://github.com/ClickHouse/mcp-clickhouse",
       "website": "https://clickhouse.com",
@@ -255,7 +260,8 @@
           "required": false,
           "secret": false
         }
-      ]
+      ],
+      "evidence": "reports/mcp/clickhouse/0.7.0.json"
     },
     {
       "id": "cloudflare",
@@ -419,8 +425,9 @@
         "published_at": "2025-09-16T22:06:29.987729Z",
         "updated_at": "2025-09-16T22:06:29.987729Z"
       },
-      "level": "L0",
-      "repository": "https://github.com/cloudflare/mcp-server-cloudflare"
+      "level": "L1",
+      "repository": "https://github.com/cloudflare/mcp-server-cloudflare",
+      "evidence": "reports/mcp/cloudflare/1.0.0.json"
     },
     {
       "id": "context7",
@@ -433,7 +440,8 @@
           "registry": "npm",
           "identifier": "@upstash/context7-mcp",
           "version": "4.4.4",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "2ae37c3a2b41ff4d591a275ff1dc56883cb60bfc71e34c399c14ebd38837bb38"
         },
         {
           "kind": "package",
@@ -454,7 +462,7 @@
         "published_at": "2026-10-19T13:48:33.320442Z",
         "updated_at": "2026-10-19T13:48:33.320442Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "Context7",
       "repository": "https://github.com/upstash/context7",
       "website": "https://context7.com",
@@ -464,7 +472,8 @@
           "required": false,
           "secret": true
         }
-      ]
+      ],
+      "evidence": "reports/mcp/context7/4.4.4.json"
     },
     {
       "id": "exa",
@@ -483,8 +492,9 @@
         "published_at": "2026-09-23T00:29:56.602357Z",
         "updated_at": "2026-09-23T00:29:56.602357Z"
       },
-      "level": "L0",
-      "repository": "https://github.com/exa-labs/exa-mcp-server"
+      "level": "L1",
+      "repository": "https://github.com/exa-labs/exa-mcp-server",
+      "evidence": "reports/mcp/exa/3.4.1.json"
     },
     {
       "id": "figma",
@@ -503,9 +513,10 @@
         "published_at": "2025-10-16T17:40:56.949472Z",
         "updated_at": "2025-10-16T17:40:56.949472Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "Figma MCP Server",
-      "repository": "https://github.com/figma/mcp-server-guide"
+      "repository": "https://github.com/figma/mcp-server-guide",
+      "evidence": "reports/mcp/figma/1.0.3.json"
     },
     {
       "id": "firecrawl",
@@ -518,7 +529,8 @@
           "registry": "npm",
           "identifier": "firecrawl-mcp",
           "version": "3.36.0",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "300d46120ee53f550899e2ecab194ed706c9996af0a71d1ad5260a6241d771a5"
         },
         {
           "kind": "remote",
@@ -531,7 +543,7 @@
         "published_at": "2026-10-27T23:06:39.322741Z",
         "updated_at": "2026-10-27T23:06:39.322741Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "Firecrawl MCP Server",
       "repository": "https://github.com/firecrawl/firecrawl-mcp-server.git",
       "environment": [
@@ -540,7 +552,8 @@
           "required": false,
           "secret": true
         }
-      ]
+      ],
+      "evidence": "reports/mcp/firecrawl/3.36.0.json"
     },
     {
       "id": "github",
@@ -553,7 +566,8 @@
           "registry": "oci",
           "identifier": "ghcr.io/github/github-mcp-server:2.0.3",
           "version": "2.0.3",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "250bc6ce70788207608ef74cef4397230ff2e8481218da74d6093e4bd9101132"
         },
         {
           "kind": "remote",
@@ -566,9 +580,10 @@
         "published_at": "2026-10-21T09:53:50.501608Z",
         "updated_at": "2026-10-21T09:53:50.501608Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "GitHub",
-      "repository": "https://github.com/github/github-mcp-server"
+      "repository": "https://github.com/github/github-mcp-server",
+      "evidence": "reports/mcp/github/2.0.3.json"
     },
     {
       "id": "gitlab",
@@ -587,8 +602,9 @@
         "published_at": "2025-10-02T04:59:37.530539Z",
         "updated_at": "2025-10-02T04:59:37.530539Z"
       },
-      "level": "L0",
-      "repository": "https://gitlab.com/gitlab-org/gitlab"
+      "level": "L1",
+      "repository": "https://gitlab.com/gitlab-org/gitlab",
+      "evidence": "reports/mcp/gitlab/0.0.1.json"
     },
     {
       "id": "grafana",
@@ -601,7 +617,8 @@
           "registry": "oci",
           "identifier": "docker.io/grafana/mcp-grafana:2.1.1",
           "version": "v2.1.1",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "71a3f4e6f412d253611314233df709ec2571fb50e39742d23fa2940f670646dc"
         },
         {
           "kind": "remote",
@@ -614,7 +631,7 @@
         "published_at": "2026-10-20T17:28:59.534981Z",
         "updated_at": "2026-10-20T17:28:59.534981Z"
       },
-      "level": "L0",
+      "level": "L1",
       "repository": "https://github.com/grafana/mcp-grafana",
       "environment": [
         {
@@ -652,7 +669,8 @@
           "required": false,
           "secret": false
         }
-      ]
+      ],
+      "evidence": "reports/mcp/grafana/v2.1.1.json"
     },
     {
       "id": "litellm",
@@ -792,10 +810,11 @@
         "published_at": "2025-11-21T06:16:59.721831Z",
         "updated_at": "2025-11-21T06:16:59.721831Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "Microsoft Learn MCP",
       "repository": "https://github.com/MicrosoftDocs/mcp",
-      "website": "https://github.com/MicrosoftDocs/mcp"
+      "website": "https://github.com/MicrosoftDocs/mcp",
+      "evidence": "reports/mcp/microsoft-learn/1.0.0.json"
     },
     {
       "id": "mongodb",
@@ -1118,7 +1137,8 @@
           "registry": "npm",
           "identifier": "@playwright/mcp",
           "version": "0.0.82",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "f668e5a4ebce36b8741af2785a9b6f82edc18e35132b2dc22a8b581c655d4ede"
         }
       ],
       "registry": {
@@ -1126,8 +1146,9 @@
         "published_at": "2026-09-18T23:41:20.46032Z",
         "updated_at": "2026-09-18T23:41:20.46032Z"
       },
-      "level": "L0",
-      "repository": "https://github.com/microsoft/playwright-mcp"
+      "level": "L2",
+      "repository": "https://github.com/microsoft/playwright-mcp",
+      "evidence": "reports/mcp/playwright/0.0.82.json"
     },
     {
       "id": "sentry",
@@ -1140,7 +1161,8 @@
           "registry": "npm",
           "identifier": "@sentry/mcp-server",
           "version": "0.42.0",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "edca513afe52b7cff5da482b647a05711e9282ca7cebdc312ce6cf3386cf0a8b"
         },
         {
           "kind": "remote",
@@ -1153,7 +1175,7 @@
         "published_at": "2026-09-25T14:49:17.516259Z",
         "updated_at": "2026-09-25T14:49:17.516259Z"
       },
-      "level": "L0",
+      "level": "L1",
       "repository": "https://github.com/getsentry/sentry-mcp",
       "environment": [
         {
@@ -1161,7 +1183,8 @@
           "required": true,
           "secret": true
         }
-      ]
+      ],
+      "evidence": "reports/mcp/sentry/0.42.0.json"
     },
     {
       "id": "stripe",
@@ -1194,7 +1217,8 @@
           "registry": "npm",
           "identifier": "@supabase/mcp-server-supabase",
           "version": "0.14.0",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "24901d85f7585d4df8fe9e6b78d4bf002d913894ee44fcd6d9f4f41d5f8a5abb"
         },
         {
           "kind": "remote",
@@ -1207,7 +1231,7 @@
         "published_at": "2026-10-14T15:34:03.096613Z",
         "updated_at": "2026-10-14T15:34:03.096613Z"
       },
-      "level": "L0",
+      "level": "L1",
       "title": "Supabase",
       "repository": "https://github.com/supabase/mcp",
       "website": "https://supabase.com/mcp",
@@ -1217,7 +1241,8 @@
           "required": true,
           "secret": true
         }
-      ]
+      ],
+      "evidence": "reports/mcp/supabase/0.14.0.json"
     },
     {
       "id": "tavily",
@@ -1230,7 +1255,8 @@
           "registry": "npm",
           "identifier": "tavily-mcp",
           "version": "0.2.15",
-          "transport": "stdio"
+          "transport": "stdio",
+          "sha256": "6a12a765ea29a8c84200e79e70a32c7570541b6005e8be1d2a57627bb4a70d37"
         }
       ],
       "registry": {
@@ -1238,7 +1264,7 @@
         "published_at": "2026-01-26T21:26:43.076Z",
         "updated_at": "2026-01-26T21:26:43.076Z"
       },
-      "level": "L0",
+      "level": "L1",
       "repository": "https://github.com/tavily-ai/tavily-mcp",
       "environment": [
         {
@@ -1251,7 +1277,8 @@
           "required": true,
           "secret": true
         }
-      ]
+      ],
+      "evidence": "reports/mcp/tavily/0.2.15.json"
     },
     {
       "id": "terraform",
