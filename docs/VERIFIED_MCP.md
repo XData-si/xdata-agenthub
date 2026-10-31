@@ -140,15 +140,18 @@ different domain) fails and stays L0 rather than being guessed.
 The patterns detect known techniques. A clean scan is not proof that descriptions are harmless.
 
 The `MCP verify` workflow (manual, or on pull requests that change the verifier) runs `scripts/mcp_l2_scan.py <id>`
-for every entry with a package: identity checks, the artifact fetched and compared with its sha256 (npm tarball, OCI
-image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a container with `--network
-none`, a read-only file system, no capabilities and placeholder values for required variables, then syft (SBOM),
-osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and gitleaks, all pinned by version
-and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and raw reports are uploaded as a
-workflow artifact; the workflow writes nothing to the repository. PyPI, NuGet and `mcpb` packages are not scanned yet;
-an entry with one stays at the level its identity evidence supports. So does a server that does not answer
-`tools/list` without network access. Only fixed `packageArguments` from the registry (and required ones with their
-default) are passed; options without a value are left out.
+for every entry with a package: identity checks, the artifact fetched and compared with its sha256 (npm tarball, PyPI
+wheel, MCP bundle, OCI image by digest), `tools/list` read with `scripts/mcp_tools_list.py` from the server in a
+container with `--network none`, a read-only file system, no capabilities and placeholder values for required
+variables, then syft (SBOM), osv-scanner (fails on CVSS ≥ 7.0; unscored advisories are listed for the reviewer) and
+gitleaks, all pinned by version and sha256. npm dependencies are installed with `--ignore-scripts`. The evidence and
+raw reports are uploaded as a workflow artifact; the workflow writes nothing to the repository. PyPI packages are
+scanned from their wheel, with dependencies installed as wheels only (`--only-binary`), and run in a pinned
+`python:3.12-slim` container; MCP bundles (`mcpb`) of type `node` run in the Node container, and their vulnerabilities
+are read from the SBOM of the bundle. NuGet packages, PyPI releases without a wheel and non-Node bundles are not
+scanned yet; an entry with one stays at the level its identity evidence supports. So does a server that does not
+answer `tools/list` without network access. Only fixed `packageArguments` from the registry (and required ones with
+their default) are passed; options without a value are left out.
 
 **Evidence** — `reports/mcp/<id>/<version>.json` (validated by `cli/mcp_evidence.py`, schema version 1): server id,
 name and version; `artifacts` with sha256 (must equal the pinned packages in the catalog); `identity` with the three

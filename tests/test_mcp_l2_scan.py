@@ -5,6 +5,7 @@ import sys
 import tarfile
 import tempfile
 import unittest
+import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "cli"))
@@ -90,6 +91,49 @@ class ResultTests(unittest.TestCase):
             target.mkdir()
             with self.assertRaises(ValueError):
                 scanner.safe_extract(archive, target)
+
+
+    def test_unsafe_zip_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            archive = pathlib.Path(tmp) / "b.mcpb"
+            with zipfile.ZipFile(archive, "w") as bundle:
+                bundle.writestr("../escape.txt", "x")
+            target = pathlib.Path(tmp) / "out"
+            target.mkdir()
+            with self.assertRaises(ValueError):
+                scanner.safe_extract_zip(archive, target)
+
+    def test_wheel_console_script_and_launcher(self):
+        points = "[console_scripts]\nother = other.cli:run\nmcp-files = mcp_files.main:main [cli]\n\n[other]\nx = y:z\n"
+        self.assertEqual(scanner.wheel_console_script(points, ["mcp_files", "mcp-files"]), "mcp_files.main:main")
+        self.assertEqual(scanner.wheel_console_script(points, ["missing"]), "mcp_files.main:main")  # first by name
+        with self.assertRaises(ValueError):
+            scanner.wheel_console_script("[gui_scripts]\na = b:c\n", ["a"])
+        code = scanner.python_launcher("mcp_files.main:app.run")
+        self.assertIn("importlib.import_module('mcp_files.main').app.run()", code)
+        with self.assertRaises(ValueError):
+            scanner.python_launcher("os:system('id')")
+
+    def test_pypi_licence_and_requirements(self):
+        self.assertEqual(scanner.pypi_licence({"license_expression": "Apache-2.0"}), "Apache-2.0")
+        self.assertEqual(scanner.pypi_licence({"license": None, "classifiers": [
+            "License :: OSI Approved :: MIT License", "Programming Language :: Python"]}), "MIT")
+        self.assertEqual(scanner.pypi_licence({"license": "Proprietary", "classifiers": []}), "Proprietary")
+        with tempfile.TemporaryDirectory() as tmp:
+            for name, version in (("httpx", "0.28.1"), ("mcp", "1.30.0")):
+                info = pathlib.Path(tmp) / f"{name}-{version}.dist-info"
+                info.mkdir()
+                (info / "METADATA").write_text(f"Metadata-Version: 2.4\nName: {name}\nVersion: {version}\n\nName: body\n")
+            self.assertEqual(scanner.installed_requirements(tmp), "httpx==0.28.1\nmcp==1.30.0\n")
+
+    def test_mcpb_entry_point(self):
+        manifest = {"server": {"type": "node", "entry_point": "server/dist/index.mjs"}}
+        self.assertEqual(scanner.mcpb_entry_point(manifest), "server/dist/index.mjs")
+        with self.assertRaises(scanner.NotScannable):
+            scanner.mcpb_entry_point({"server": {"type": "python", "entry_point": "main.py"}})
+        for unsafe in ("/etc/passwd", "../x.js", ""):
+            with self.assertRaises(ValueError):
+                scanner.mcpb_entry_point({"server": {"type": "node", "entry_point": unsafe}})
 
 
 class AssembleTests(unittest.TestCase):
