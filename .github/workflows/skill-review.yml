@@ -13,8 +13,8 @@ jobs:
   security-gate:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
       - name: Deterministic skill security gate
@@ -34,10 +34,10 @@ jobs:
       AI_REVIEW_API_KEY: ${{ secrets.AI_REVIEW_API_KEY }}
       AI_REVIEW_MODEL: ${{ vars.AI_REVIEW_MODEL || 'xdata-default' }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
       - name: AI review of changed skills (advisory)

@@ -28,6 +28,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   and MCP search, rendered by the manual `Recordings` workflow as a downloadable artifact.
 
 ### Changed
+- Every GitHub Action is pinned to a commit SHA (version in a comment, kept current by Dependabot), and releases
+  attach the SLSA provenance bundle as `xdata-agenthub-<version>.intoto.jsonl` (OpenSSF Scorecard).
 - MCP L2 scan: only fixed registry arguments are passed to the server, `HOME` is writable for the unprivileged user,
   and a server that cannot list its tools offline keeps its L1 identity result.
 - Repository security: secret scanning with push protection, Dependabot security updates and CodeQL (Python,
