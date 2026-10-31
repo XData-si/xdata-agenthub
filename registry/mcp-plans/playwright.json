@@ -4,21 +4,92 @@
   "version": "0.0.82",
   "package": "npm",
   "image": "mcr.microsoft.com/playwright@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f",
-  "image_note": "Playwright v1.64.0-noble: Node and the Chromium build the package expects; the npm package itself is the pinned, scanned artifact mounted read-only",
-  "args": ["--headless", "--isolated", "--no-sandbox", "--browser", "chromium", "--output-dir", "/tmp/playwright-output"],
-  "fixtures": [{"host": "fixture", "kind": "http", "port": 8000, "root": "tests/fixtures/mcp/l3/site"}],
-  "calls": [
-    {"name": "open the fixture page", "tool": "browser_navigate", "arguments": {"url": "http://fixture:8000/"},
-     "expect": "success", "expect_text": "fixture-page-7f3a"},
-    {"name": "read the page", "tool": "browser_snapshot", "arguments": {}, "expect": "success", "expect_text": "Second page"},
-    {"name": "follow a link on the allowed host", "tool": "browser_navigate", "arguments": {"url": "http://fixture:8000/second.html"},
-     "expect": "success", "expect_text": "fixture-second-91c2"},
-    {"name": "host outside the allowlist is unreachable", "tool": "browser_navigate", "arguments": {"url": "http://example.com/"},
-     "expect": "error"},
-    {"name": "unknown tool is rejected", "tool": "no_such_tool", "arguments": {}, "expect": "error"},
-    {"name": "invalid arguments are rejected", "tool": "browser_navigate", "arguments": {"url": 42}, "expect": "error"}
+  "image_note": "Playwright v1.64.0-noble: Node and Chromium 1248. The package pins playwright 1.64.0-alpha (Chromium 1246), so the image's Chromium is passed with --executable-path; the npm package itself is the pinned, scanned artifact mounted read-only",
+  "args": [
+    "--headless",
+    "--isolated",
+    "--no-sandbox",
+    "--browser",
+    "chromium",
+    "--executable-path",
+    "/ms-playwright/chromium-1248/chrome-linux64/chrome",
+    "--output-dir",
+    "/tmp/playwright-output"
   ],
-  "profile": {"filesystem": "write", "network": "allowlisted", "data": "read-only", "external_actions": "none",
-              "credentials": "none"},
-  "allowed": {"hosts": ["fixture"], "write_paths": ["/tmp"], "executables": ["/usr/bin/node", "/ms-playwright/"]}
+  "fixtures": [
+    {
+      "host": "fixture",
+      "kind": "http",
+      "port": 8000,
+      "root": "tests/fixtures/mcp/l3/site"
+    }
+  ],
+  "calls": [
+    {
+      "name": "open the fixture page",
+      "tool": "browser_navigate",
+      "arguments": {
+        "url": "http://fixture:8000/"
+      },
+      "expect": "success",
+      "expect_text": "fixture-page-7f3a"
+    },
+    {
+      "name": "read the page",
+      "tool": "browser_snapshot",
+      "arguments": {},
+      "expect": "success",
+      "expect_text": "Second page"
+    },
+    {
+      "name": "follow a link on the allowed host",
+      "tool": "browser_navigate",
+      "arguments": {
+        "url": "http://fixture:8000/second.html"
+      },
+      "expect": "success",
+      "expect_text": "fixture-second-91c2"
+    },
+    {
+      "name": "host outside the allowlist is unreachable",
+      "tool": "browser_navigate",
+      "arguments": {
+        "url": "http://example.com/"
+      },
+      "expect": "error"
+    },
+    {
+      "name": "unknown tool is rejected",
+      "tool": "no_such_tool",
+      "arguments": {},
+      "expect": "error"
+    },
+    {
+      "name": "invalid arguments are rejected",
+      "tool": "browser_navigate",
+      "arguments": {
+        "url": 42
+      },
+      "expect": "error"
+    }
+  ],
+  "profile": {
+    "filesystem": "write",
+    "network": "allowlisted",
+    "data": "read-only",
+    "external_actions": "none",
+    "credentials": "none"
+  },
+  "allowed": {
+    "hosts": [
+      "fixture"
+    ],
+    "write_paths": [
+      "/tmp"
+    ],
+    "executables": [
+      "/usr/bin/node",
+      "/ms-playwright/"
+    ]
+  }
 }
