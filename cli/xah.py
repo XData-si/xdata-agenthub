@@ -19,14 +19,24 @@ MCP_CATALOG = ROOT / "registry" / "mcp-servers.json"
 EXTRA_CATALOGS_ENV = "XAH_CATALOGS"
 _extra_catalogs = []
 _item_roots = {}
+_trusted_sources = []  # --trusted-sources PATH; falls back to XAH_TRUSTED_SOURCES
+
+
+def trust_policy():
+    import trusted_sources
+    return trusted_sources.load_policy(_trusted_sources[0] if _trusted_sources else
+                                       os.environ.get(trusted_sources.POLICY_ENV, ""))
 
 def catalog_files():
     files = [(CATALOG, ROOT)]
     configured = list(_extra_catalogs) + [p for p in os.environ.get(EXTRA_CATALOGS_ENV, "").split(os.pathsep) if p]
+    policy = trust_policy() if configured else None
     for value in configured:
         path = pathlib.Path(value).expanduser().resolve()
         if not path.is_file():
             raise ValueError(f"Additional catalog not found: {path}")
+        import trusted_sources
+        trusted_sources.check_catalog(policy, path)
         if path in [existing for existing, _ in files]:
             continue
         files.append((path, path.parent))
@@ -145,6 +155,8 @@ def main():
     parser = argparse.ArgumentParser(prog="xah", description="XData AgentHub — portable agent resources")
     parser.add_argument("--catalog", action="append", default=[], metavar="PATH",
                         help=f"Additional local catalog JSON (repeatable; also {EXTRA_CATALOGS_ENV})")
+    parser.add_argument("--trusted-sources", metavar="PATH",
+                        help="Trusted sources policy JSON (also XAH_TRUSTED_SOURCES); see docs/TRUSTED_CATALOG_REFRESH.md")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list", help="List catalog items")
     trust = sub.add_parser("trust", help="Inspect declared catalog provenance (not certification)")
@@ -233,6 +245,7 @@ def main():
     mcp_inspect.add_argument("--json", action="store_true")
     args = parser.parse_args()
     _extra_catalogs[:] = args.catalog
+    _trusted_sources[:] = [args.trusted_sources] if args.trusted_sources else []
     try:
         if args.cmd == "mcp":
             import mcp_catalog
@@ -360,6 +373,8 @@ def main():
                 return 2
         elif args.cmd == "catalog-refresh":
             from catalog_refresh import refresh_catalog
+            import trusted_sources
+            trusted_sources.check_refresh_url(trust_policy(), args.url)
             digest = refresh_catalog(CATALOG, source_url=args.url, revision=args.revision,
                                      sha256=args.sha256, approve=args.approve, offline=args.offline)
             print(f"Catalog refreshed; verified SHA-256: {digest}")
@@ -438,6 +453,8 @@ def main():
                 return 2
         elif args.cmd == "doctor":
             print(f"Python: {platform.python_version()}")
+            import trusted_sources
+            print(trusted_sources.describe(trust_policy()))
             for path, _ in catalog_files():
                 print(f"Catalog: {path}")
             if sys.version_info < (3, 10):

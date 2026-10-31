@@ -4,6 +4,11 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 
 ## [Unreleased]
 
+### Added
+- Trusted sources policy (XAH-303): an opt-in JSON file (`XAH_TRUSTED_SOURCES` or `--trusted-sources`) limits
+  `catalog-refresh` to allowed HTTPS URL prefixes and additional catalogs to allowed directories; `xah doctor` reports
+  the active policy.
+
 ## [0.4.0] - 2026-10-31
 
 Verified MCP: 23 MCP servers in the catalog, 16 above L0 with committed evidence (`playwright` L2, 15 servers L1).

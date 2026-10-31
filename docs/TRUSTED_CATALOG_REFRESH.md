@@ -15,3 +15,27 @@ Use a **full immutable commit SHA** in the URL and obtain the expected digest th
 Use `--offline` to guarantee that no network request is attempted; the operation fails safely and preserves the existing catalog. Normal `list`, `search`, `inspect`, `add` and `update` continue to work offline with the existing catalog.
 
 Security caveats: catalog metadata is untrusted input; catalog refresh does not authenticate the publisher or validate all referenced local paths. Run `xah doctor` after refresh to validate referenced local files. Remote catalogs with entries absent from the local checkout will fail doctor; this command is not a package downloader. Concurrent catalog writers and abrupt power loss are outside the atomicity guarantee.
+
+## Trusted sources policy (XAH-303)
+
+Operators can restrict where catalog content may come from with a policy file, named by `XAH_TRUSTED_SOURCES` or
+`xah --trusted-sources PATH`:
+
+```json
+{
+  "schema_version": 1,
+  "refresh_url_prefixes": ["https://raw.githubusercontent.com/XData-si/xdata-agenthub/"],
+  "catalog_dirs": ["~/org-skills", "/opt/xah-catalogs"]
+}
+```
+
+With a policy in place, `catalog-refresh` refuses any URL that does not start with one of `refresh_url_prefixes`
+(checked before any network access), and every additional catalog from `--catalog` or `XAH_CATALOGS` must lie inside
+one of `catalog_dirs` (relative directories are resolved next to the policy file; symlinks and `..` are resolved before
+the check). Prefixes must be HTTPS, end with `/` and carry no credentials or query, so `https://host/org/` does not
+also admit `https://host/org-evil/`. `xah doctor` prints which policy is active. Without a policy the behaviour is
+unchanged.
+
+The policy narrows the allowed sources; it does not authenticate a publisher. Pinned revisions, SHA-256 checks and
+`--approve` still apply. Keep the policy file under configuration management and readable only by the operator.
+
