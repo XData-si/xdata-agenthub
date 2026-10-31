@@ -90,6 +90,8 @@ def same_repo(a, b):
 
 
 def check_namespace(entry, http):
+    if entry["registry"]["status"] == "unlisted":
+        return _check(False, f"{entry['name']} is not in the official registry (community listing)"), None
     url = f"{API}/servers/{urllib.parse.quote(entry['name'], safe='')}/versions/{urllib.parse.quote(entry['version'], safe='')}"
     try:
         record = http.json(url)

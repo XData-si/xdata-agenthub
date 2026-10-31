@@ -22,6 +22,9 @@ PACKAGE_REGISTRIES = {"npm", "pypi", "oci", "nuget", "mcpb"}
 LOCAL_TRANSPORTS = {"stdio", "streamable-http", "sse"}
 REMOTE_TRANSPORTS = {"streamable-http", "sse"}
 REGISTRY_STATUSES = {"active", "deprecated", "deleted"}
+# A community listing is a server added on request although it is not in the official registry (no namespace
+# proof, so it never rises above L0) or not published by the vendor of the service it connects to.
+LISTINGS = {"community"}
 PERMISSIONS = {
     "filesystem": {"none", "read", "write"},
     "network": {"none", "allowlisted", "any"},
@@ -31,7 +34,7 @@ PERMISSIONS = {
 }
 
 ENTRY_REQUIRED = {"id", "name", "description", "version", "artifacts", "registry", "level"}
-ENTRY_OPTIONAL = {"title", "repository", "website", "environment", "permissions", "evidence"}
+ENTRY_OPTIONAL = {"title", "repository", "website", "environment", "permissions", "evidence", "listing"}
 
 
 def _fields(obj, required, optional, where):
@@ -103,10 +106,14 @@ def validate_entry(entry, where="server"):
             names.add(var["name"])
             if type(var["required"]) is not bool or type(var["secret"]) is not bool:
                 raise ValueError(f"{where}.environment[{idx}] flags must be booleans")
+    if "listing" in entry and entry["listing"] not in LISTINGS:
+        raise ValueError(f"{where}.listing must be one of {', '.join(sorted(LISTINGS))}")
     registry = entry["registry"]
     _fields(registry, {"status", "published_at", "updated_at"}, set(), f"{where}.registry")
-    if registry["status"] not in REGISTRY_STATUSES:
+    if registry["status"] not in REGISTRY_STATUSES | ({"unlisted"} if "listing" in entry else set()):
         raise ValueError(f"{where}.registry.status is invalid")
+    if registry["status"] == "unlisted" and entry["level"] != "L0":
+        raise ValueError(f"{where}: a server outside the official registry has no namespace proof and stays L0")
     for field in ("published_at", "updated_at"):
         if not isinstance(registry[field], str) or not TIMESTAMP.fullmatch(registry[field]):
             raise ValueError(f"{where}.registry.{field} must be a UTC timestamp")

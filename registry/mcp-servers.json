@@ -700,6 +700,82 @@
       ]
     },
     {
+      "id": "mcp-atlassian",
+      "name": "io.github.sooperset/mcp-atlassian",
+      "description": "Jira and Confluence for Cloud and Server/Data Center (self-hosted). Community server, not published by Atlassian.",
+      "version": "0.23.1",
+      "artifacts": [
+        {
+          "kind": "package",
+          "registry": "oci",
+          "identifier": "ghcr.io/sooperset/mcp-atlassian:0.23.1",
+          "version": "0.23.1",
+          "transport": "stdio"
+        }
+      ],
+      "registry": {
+        "status": "unlisted",
+        "published_at": "2026-08-19T00:38:15Z",
+        "updated_at": "2026-08-19T00:38:15Z"
+      },
+      "level": "L0",
+      "title": "MCP Atlassian (Jira/Confluence, Cloud and Data Center)",
+      "repository": "https://github.com/sooperset/mcp-atlassian",
+      "listing": "community",
+      "environment": [
+        {
+          "name": "ATLASSIAN_OAUTH_ENABLE",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CONFLUENCE_API_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "CONFLUENCE_PERSONAL_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "CONFLUENCE_URL",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "CONFLUENCE_USERNAME",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "JIRA_API_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "JIRA_PERSONAL_TOKEN",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "JIRA_URL",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "JIRA_USERNAME",
+          "required": false,
+          "secret": false
+        },
+        {
+          "name": "READ_ONLY_MODE",
+          "required": false,
+          "secret": false
+        }
+      ]
+    },
+    {
       "id": "microsoft-learn",
       "name": "com.microsoft/microsoft-learn-mcp",
       "description": "Official Microsoft Learn MCP Server – real-time, trusted docs & code samples for AI and LLMs.",

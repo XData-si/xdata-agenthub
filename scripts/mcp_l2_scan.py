@@ -179,8 +179,9 @@ def prepare_npm(artifact, entry, work, http, extra):
     run(["npm", "install", "--omit=dev", "--ignore-scripts", "--no-audit", "--no-fund", "--package-lock"], cwd=package)
     binary = npm_bin(package_json)
     env = [x for k, v in placeholder_env(entry).items() for x in ("-e", f"{k}={v}")]
-    command = ["docker", "run", *ISOLATION, "--user", "65534:65534", "-v", f"{package}:/app:ro", "-w", "/app", *env,
-               NODE_IMAGE, "node", f"/app/{binary}", *extra]
+    # nobody (65534) has no home directory; servers that write a config or cache there get the writable /tmp.
+    command = ["docker", "run", *ISOLATION, "--user", "65534:65534", "-e", "HOME=/tmp", "-v", f"{package}:/app:ro",
+               "-w", "/app", *env, NODE_IMAGE, "node", f"/app/{binary}", *extra]
     return {"command": command, "sbom": f"dir:{package}", "osv": ["scan", "source", "--lockfile", str(package / "package-lock.json")],
             "secrets_dir": package, "secrets_exclude": ["node_modules"], "licence": package_json.get("license")}
 

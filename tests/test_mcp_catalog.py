@@ -91,6 +91,18 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_mcp_catalog(dict(catalog(), schema_version=2))
 
+    def test_community_listing_outside_the_registry_stays_l0(self):
+        community = dict(copy.deepcopy(self.entry), listing="community",
+                         registry={"status": "unlisted", "published_at": "2026-09-01T10:00:00Z",
+                                   "updated_at": "2026-09-01T10:00:00Z"})
+        validate_entry(copy.deepcopy(community))
+        for change in ({"listing": "partner"}, {"level": "L1", "evidence": "reports/mcp/files/1.2.0.json"}):
+            with self.assertRaises(ValueError):
+                validate_entry(dict(copy.deepcopy(community), **change))
+        unlisted_vendor = copy.deepcopy(community); del unlisted_vendor["listing"]
+        with self.assertRaises(ValueError):
+            validate_entry(unlisted_vendor)
+
     def test_search_filters(self):
         other = importer.to_entry(record(name="io.github.example/remote-only", packages=[]), "remote-only")
         servers = [self.entry, other]
@@ -156,6 +168,14 @@ class ImportTests(unittest.TestCase):
                 self.assertTrue(logs and logs[0].startswith("warning: files:"))
         with self.assertRaises(ValueError):
             self.run_refresh(catalog(), {}, add=("io.github.example/files", "files"))
+
+    def test_unlisted_community_entries_are_not_fetched(self):
+        community = dict(importer.to_entry(record(name="io.github.other/tool"), "tool"), listing="community",
+                         registry={"status": "unlisted", "published_at": "2026-09-01T10:00:00Z",
+                                   "updated_at": "2026-09-01T10:00:00Z"})
+        fetched = []
+        result = importer.refresh(catalog(community), fetch=lambda name: fetched.append(name), log=lambda _: None)
+        self.assertEqual((fetched, result["servers"]), ([], [community]))
 
     def test_check_mode_does_not_write(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -68,10 +68,11 @@ def build(out_dir):
         transport = html.escape(", ".join(sorted({a["transport"] for a in server["artifacts"]})))
         link = html.escape(server.get("repository") or server.get("website") or "")
         heading = f'<a href="{link}" rel="noopener">{title}</a>' if link else title
+        community = ' <span class="seal">community</span>' if server.get("listing") == "community" else ''
         cards.append(
             f'<article data-text="mcp {html.escape(server["id"])} {name.lower()} {description.lower()}">'
             f'<h3>{heading}</h3>'
-            f'<span class="seal seal-mcp-{level.lower()}">{level} {LEVEL_LABELS[server["level"]]}</span>'
+            f'<span class="seal seal-mcp-{level.lower()}">{level} {LEVEL_LABELS[server["level"]]}</span>{community}'
             f'<p>{description}</p>'
             f'<code>{name} {html.escape(server["version"])} · {transport}</code>'
             '</article>')

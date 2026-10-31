@@ -86,6 +86,7 @@ evidence. Reports are reproducible: anyone can re-run the published test plan.
 | `registry` | upstream status and publish/update timestamps |
 | `level` | `L0`–`L4`; anything above L0 requires `evidence` and a `sha256` for every package, L3+ also a `permissions` profile |
 | `permissions`, `evidence` | permission profile (values from the table above) and a repository path to the evidence report |
+| `listing` | `community` for a server added on request that its vendor did not publish; with `registry.status` `unlisted` it is not in the official registry at all, so it has no namespace proof and stays L0 |
 
 Import: `python3 scripts/import_mcp_registry.py --add <registry name> --id <slug>` starts listing a server;
 `python3 scripts/import_mcp_registry.py` refreshes all listed servers from the registry's `versions/latest` endpoint
@@ -104,6 +105,10 @@ Decisions for phase 2: the initial set contains only servers published by the ve
 (namespace owned by that vendor); servers without a package (remote endpoints only) can reach L1 at most, because their
 code cannot be scanned; the verifier starts a packaged server only to read `tools/list` (isolated container, no
 network, no credentials, no tool calls — exercising tools is L3); heavier scanners run in CI, never in `xah`.
+
+Exception: `mcp-atlassian` (sooperset) is listed as `community` because Atlassian publishes no MCP server for Jira and
+Confluence Server/Data Center (self-hosted); Atlassian's own server covers Cloud only. It is not in the official
+registry, so the weekly registry check skips it and it stays L0; its OCI image is still scanned for the record.
 
 **L1 (identity)** — all three must pass:
 - *namespace*: the official registry lists the server as active under this name (its namespace proof is the
