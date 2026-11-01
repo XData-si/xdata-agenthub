@@ -53,10 +53,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           ID: ${{ inputs.id || 'playwright' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           case "$ID" in *[!a-z0-9-]*|'') echo "invalid id" >&2; exit 1;; esac
           status=0
-          python3 scripts/mcp_l3_run.py "$ID" --out "$RUNNER_TEMP/runtime" --runsc-logs /tmp/runsc | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
+          python3 scripts/mcp_l3_run.py "$ID" --out "$RUNNER_TEMP/runtime" --runsc-logs /tmp/runsc \
+            --runsc-version "$(runsc --version | head -1 | awk '{print $3}')" --run-url "$RUN_URL" | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
           sudo chmod -R a+rX /tmp/runsc
           exit $status
       - name: Collect gVisor logs

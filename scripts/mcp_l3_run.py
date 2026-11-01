@@ -8,7 +8,9 @@ Runs in CI only (needs Docker and the gVisor runtime `runsc-trace`, see .github/
 4. run the plan's positive and negative tool calls (registry/mcp-plans/<id>.json);
 5. parse file, network and process activity from the gVisor strace log and compare it with the plan's profile.
 
-Writes OUT/<id>/<version>-runtime.json and the raw gVisor logs. Nothing is committed and no level is changed.
+Writes OUT/<id>/<version>-runtime.json (full report), OUT/<id>/<version>.json (the committed L2 evidence plus an L3
+`runtime` section, validated by cli/mcp_evidence.py) and the raw gVisor logs. Nothing is committed and no level is
+changed: a maintainer reviews the report and raises the level, with the plan's profile as `permissions`, in a PR.
 
   python3 scripts/mcp_l3_run.py playwright --out "$RUNNER_TEMP/mcp-runtime" --runsc-logs /tmp/runsc
 """
@@ -27,7 +29,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "cli"))
 sys.path.insert(0, str(ROOT / "scripts"))
 import mcp_catalog
+import mcp_evidence
 import mcp_l2_scan
+import mcp_tool_scan
 import mcp_tools_list
 import verify_mcp_identity
 from import_mcp_registry import CATALOG
@@ -145,6 +149,9 @@ def run_plan(entry, plan, work, runsc_logs, http):
     evidence = verify_mcp_identity.verify(entry, http)
     pins = {(p["registry"], p["identifier"]): p["sha256"] for p in evidence["artifacts"]}
     artifact = dict(artifact, sha256=pins[(artifact["registry"], artifact["identifier"])])
+    if entry["artifacts"] and any(a.get("sha256") not in (None, pins.get((a["registry"], a["identifier"])))
+                                  for a in entry["artifacts"] if a["kind"] == "package"):
+        raise ValueError("the published artifact no longer matches the catalog pin")
     package = pathlib.Path(mcp_l2_scan.prepare_npm(artifact, entry, work, http, [])["secrets_dir"])
     binary = mcp_l2_scan.npm_bin(json.loads((package / "package.json").read_text(encoding="utf-8")))
     tag = uuid.uuid4().hex[:10]
@@ -185,9 +192,27 @@ def run_plan(entry, plan, work, runsc_logs, http):
     logs = sorted(p for p in (pathlib.Path(runsc_logs) / container).glob("*") if p.is_file()) if container else []
     lines = [line for log in logs for line in log.read_text(encoding="utf-8", errors="replace").splitlines()]
     activity = parse_strace(lines)
-    return {"artifacts": evidence["artifacts"], "tools": len(tools), "calls": outcomes, "activity": activity,
+    return {"artifacts": evidence["artifacts"], "tools": len(tools), "tools_digest": mcp_tool_scan.tools_digest(tools),
+            "calls": outcomes, "activity": activity,
             "mismatches": compare(activity, plan["allowed"], fixture_ips), "fixture_ips": fixture_ips,
             "strace_lines": len(lines), "logs": [str(p) for p in logs], "server_stderr": stderr}
+
+
+def summarize_writes(paths, depth=3):
+    """Directories written to, a few levels deep, so the evidence stays readable (font caches write hundreds)."""
+    return sorted({"/".join(p.split("/")[:depth + 1]) for p in paths})
+
+
+def runtime_section(report, plan, sandbox):
+    return {"result": report["result"], "plan": f"registry/mcp-plans/{report['id']}.json",
+            "plan_sha256": report["plan_sha256"], "sandbox": sandbox, "image": plan["image"],
+            "tools_digest": report["tools_digest"],
+            "calls": [{k: c[k] for k in ("name", "tool", "expect", "result")} for c in report["calls"]],
+            "activity": {"writes": summarize_writes(report["activity"]["writes"]),
+                         "write_count": len(report["activity"]["writes"]),
+                         "connects": report["activity"]["connects"], "blocked": report["activity"]["blocked"],
+                         "execs": report["activity"]["execs"]},
+            "mismatches": report["mismatches"], "profile": plan["profile"]}
 
 
 def main(argv=None):
@@ -195,6 +220,8 @@ def main(argv=None):
     parser.add_argument("id")
     parser.add_argument("--out", required=True)
     parser.add_argument("--runsc-logs", required=True)
+    parser.add_argument("--runsc-version", default="gVisor", help="recorded in the evidence, e.g. release-20261026.0")
+    parser.add_argument("--run-url")
     args = parser.parse_args(argv)
     servers = mcp_catalog.validate_mcp_catalog(json.loads(CATALOG.read_text(encoding="utf-8")))
     entry = next((s for s in servers if s["id"] == args.id), None)
@@ -212,6 +239,18 @@ def main(argv=None):
                                                           encoding="utf-8")
     for log in report["logs"]:
         shutil.copy(log, out / pathlib.Path(log).name)
+    if entry.get("evidence"):
+        # Extend the committed L2 evidence; validated against the entry as it would be with the plan's profile.
+        evidence = json.loads((ROOT / entry["evidence"]).read_text(encoding="utf-8"))
+        sandbox = (f"gVisor {args.runsc_version} with strace; internal Docker network with fixtures only; read-only "
+                   "root, no capabilities, user nobody, no credentials")
+        evidence["runtime"] = runtime_section(report, plan, sandbox)
+        if args.run_url:
+            evidence["runtime"]["run"] = args.run_url
+        level = mcp_evidence.validate_evidence(evidence, dict(entry, permissions=plan["profile"]))
+        (out / f"{entry['version']}.json").write_text(json.dumps(evidence, indent=2, ensure_ascii=False) + "\n",
+                                                      encoding="utf-8")
+        print(f"evidence with runtime section supports {level}")
     print(f"{entry['id']} {entry['version']}: runtime {report['result']} ({report['strace_lines']} strace lines)")
     for call in report["calls"]:
         print(f"  call {call['result']}: {call['name']} ({call['tool']}, expect {call['expect']})")

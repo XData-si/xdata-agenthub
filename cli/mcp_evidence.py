@@ -1,10 +1,12 @@
-"""Evidence documents for Verified MCP levels L1 and L2 (reports/mcp/<id>/<version>.json).
+"""Evidence documents for Verified MCP levels L1 to L3 (reports/mcp/<id>/<version>.json).
 
 An entry in registry/mcp-servers.json above L0 points to one evidence document. The document is bound to the entry:
 same server name and version, and the same sha256 for every package. The level the entry claims must follow from the
 recorded results, and the tools/list snapshot is re-checked here, so a report cannot claim a clean scan that the
-snapshot contradicts. Standard library only; nothing is fetched or executed.
+snapshot contradicts. An L3 `runtime` section must agree with the entry's permission profile and the L2 snapshot,
+and its test plan must be the committed one. Standard library only; nothing is fetched or executed.
 """
+import hashlib
 import json
 
 from mcp_catalog import HEX, LEVELS, TIMESTAMP, _fields, _https, _text, validate_entry
@@ -13,6 +15,9 @@ import mcp_tool_scan
 RESULTS = {"pass", "fail"}
 L2_SCANS = ("tools", "dependencies", "sbom", "secrets", "licence")
 IDENTITY_CHECKS = ("namespace", "repository", "artifacts")
+RUNTIME_FIELDS = {"result", "plan", "plan_sha256", "sandbox", "image", "tools_digest", "calls", "activity",
+                  "mismatches", "profile"}
+ACTIVITY_KINDS = ("writes", "connects", "blocked", "execs")
 
 
 def _result(obj, where, required=(), optional=()):
@@ -29,7 +34,7 @@ def validate_evidence(evidence, entry):
     """Validate an evidence document against its catalog entry; return the highest level it supports."""
     validate_entry(entry)
     _fields(evidence, {"schema_version", "server", "artifacts", "generated_at", "identity"},
-            {"run", "scans", "tools"}, "evidence")
+            {"run", "scans", "tools", "runtime"}, "evidence")
     if type(evidence["schema_version"]) is not int or evidence["schema_version"] != 1:
         raise ValueError("Unsupported MCP evidence schema version")
     server = evidence["server"]
@@ -82,7 +87,52 @@ def validate_evidence(evidence, entry):
         # L2 needs a package to scan: remote-only servers stop at L1.
         if level == "L1" and packages and all(scans[s]["result"] == "pass" for s in L2_SCANS):
             level = "L2"
+    if "runtime" in evidence:
+        if "tools" not in evidence:
+            raise ValueError("evidence.runtime needs the L2 tools snapshot")
+        if validate_runtime(evidence["runtime"], entry, mcp_tool_scan.tools_digest(evidence["tools"])) and level == "L2":
+            level = "L3"
     return level
+
+
+def validate_runtime(runtime, entry, tools_digest):
+    """Validate an L3 runtime section; return True when it supports L3 for this entry."""
+    _fields(runtime, RUNTIME_FIELDS, {"run"}, "evidence.runtime")
+    if "run" in runtime:
+        _https(runtime["run"], "evidence.runtime.run")
+    if runtime["result"] not in RESULTS:
+        raise ValueError("evidence.runtime.result must be pass or fail")
+    for field in ("plan", "sandbox", "image"):
+        _text(runtime[field], f"evidence.runtime.{field}", 300)
+    for field in ("plan_sha256", "tools_digest"):
+        if not isinstance(runtime[field], str) or not HEX.fullmatch(runtime[field]):
+            raise ValueError(f"evidence.runtime.{field} must be 64 lowercase hex characters")
+    calls = runtime["calls"]
+    if not isinstance(calls, list):
+        raise ValueError("evidence.runtime.calls must be an array")
+    for idx, call in enumerate(calls):
+        _fields(call, {"name", "tool", "expect", "result"}, {"excerpt"}, f"evidence.runtime.calls[{idx}]")
+        if call["expect"] not in ("success", "error") or call["result"] not in RESULTS:
+            raise ValueError(f"evidence.runtime.calls[{idx}] has an invalid expect or result")
+    activity = runtime["activity"]
+    _fields(activity, set(ACTIVITY_KINDS), {"reads", "unix", "write_count"}, "evidence.runtime.activity")
+    for kind in ACTIVITY_KINDS:
+        if not isinstance(activity[kind], list) or not all(isinstance(v, str) for v in activity[kind]):
+            raise ValueError(f"evidence.runtime.activity.{kind} must be an array of strings")
+    if not isinstance(runtime["mismatches"], list):
+        raise ValueError("evidence.runtime.mismatches must be an array")
+    supported = (bool(calls) and all(c["result"] == "pass" for c in calls)
+                 and {c["expect"] for c in calls} == {"success", "error"} and not runtime["mismatches"])
+    if runtime["result"] == "pass" and not supported:
+        raise ValueError("evidence.runtime passes although a call failed, a case kind is missing or the profile was not met")
+    if runtime["result"] != "pass":
+        return False
+    # The profile shown to users is the one that was tested, and the server exposed the same tools as in L2.
+    if runtime["profile"] != entry.get("permissions"):
+        raise ValueError("evidence.runtime.profile differs from the catalog entry's permissions")
+    if runtime["tools_digest"] != tools_digest:
+        raise ValueError("evidence.runtime.tools_digest differs from the L2 tools snapshot")
+    return True
 
 
 def check_catalog_evidence(servers, root):
@@ -94,7 +144,15 @@ def check_catalog_evidence(servers, root):
         path = root / entry["evidence"]
         if not path.is_file():
             raise ValueError(f"{entry['id']}: evidence file {entry['evidence']} not found")
-        supported = validate_evidence(json.loads(path.read_text(encoding="utf-8")), entry)
+        evidence = json.loads(path.read_text(encoding="utf-8"))
+        supported = validate_evidence(evidence, entry)
+        runtime = evidence.get("runtime")
+        if runtime and supported == "L3":
+            plan = root / runtime["plan"]
+            if runtime["plan"].startswith("/") or ".." in runtime["plan"].split("/") or not plan.is_file():
+                raise ValueError(f"{entry['id']}: test plan {runtime['plan']} not found")
+            if hashlib.sha256(plan.read_bytes()).hexdigest() != runtime["plan_sha256"]:
+                raise ValueError(f"{entry['id']}: test plan {runtime['plan']} changed since the runtime evidence")
         if LEVELS.index(entry["level"]) > LEVELS.index(supported):
             raise ValueError(f"{entry['id']}: level {entry['level']} claimed, evidence supports {supported}")
         checked += 1
