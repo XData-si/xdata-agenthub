@@ -278,8 +278,17 @@ def main():
                     secrets = [v["name"] for v in server.get("environment", []) if v["secret"]]
                     if secrets:
                         print("Secrets it asks for: " + ", ".join(secrets))
+                    if "permissions" in server:
+                        print("Permission profile (tested): " + ", ".join(f"{k} {v}" for k, v in server["permissions"].items()))
                     if "evidence" in server:
                         print(f'Evidence: {server["evidence"]}')
+                        runtime = json.loads((ROOT / server["evidence"]).read_text(encoding="utf-8")).get("runtime")
+                        if runtime and runtime["result"] == "pass":
+                            activity = runtime["activity"]
+                            print(f'Runtime ({runtime["sandbox"].split(";")[0]}): {len(runtime["calls"])} tool calls; '
+                                  f'connected to {", ".join(activity["connects"]) or "nothing"}')
+                            if activity["blocked"]:
+                                print("  Blocked connection attempts: " + ", ".join(activity["blocked"]))
             else:
                 found = (servers if args.mcp_cmd == "list" else
                          mcp_catalog.filter_servers(servers, query=args.query, level=args.level, transport=args.transport))

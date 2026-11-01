@@ -162,7 +162,7 @@ request that adds the evidence file and changes `level` in the same commit.
 
 ### Results of the phase 2 set (2026-10-31)
 
-`playwright` 0.0.82 reached L2. `atlassian`, `cloudflare`, `exa`, `figma`, `gitlab` and `microsoft-learn` are
+`playwright` 0.0.82 reached L2, and L3 in phase 3. `atlassian`, `cloudflare`, `exa`, `figma`, `gitlab` and `microsoft-learn` are
 remote-only and stop at L1 by design. The others did not pass every check:
 
 | Server | Version | Level | Failed | Why |
@@ -183,6 +183,37 @@ remote-only and stop at L1 by design. The others did not pass every check:
 | `notion` | 1.0.1 | L0 | L1 repository | the registry entry declares no source repository |
 | `stripe` | 0.2.4 | L0 | L1 repository | the GitHub organisation's website is `stripe.dev`, not the namespace domain `stripe.com` |
 | `mcp-atlassian` | 0.23.1 | L0 | L1 namespace | community listing outside the official registry; without credentials it lists no tools, and the image has 76 high/critical advisories |
+
+## Phase 3: L3 criteria
+
+**L3 (runtime tested)** — L2 plus a passing run of the server's committed test plan
+(`registry/mcp-plans/<id>.json`) with the same pinned artifact:
+
+- *sandbox*: the server runs under gVisor (`runsc`, pinned release) with strace for file, network and process
+  system calls, a read-only root file system, no capabilities, user nobody and no credentials, on an internal Docker
+  network whose only other members are the plan's fixtures (for example a static web server). There is no route to the
+  internet, so the egress allowlist is the fixture list. Fixture names are written to `/etc/hosts`.
+- *plan*: positive calls against the fixtures and negative calls (a host outside the allowlist, an unknown tool,
+  invalid arguments); every call must behave as the plan expects, and the plan must contain both kinds.
+- *profile*: observed activity must stay within the plan's allowlist: file writes only under the allowed paths,
+  connections only to fixtures and loopback, executed programs only from the allowed list. The plan's profile is the
+  `permissions` of the catalog entry and is shown by `xah mcp inspect`.
+- *same server*: the tools listed at runtime must have the same digest as the L2 snapshot.
+
+**Blocked attempts** (connections the sandbox refused because there is no route) do not fail L3: the profile held.
+They are listed in the evidence and by `xah mcp inspect`, so users see what the server tries to reach. Example:
+Playwright's Chromium tries Google DNS (`8.8.8.8`, `8.8.4.4`) and DNS over HTTPS.
+
+**Evidence** — the L2 evidence document gains a `runtime` section: plan path and sha256, sandbox, image, the tools
+digest, every call with its expectation and result, the observed activity (written directories, connections, blocked
+attempts, executed programs), mismatches and the profile. `xah doctor` rejects an L3 claim when a call failed, a case
+kind is missing, there is a mismatch, the profile differs from the entry's `permissions`, the tools differ from L2, or
+the committed plan changed since the run.
+
+The `MCP runtime` workflow (`scripts/mcp_l3_run.py`) runs a plan in CI and uploads the report, the extended evidence
+and the raw gVisor logs; a maintainer reviews them and raises the level in a pull request. L3 says how one version
+behaved in this sandbox with synthetic data; it does not cover your environment, your data or real credentials.
+Servers that need a SaaS account are not tested at L3 yet: that needs dedicated test accounts, never production ones.
 
 ## Phases
 | Phase | Scope | Priority |

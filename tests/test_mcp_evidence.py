@@ -163,5 +163,62 @@ class EvidenceTests(unittest.TestCase):
             self.assertEqual(check_catalog_evidence([entry(level="L1")], root), 1)
 
 
+
+PROFILE = {"filesystem": "write", "network": "allowlisted", "data": "read-only", "external_actions": "none",
+           "credentials": "none"}
+
+
+def with_runtime(doc, plan_sha=SHA, **changes):
+    doc = copy.deepcopy(doc)
+    doc["runtime"] = {"result": "pass", "plan": "registry/mcp-plans/files.json", "plan_sha256": plan_sha,
+                      "sandbox": "gVisor test", "image": "example@sha256:" + "c" * 64,
+                      "tools_digest": tools_digest(doc["tools"]),
+                      "calls": [{"name": "read", "tool": "read_file", "expect": "success", "result": "pass"},
+                                {"name": "escape", "tool": "read_file", "expect": "error", "result": "pass"}],
+                      "activity": {"writes": [], "connects": [], "blocked": ["8.8.8.8:53"], "execs": ["/usr/bin/node"]},
+                      "mismatches": [], "profile": dict(PROFILE)}
+    doc["runtime"].update(changes)
+    return doc
+
+
+class RuntimeEvidenceTests(unittest.TestCase):
+    def test_runtime_pass_supports_l3_with_matching_profile(self):
+        # with_runtime() records a blocked attempt (8.8.8.8:53): reported, but not a failure
+        self.assertEqual(validate_evidence(with_runtime(evidence()), entry("L3", permissions=PROFILE)), "L3")
+
+    def test_runtime_needs_l2_and_consistent_results(self):
+        failing = evidence()
+        failing["scans"]["dependencies"] = {"result": "fail"}
+        self.assertEqual(validate_evidence(with_runtime(failing), entry("L1", permissions=PROFILE)), "L1")
+        self.assertEqual(validate_evidence(with_runtime(evidence(), result="fail"), entry("L2", permissions=PROFILE)), "L2")
+        bad = [{"calls": [{"name": "read", "tool": "read_file", "expect": "success", "result": "fail"}]},
+               {"calls": [{"name": "read", "tool": "read_file", "expect": "success", "result": "pass"}]},
+               {"mismatches": ["write outside allowed paths: /etc/passwd"]}]
+        for change in bad:
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                validate_evidence(with_runtime(evidence(), **change), entry("L3", permissions=PROFILE))
+
+    def test_runtime_is_bound_to_profile_and_tools(self):
+        with self.assertRaises(ValueError):
+            validate_evidence(with_runtime(evidence()), entry("L3", permissions=dict(PROFILE, network="none")))
+        with self.assertRaises(ValueError):
+            validate_evidence(with_runtime(evidence(), tools_digest="d" * 64), entry("L3", permissions=PROFILE))
+
+    def test_catalog_check_requires_the_committed_plan(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            plan = root / "registry/mcp-plans/files.json"
+            plan.parent.mkdir(parents=True)
+            plan.write_text('{"plan": 1}', encoding="utf-8")
+            import hashlib
+            digest = hashlib.sha256(plan.read_bytes()).hexdigest()
+            report = root / "reports/mcp/files/1.2.0.json"
+            report.parent.mkdir(parents=True)
+            report.write_text(json.dumps(with_runtime(evidence(), plan_sha=digest)), encoding="utf-8")
+            self.assertEqual(check_catalog_evidence([entry("L3", permissions=PROFILE)], root), 1)
+            plan.write_text('{"plan": 2}', encoding="utf-8")
+            with self.assertRaises(ValueError):
+                check_catalog_evidence([entry("L3", permissions=PROFILE)], root)
+
 if __name__ == "__main__":
     unittest.main()

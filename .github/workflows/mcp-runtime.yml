@@ -1,0 +1,74 @@
+name: MCP runtime
+# Verified MCP L3 (draft, docs/VERIFIED_MCP.md): runs a catalog entry's test plan (registry/mcp-plans/<id>.json) under
+# gVisor with strace, on an internal Docker network whose only other member is the plan's fixture. Uploads the runtime
+# report and the raw gVisor logs as an artifact; writes nothing to the repository and changes no level.
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: 'Catalog id with a test plan'
+        required: true
+        default: 'playwright'
+  pull_request:
+    paths:
+      - 'scripts/mcp_l3_run.py'
+      - 'registry/mcp-plans/**'
+      - 'tests/fixtures/mcp/l3/**'
+      - '.github/workflows/mcp-runtime.yml'
+permissions:
+  contents: read
+jobs:
+  runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+      - name: Install gVisor (pinned)
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 3 -o gvisor.tar.bz2 \
+            https://github.com/google/gvisor/releases/download/release-20261026.0/gvisor-x86_64.tar.bz2
+          echo "096589d2d6078ba4caa26aa0200932f571aa5da9d08a5156b98ab1d93fa54468  gvisor.tar.bz2" | sha256sum -c -
+          mkdir gvisor && tar -xjf gvisor.tar.bz2 -C gvisor
+          runsc=$(find gvisor -type f -name runsc | head -1)
+          shim=$(find gvisor -type f -name 'containerd-shim-runsc-v1' | head -1)
+          sudo install -m 0755 "$runsc" /usr/local/bin/runsc
+          [ -z "$shim" ] || sudo install -m 0755 "$shim" /usr/local/bin/containerd-shim-runsc-v1
+          sudo mkdir -p -m 0777 /tmp/runsc
+          sudo /usr/local/bin/runsc install --runtime runsc-trace -- \
+            --debug --debug-log=/tmp/runsc/%ID%/ --strace --strace-log-size=4096 \
+            --strace-syscalls=openat,open,creat,unlinkat,unlink,renameat,renameat2,rename,mkdirat,mkdir,connect,execve,execveat
+          sudo systemctl restart docker
+          docker info --format '{{json .Runtimes}}' | grep -q runsc-trace
+          runsc --version | head -1
+      - name: Run test plan
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ID: ${{ inputs.id || 'playwright' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          case "$ID" in *[!a-z0-9-]*|'') echo "invalid id" >&2; exit 1;; esac
+          status=0
+          python3 scripts/mcp_l3_run.py "$ID" --out "$RUNNER_TEMP/runtime" --runsc-logs /tmp/runsc \
+            --runsc-version "$(runsc --version | head -1 | awk '{print $3}')" --run-url "$RUN_URL" | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
+          sudo chmod -R a+rX /tmp/runsc
+          exit $status
+      - name: Collect gVisor logs
+        if: always()
+        # One archive: gVisor names some log directories "<unknown>", which artifact uploads reject.
+        run: mkdir -p "$RUNNER_TEMP/runtime" && sudo tar -czf "$RUNNER_TEMP/runtime/gvisor-logs.tgz" -C /tmp runsc && sudo chmod a+r "$RUNNER_TEMP/runtime/gvisor-logs.tgz" || true
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: mcp-runtime-${{ inputs.id || 'playwright' }}
+          path: ${{ runner.temp }}/runtime
+          retention-days: 14
+          if-no-files-found: warn
