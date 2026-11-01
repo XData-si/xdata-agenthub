@@ -1146,9 +1146,16 @@
         "published_at": "2026-09-18T23:41:20.46032Z",
         "updated_at": "2026-09-18T23:41:20.46032Z"
       },
-      "level": "L2",
+      "level": "L3",
       "repository": "https://github.com/microsoft/playwright-mcp",
-      "evidence": "reports/mcp/playwright/0.0.82.json"
+      "evidence": "reports/mcp/playwright/0.0.82.json",
+      "permissions": {
+        "filesystem": "write",
+        "network": "allowlisted",
+        "data": "read-only",
+        "external_actions": "none",
+        "credentials": "none"
+      }
     },
     {
       "id": "sentry",

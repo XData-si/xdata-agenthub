@@ -5,6 +5,11 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
 ## [Unreleased]
 
 ### Added
+- Verified MCP L3 (#86): `scripts/mcp_l3_run.py` and the `MCP runtime` workflow run a server's test plan
+  (`registry/mcp-plans/`) under gVisor with strace on an internal network with fixtures only, and compare file,
+  network and process activity with the declared permission profile. `cli/mcp_evidence.py` validates the `runtime`
+  section; `xah mcp inspect` shows the tested profile and blocked connection attempts. `playwright` is the first L3
+  server.
 - Trusted sources policy (XAH-303): an opt-in JSON file (`XAH_TRUSTED_SOURCES` or `--trusted-sources`) limits
   `catalog-refresh` to allowed HTTPS URL prefixes and additional catalogs to allowed directories; `xah doctor` reports
   the active policy.

@@ -972,5 +972,108 @@
         "openWorldHint": true
       }
     }
-  ]
+  ],
+  "runtime": {
+    "result": "pass",
+    "plan": "registry/mcp-plans/playwright.json",
+    "plan_sha256": "62a8fa14329df22e7939f14f8981a116a519a1c4cb8080e02bc9d1fd5b9df9e6",
+    "sandbox": "gVisor release-20261026.0 with strace; internal Docker network with fixtures only; read-only root, no capabilities, user nobody, no credentials",
+    "image": "mcr.microsoft.com/playwright@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f",
+    "tools_digest": "d30e3df03d196b3d8d12424909ed86c31f5e64a9b1189a2a93845250bd02f874",
+    "calls": [
+      {
+        "name": "open the fixture page",
+        "tool": "browser_navigate",
+        "expect": "success",
+        "result": "pass"
+      },
+      {
+        "name": "read the page",
+        "tool": "browser_snapshot",
+        "expect": "success",
+        "result": "pass"
+      },
+      {
+        "name": "follow a link on the allowed host",
+        "tool": "browser_navigate",
+        "expect": "success",
+        "result": "pass"
+      },
+      {
+        "name": "host outside the allowlist is unreachable",
+        "tool": "browser_navigate",
+        "expect": "error",
+        "result": "pass"
+      },
+      {
+        "name": "unknown tool is rejected",
+        "tool": "no_such_tool",
+        "expect": "error",
+        "result": "pass"
+      },
+      {
+        "name": "invalid arguments are rejected",
+        "tool": "browser_navigate",
+        "expect": "error",
+        "result": "pass"
+      }
+    ],
+    "activity": {
+      "writes": [
+        "/tmp/.cache",
+        "/tmp/.cache/dconf",
+        "/tmp/.cache/fontconfig",
+        "/tmp/.cache/ms-playwright",
+        "/tmp/.config",
+        "/tmp/.config/google-chrome-for-testing",
+        "/tmp/org.chromium.Chromium.A4hfTz",
+        "/tmp/playwright-artifacts-aelcPd",
+        "/tmp/playwright-output",
+        "/tmp/playwright-output/console-2026-11-01T09-39-30-093Z.log",
+        "/tmp/playwright-output/page-2026-11-01T09-39-30-257Z.yml",
+        "/tmp/playwright-output/page-2026-11-01T09-39-30-392Z.yml",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/.org.chromium.Chromium.Local State.ZvsIbk",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/Default",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/GPUPersistentCache",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/Last Version",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/Local State",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/NativeMessagingHosts",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/OptimizationGuideModelsManifest",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/Safe Browsing",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/SingletonCookie",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/SingletonLock",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/SingletonSocket",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/Variations",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/component_crx_cache",
+        "/tmp/playwright_chromiumdev_profile-iRjsQi/segmentation_platform",
+        "/tmp/pw-7505d64a",
+        "/tmp/pw-7505d64a/browser"
+      ],
+      "write_count": 285,
+      "connects": [
+        "127.0.0.11:53",
+        "172.18.0.2:8000"
+      ],
+      "blocked": [
+        "2001:4860:4860::8888:443",
+        "8.8.4.4:53",
+        "8.8.8.8:53"
+      ],
+      "execs": [
+        "/ms-playwright/chromium-1248/chrome-linux64/chrome",
+        "/ms-playwright/chromium-1248/chrome-linux64/chrome_crashpad_handler",
+        "/proc/self/exe"
+      ]
+    },
+    "mismatches": [],
+    "profile": {
+      "filesystem": "write",
+      "network": "allowlisted",
+      "data": "read-only",
+      "external_actions": "none",
+      "credentials": "none"
+    },
+    "run": "https://github.com/XData-si/xdata-agenthub/actions/runs/41294009056"
+  }
 }
