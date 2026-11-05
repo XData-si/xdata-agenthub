@@ -160,23 +160,24 @@ L1 results; `scans` with the five L2 results and the tool names and versions use
 snapshot contradicts, and rejects a catalog level the evidence does not support. Raising a level is a reviewed pull
 request that adds the evidence file and changes `level` in the same commit.
 
-### Results of the phase 2 set (2026-10-31)
+### Results of the phase 2 set (2026-10-31, refreshed 2026-11-05)
 
-`playwright` 0.0.82 reached L2, and L3 in phase 3. `atlassian`, `cloudflare`, `exa`, `figma`, `gitlab` and `microsoft-learn` are
+`playwright` 0.0.82 reached L2, and L3 in phase 3; 0.0.84 was verified again on 2026-11-05.
+The table shows the versions in the catalog after the 2026-11-05 refresh. `atlassian`, `cloudflare`, `exa`, `figma`, `gitlab` and `microsoft-learn` are
 remote-only and stop at L1 by design. The others did not pass every check:
 
 | Server | Version | Level | Failed | Why |
 |---|---|---|---|---|
-| `github` | 2.0.3 | L1 | L2 dependencies | 13 high/critical advisories in the Debian base image (glibc) |
-| `grafana` | v2.1.1 | L1 | L2 dependencies | 90 high/critical advisories in the base image (util-linux and others) |
+| `github` | 2.1.0 | L1 | L2 dependencies | 14 high/critical advisories in the Debian base image (glibc, openssl) |
+| `grafana` | v2.2.0 | L1 | L2 dependencies | 68 high/critical advisories in the base image (util-linux and others) |
 | `sentry` | 0.42.0 | L1 | L2 dependencies, secrets, licence | `@modelcontextprotocol/sdk` 1.30.0; 4 `sentry-access-token` matches in `dist/`; FSL-1.1-ALv2 is not OSI-approved |
 | `brave-search` | 2.1.3 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.30.0 (5 high advisories) |
 | `tavily` | 0.2.15 | L1 | L2 dependencies | `@modelcontextprotocol/sdk` 1.25.2 (5 high advisories) |
-| `firecrawl` | 3.36.0 | L1 | L2 dependencies | `zod` 3.25.76 (GHSA-mrhx-c7xc-m3w5, 8.2) |
-| `supabase` | 0.14.0 | L1 | L2 tools | `tools/list` needs network access, so it cannot be read in the isolated container |
-| `context7` | 4.4.4 | L1 | L2 dependencies, sbom | the npm package passes; the `mcpb` bundle is one bundled file whose dependencies cannot be identified or audited |
+| `firecrawl` | 3.37.0 | L1 | L2 dependencies | `zod` 3.25.76 (GHSA-mrhx-c7xc-m3w5, 8.2) |
+| `supabase` | 0.16.0 | L1 | L2 tools | `tools/list` needs network access, so it cannot be read in the isolated container |
+| `context7` | 4.5.0 | L1 | L2 dependencies, sbom | the npm package passes; the `mcpb` bundle is one bundled file whose dependencies cannot be identified or audited |
 | `clickhouse` | 0.7.0 | L1 | L2 dependencies | the PyPI wheel passes (no high advisories); the OCI image has 124 high/critical advisories (authlib and others) |
-| `mongodb` | 3.2.1 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository ([reported](https://github.com/mongodb-js/mongodb-mcp-server/issues/1666)) |
+| `mongodb` | 3.2.2 | L0 | L1 artifacts | the OCI image has no `org.opencontainers.image.source` label linking it to the repository ([reported](https://github.com/mongodb-js/mongodb-mcp-server/issues/1666)) |
 | `terraform` | 1.4.1 | L0 | L1 artifacts | same as `mongodb`; the image also declares no licence ([reported](https://github.com/hashicorp/terraform-mcp-server/issues/631)) |
 | `azure` | 3.0.0-beta.48 | L0 | L1 artifacts | NuGet is not supported; PyPI has no `3.0.0b48` |
 | `litellm` | 1.0.2 | L0 | L1 repository | the declared repository `BerriAI/litellm-agent-mcp` does not exist ([reported](https://github.com/BerriAI/litellm/issues/49489)); with current dependencies the server also fails to start (`Server` has no `list_tools`) |
