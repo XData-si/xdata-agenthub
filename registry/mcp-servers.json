@@ -433,23 +433,22 @@
       "id": "context7",
       "name": "io.github.upstash/context7",
       "description": "Up-to-date docs for AI agents",
-      "version": "4.4.4",
+      "version": "4.5.0",
       "artifacts": [
         {
           "kind": "package",
           "registry": "npm",
           "identifier": "@upstash/context7-mcp",
-          "version": "4.4.4",
-          "transport": "stdio",
-          "sha256": "2ae37c3a2b41ff4d591a275ff1dc56883cb60bfc71e34c399c14ebd38837bb38"
+          "version": "4.5.0",
+          "transport": "stdio"
         },
         {
           "kind": "package",
           "registry": "mcpb",
-          "identifier": "https://github.com/upstash/context7/releases/download/mcpb-v4.4.4/context7.mcpb",
-          "version": "4.4.4",
+          "identifier": "https://github.com/upstash/context7/releases/download/mcpb-v4.5.0/context7.mcpb",
+          "version": "4.5.0",
           "transport": "stdio",
-          "sha256": "25cabf3767cc61171e3435c4ce5427e03ffe7ab671cc0e2d5b89e04eef246949"
+          "sha256": "d6faf96c89cb12b312b8cd6b7659477530add9adfff311f1f55dc4f3efe018ee"
         },
         {
           "kind": "remote",
@@ -459,10 +458,10 @@
       ],
       "registry": {
         "status": "active",
-        "published_at": "2026-10-19T13:48:33.320442Z",
-        "updated_at": "2026-10-19T13:48:33.320442Z"
+        "published_at": "2026-11-03T06:43:23.026643Z",
+        "updated_at": "2026-11-03T06:43:23.026643Z"
       },
-      "level": "L1",
+      "level": "L0",
       "title": "Context7",
       "repository": "https://github.com/upstash/context7",
       "website": "https://context7.com",
@@ -472,8 +471,7 @@
           "required": false,
           "secret": true
         }
-      ],
-      "evidence": "reports/mcp/context7/4.4.4.json"
+      ]
     },
     {
       "id": "exa",
@@ -522,15 +520,14 @@
       "id": "firecrawl",
       "name": "io.github.firecrawl/firecrawl-mcp-server",
       "description": "Firecrawl, the context API for AI agents: search, scrape, interact with the web, plus paper search.",
-      "version": "3.36.0",
+      "version": "3.37.0",
       "artifacts": [
         {
           "kind": "package",
           "registry": "npm",
           "identifier": "firecrawl-mcp",
-          "version": "3.36.0",
-          "transport": "stdio",
-          "sha256": "300d46120ee53f550899e2ecab194ed706c9996af0a71d1ad5260a6241d771a5"
+          "version": "3.37.0",
+          "transport": "stdio"
         },
         {
           "kind": "remote",
@@ -540,10 +537,10 @@
       ],
       "registry": {
         "status": "active",
-        "published_at": "2026-10-27T23:06:39.322741Z",
-        "updated_at": "2026-10-27T23:06:39.322741Z"
+        "published_at": "2026-11-04T15:17:44.447982Z",
+        "updated_at": "2026-11-04T15:17:44.447982Z"
       },
-      "level": "L1",
+      "level": "L0",
       "title": "Firecrawl MCP Server",
       "repository": "https://github.com/firecrawl/firecrawl-mcp-server.git",
       "environment": [
@@ -552,22 +549,20 @@
           "required": false,
           "secret": true
         }
-      ],
-      "evidence": "reports/mcp/firecrawl/3.36.0.json"
+      ]
     },
     {
       "id": "github",
       "name": "io.github.github/github-mcp-server",
       "description": "Connect AI assistants to GitHub - manage repos, issues, PRs, and workflows through natural language.",
-      "version": "2.0.3",
+      "version": "2.1.0",
       "artifacts": [
         {
           "kind": "package",
           "registry": "oci",
-          "identifier": "ghcr.io/github/github-mcp-server:2.0.3",
-          "version": "2.0.3",
-          "transport": "stdio",
-          "sha256": "250bc6ce70788207608ef74cef4397230ff2e8481218da74d6093e4bd9101132"
+          "identifier": "ghcr.io/github/github-mcp-server:2.1.0",
+          "version": "2.1.0",
+          "transport": "stdio"
         },
         {
           "kind": "remote",
@@ -577,13 +572,12 @@
       ],
       "registry": {
         "status": "active",
-        "published_at": "2026-10-21T09:53:50.501608Z",
-        "updated_at": "2026-10-21T09:53:50.501608Z"
+        "published_at": "2026-11-03T11:06:05.48244Z",
+        "updated_at": "2026-11-03T11:06:05.48244Z"
       },
-      "level": "L1",
+      "level": "L0",
       "title": "GitHub",
-      "repository": "https://github.com/github/github-mcp-server",
-      "evidence": "reports/mcp/github/2.0.3.json"
+      "repository": "https://github.com/github/github-mcp-server"
     },
     {
       "id": "gitlab",
@@ -610,15 +604,14 @@
       "id": "grafana",
       "name": "io.github.grafana/mcp-grafana",
       "description": "An MCP server giving access to Grafana dashboards, data and more.",
-      "version": "v2.1.1",
+      "version": "v2.2.0",
       "artifacts": [
         {
           "kind": "package",
           "registry": "oci",
-          "identifier": "docker.io/grafana/mcp-grafana:2.1.1",
-          "version": "v2.1.1",
-          "transport": "stdio",
-          "sha256": "71a3f4e6f412d253611314233df709ec2571fb50e39742d23fa2940f670646dc"
+          "identifier": "docker.io/grafana/mcp-grafana:2.2.0",
+          "version": "v2.2.0",
+          "transport": "stdio"
         },
         {
           "kind": "remote",
@@ -628,11 +621,13 @@
       ],
       "registry": {
         "status": "active",
-        "published_at": "2026-10-20T17:28:59.534981Z",
-        "updated_at": "2026-10-20T17:28:59.534981Z"
+        "published_at": "2026-11-02T12:54:14.752309Z",
+        "updated_at": "2026-11-02T12:54:14.752309Z"
       },
-      "level": "L1",
+      "level": "L0",
+      "title": "Grafana",
       "repository": "https://github.com/grafana/mcp-grafana",
+      "website": "https://grafana.com/docs/grafana/latest/developer-resources/mcp/",
       "environment": [
         {
           "name": "GRAFANA_EXTRA_HEADERS",
@@ -669,8 +664,7 @@
           "required": false,
           "secret": false
         }
-      ],
-      "evidence": "reports/mcp/grafana/v2.1.1.json"
+      ]
     },
     {
       "id": "litellm",
@@ -820,27 +814,27 @@
       "id": "mongodb",
       "name": "io.github.mongodb-js/mongodb-mcp-server",
       "description": "MongoDB Model Context Protocol Server",
-      "version": "3.2.1",
+      "version": "3.2.2",
       "artifacts": [
         {
           "kind": "package",
           "registry": "npm",
           "identifier": "mongodb-mcp-server",
-          "version": "3.2.1",
+          "version": "3.2.2",
           "transport": "stdio"
         },
         {
           "kind": "package",
           "registry": "oci",
-          "identifier": "docker.io/mongodb/mongodb-mcp-server:3.2.1",
-          "version": "3.2.1",
+          "identifier": "docker.io/mongodb/mongodb-mcp-server:3.2.2",
+          "version": "3.2.2",
           "transport": "stdio"
         }
       ],
       "registry": {
         "status": "active",
-        "published_at": "2026-10-28T16:05:19.604548Z",
-        "updated_at": "2026-10-28T16:05:19.604548Z"
+        "published_at": "2026-11-04T14:41:41.653394Z",
+        "updated_at": "2026-11-04T14:41:41.653394Z"
       },
       "level": "L0",
       "repository": "https://github.com/mongodb-js/mongodb-mcp-server",
@@ -897,6 +891,11 @@
         },
         {
           "name": "MDB_MCP_CONNECTION_STRING",
+          "required": false,
+          "secret": true
+        },
+        {
+          "name": "MDB_MCP_CONNECTION_STRINGS",
           "required": false,
           "secret": true
         },
@@ -1130,32 +1129,23 @@
       "id": "playwright",
       "name": "io.github.microsoft/playwright-mcp",
       "description": "Playwright Tools for MCP",
-      "version": "0.0.82",
+      "version": "0.0.84",
       "artifacts": [
         {
           "kind": "package",
           "registry": "npm",
           "identifier": "@playwright/mcp",
-          "version": "0.0.82",
-          "transport": "stdio",
-          "sha256": "f668e5a4ebce36b8741af2785a9b6f82edc18e35132b2dc22a8b581c655d4ede"
+          "version": "0.0.84",
+          "transport": "stdio"
         }
       ],
       "registry": {
         "status": "active",
-        "published_at": "2026-09-18T23:41:20.46032Z",
-        "updated_at": "2026-09-18T23:41:20.46032Z"
+        "published_at": "2026-10-31T15:30:11.740877Z",
+        "updated_at": "2026-10-31T15:30:11.740877Z"
       },
-      "level": "L3",
-      "repository": "https://github.com/microsoft/playwright-mcp",
-      "evidence": "reports/mcp/playwright/0.0.82.json",
-      "permissions": {
-        "filesystem": "write",
-        "network": "allowlisted",
-        "data": "read-only",
-        "external_actions": "none",
-        "credentials": "none"
-      }
+      "level": "L0",
+      "repository": "https://github.com/microsoft/playwright-mcp"
     },
     {
       "id": "sentry",
@@ -1217,15 +1207,14 @@
       "id": "supabase",
       "name": "com.supabase/mcp",
       "description": "MCP server for interacting with the Supabase platform",
-      "version": "0.14.0",
+      "version": "0.16.0",
       "artifacts": [
         {
           "kind": "package",
           "registry": "npm",
           "identifier": "@supabase/mcp-server-supabase",
-          "version": "0.14.0",
-          "transport": "stdio",
-          "sha256": "24901d85f7585d4df8fe9e6b78d4bf002d913894ee44fcd6d9f4f41d5f8a5abb"
+          "version": "0.16.0",
+          "transport": "stdio"
         },
         {
           "kind": "remote",
@@ -1235,10 +1224,10 @@
       ],
       "registry": {
         "status": "active",
-        "published_at": "2026-10-14T15:34:03.096613Z",
-        "updated_at": "2026-10-14T15:34:03.096613Z"
+        "published_at": "2026-11-05T13:52:15.463919Z",
+        "updated_at": "2026-11-05T13:52:15.463919Z"
       },
-      "level": "L1",
+      "level": "L0",
       "title": "Supabase",
       "repository": "https://github.com/supabase/mcp",
       "website": "https://supabase.com/mcp",
@@ -1248,8 +1237,7 @@
           "required": true,
           "secret": true
         }
-      ],
-      "evidence": "reports/mcp/supabase/0.14.0.json"
+      ]
     },
     {
       "id": "tavily",
