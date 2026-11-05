@@ -15,6 +15,8 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   the active policy.
 
 ### Changed
+- Verified MCP docs and site show servers per level, including empty levels, and state that levels are cumulative;
+  a test keeps the docs table in sync with the catalog.
 - MCP catalog refreshed from the official registry (2026-11-05): context7 4.5.0, firecrawl 3.37.0, github 2.1.0,
   grafana v2.2.0, mongodb 3.2.2, playwright 0.0.84, supabase 0.16.0, each verified again (levels unchanged;
   playwright 0.0.84 again L3).

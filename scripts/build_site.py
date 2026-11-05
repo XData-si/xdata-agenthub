@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Build the static catalog site (site/index.html) from registry/catalog.json. Standard library only."""
+import collections
 import html
 import json
 import pathlib
@@ -8,9 +9,16 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "cli"))
-from mcp_catalog import LEVEL_LABELS
+from mcp_catalog import LEVEL_LABELS, LEVELS
 
 REPO = "https://github.com/XData-si/xdata-agenthub"
+
+
+def level_summary(servers):
+    """Servers per level, highest first, including empty levels (levels are cumulative)."""
+    counts = collections.Counter(server["level"] for server in servers)
+    parts = " · ".join(f"{level} {counts[level]}" for level in reversed(LEVELS))
+    return f"By highest level reached (levels are cumulative): {parts}"
 
 
 def sections():
@@ -59,7 +67,8 @@ def build(out_dir):
         cards.append('<h2 data-section id="mcp">MCP servers (preview)</h2>'
                      '<p class="note">Listed servers are metadata from the official MCP Registry, pinned to one '
                      'version. <b>L0 means listed only: not reviewed, scanned or tested.</b> '
-                     f'<a href="{REPO}/blob/main/docs/VERIFIED_MCP.md">Verification levels</a></p>')
+                     f'<a href="{REPO}/blob/main/docs/VERIFIED_MCP.md">Verification levels</a></p>'
+                     f'<p class="note">{level_summary(servers)}</p>')
     for server in servers:
         title = html.escape(server.get("title", server["id"]))
         name = html.escape(server["name"])
