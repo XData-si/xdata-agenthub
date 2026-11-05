@@ -14,6 +14,11 @@ All notable changes to XData AgentHub are recorded here. The project follows sem
   `catalog-refresh` to allowed HTTPS URL prefixes and additional catalogs to allowed directories; `xah doctor` reports
   the active policy.
 
+### Changed
+- MCP catalog refreshed from the official registry (2026-11-05): context7 4.5.0, firecrawl 3.37.0, github 2.1.0,
+  grafana v2.2.0, mongodb 3.2.2, playwright 0.0.84, supabase 0.16.0, each verified again (levels unchanged;
+  playwright 0.0.84 again L3).
+
 ## [0.4.0] - 2026-10-31
 
 Verified MCP: 23 MCP servers in the catalog, 16 above L0 with committed evidence (`playwright` L2, 15 servers L1).

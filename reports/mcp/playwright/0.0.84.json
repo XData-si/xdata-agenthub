@@ -988,5 +988,111 @@
         "openWorldHint": true
       }
     }
-  ]
+  ],
+  "runtime": {
+    "result": "pass",
+    "plan": "registry/mcp-plans/playwright.json",
+    "plan_sha256": "98e5f0c5abce2d98b676d1c29456aca708735f25ef9b9cd35b32d40c379105b1",
+    "sandbox": "gVisor release-20261026.0 with strace; internal Docker network with fixtures only; read-only root, no capabilities, user nobody, no credentials",
+    "image": "mcr.microsoft.com/playwright@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f",
+    "tools_digest": "ad5248814b9ef5ae4d23730df7d64c195dd7193827da45103034234fa949722b",
+    "calls": [
+      {
+        "name": "open the fixture page",
+        "tool": "browser_navigate",
+        "expect": "success",
+        "result": "pass"
+      },
+      {
+        "name": "read the page",
+        "tool": "browser_snapshot",
+        "expect": "success",
+        "result": "pass"
+      },
+      {
+        "name": "follow a link on the allowed host",
+        "tool": "browser_navigate",
+        "expect": "success",
+        "result": "pass"
+      },
+      {
+        "name": "host outside the allowlist is unreachable",
+        "tool": "browser_navigate",
+        "expect": "error",
+        "result": "pass"
+      },
+      {
+        "name": "unknown tool is rejected",
+        "tool": "no_such_tool",
+        "expect": "error",
+        "result": "pass"
+      },
+      {
+        "name": "invalid arguments are rejected",
+        "tool": "browser_navigate",
+        "expect": "error",
+        "result": "pass"
+      }
+    ],
+    "activity": {
+      "writes": [
+        "/tmp/.cache",
+        "/tmp/.cache/dconf",
+        "/tmp/.cache/fontconfig",
+        "/tmp/.cache/ms-playwright",
+        "/tmp/.config",
+        "/tmp/.config/google-chrome-for-testing",
+        "/tmp/org.chromium.Chromium.JXMEev",
+        "/tmp/playwright-artifacts-h15Tt2",
+        "/tmp/playwright-output",
+        "/tmp/playwright-output/console-2026-11-05T15-06-18-262Z.log",
+        "/tmp/playwright-output/page-2026-11-05T15-06-18-442Z.yml",
+        "/tmp/playwright-output/page-2026-11-05T15-06-18-582Z.yml",
+        "/tmp/playwright_chromiumdev_profile-rTeylx",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/.org.chromium.Chromium.Local State.JCBgEl",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/.org.chromium.Chromium.Local State.WfFsyQ",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/.org.chromium.Chromium.Local State.ljWJJv",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/Default",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/GPUPersistentCache",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/Last Version",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/Local State",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/NativeMessagingHosts",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/OptimizationGuideModelsManifest",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/Safe Browsing",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/SingletonCookie",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/SingletonLock",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/SingletonSocket",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/Variations",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/component_crx_cache",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/extensions_crx_cache",
+        "/tmp/playwright_chromiumdev_profile-rTeylx/segmentation_platform",
+        "/tmp/pw-7505d64a",
+        "/tmp/pw-7505d64a/browser"
+      ],
+      "write_count": 314,
+      "connects": [
+        "127.0.0.11:53",
+        "172.18.0.2:8000"
+      ],
+      "blocked": [
+        "2001:4860:4860::8888:443",
+        "8.8.4.4:53",
+        "8.8.8.8:53"
+      ],
+      "execs": [
+        "/ms-playwright/chromium-1248/chrome-linux64/chrome",
+        "/ms-playwright/chromium-1248/chrome-linux64/chrome_crashpad_handler",
+        "/proc/self/exe"
+      ]
+    },
+    "mismatches": [],
+    "profile": {
+      "filesystem": "write",
+      "network": "allowlisted",
+      "data": "read-only",
+      "external_actions": "none",
+      "credentials": "none"
+    },
+    "run": "https://github.com/XData-si/xdata-agenthub/actions/runs/42051363259"
+  }
 }
