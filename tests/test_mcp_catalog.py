@@ -233,3 +233,21 @@ class CliAndSiteTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LevelSummaryTests(unittest.TestCase):
+    def test_docs_level_table_matches_catalog(self):
+        import collections
+        import re
+        servers = json.loads((ROOT / "registry/mcp-servers.json").read_text(encoding="utf-8"))["servers"]
+        counts = collections.Counter(s["level"] for s in servers)
+        text = (ROOT / "docs/VERIFIED_MCP.md").read_text(encoding="utf-8")
+        section = text.split("### Catalog by level", 1)[1].split("\n### ", 1)[0]
+        rows = dict(re.findall(r"^\| (L[0-4]) \| (\d+) \|", section, re.M))
+        self.assertEqual(set(rows), {"L0", "L1", "L2", "L3", "L4"})
+        self.assertEqual({level: int(n) for level, n in rows.items()},
+                         {level: counts[level] for level in rows})
+
+    def test_site_summary_lists_empty_levels(self):
+        summary = build_site.level_summary([{"level": "L3"}, {"level": "L1"}, {"level": "L1"}])
+        self.assertIn("L4 0 · L3 1 · L2 0 · L1 2 · L0 0", summary)

@@ -160,6 +160,23 @@ L1 results; `scans` with the five L2 results and the tool names and versions use
 snapshot contradicts, and rejects a catalog level the evidence does not support. Raising a level is a reviewed pull
 request that adds the evidence file and changes `level` in the same commit.
 
+### Catalog by level
+
+Levels are cumulative: an entry at L3 has passed L1 and L2 as well, and `xah doctor` rejects a level its evidence does
+not support. Each server is counted once, at the highest level it reached, so an empty row means no server *stops*
+at that level. This table is checked against `registry/mcp-servers.json` by the test suite.
+
+| Level | Servers | Why servers stop here |
+|---|---|---|
+| L4 | 0 | continuous verification is not implemented yet (phase 6) |
+| L3 | 1 | `playwright` |
+| L2 | 0 | `playwright` passed L2 and went on to L3; every other packaged server failed at least one L2 check |
+| L1 | 15 | 6 are remote-only, so there is no artifact to scan and L1 is their ceiling; 9 failed L2 on findings (table below) |
+| L0 | 7 | an identity check failed or could not be run (table below) |
+
+The L1 row is mostly findings, not missing work: each packaged L1 server was scanned, and the table below names the
+check it failed and why.
+
 ### Results of the phase 2 set (2026-10-31, refreshed 2026-11-05)
 
 `playwright` 0.0.82 reached L2, and L3 in phase 3; 0.0.84 was verified again on 2026-11-05.
